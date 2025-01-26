@@ -1,11 +1,10 @@
-import React from "react";
 import { useProperties } from "../../redux/hooks/useProperties";
 
-const PropertiesList: React.FC = () => {
+const PropertiesPage = () => {
   const { data, loading, error } = useProperties();
 
   if (loading) return <p>Loading properties...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
@@ -19,4 +18,4 @@ const PropertiesList: React.FC = () => {
   );
 };
 
-export default PropertiesList;
+export default PropertiesPage;

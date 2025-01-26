@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../utils";
 
 interface AdminCredentials {
   email: string;
@@ -21,13 +21,13 @@ const initialState: AdminState = {
 export const loginAdmin = createAsyncThunk(
   "admins/loginAdmin",
   async (credentials: AdminCredentials) => {
-    const response = await axios.post("/login", credentials);
+    const response = await axiosInstance.post("/login", credentials);
     return response.data;
   }
 );
 
 export const logoutAdmin = createAsyncThunk("admins/logoutAdmin", async () => {
-  await axios.delete("/logout");
+  await axiosInstance.delete("/logout");
 });
 
 const adminsSlice = createSlice({

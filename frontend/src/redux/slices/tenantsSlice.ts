@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../utils";
 
 interface Tenant {
   id: number;
@@ -21,14 +21,14 @@ const initialState: TenantsState = {
 
 // Thunks
 export const fetchTenants = createAsyncThunk("tenants/fetchAll", async () => {
-  const response = await axios.get("/tenants");
+  const response = await axiosInstance.get("/tenants");
   return response.data;
 });
 
 export const fetchTenantById = createAsyncThunk(
   "tenants/fetchById",
   async (id: number) => {
-    const response = await axios.get(`/tenants/${id}`);
+    const response = await axiosInstance.get(`/tenants/${id}`);
     return response.data;
   }
 );
@@ -36,7 +36,7 @@ export const fetchTenantById = createAsyncThunk(
 export const addTenant = createAsyncThunk(
   "tenants/add",
   async (tenant: Omit<Tenant, "id">) => {
-    const response = await axios.post("/tenants", tenant);
+    const response = await axiosInstance.post("/tenants", tenant);
     return response.data;
   }
 );
@@ -44,7 +44,7 @@ export const addTenant = createAsyncThunk(
 export const editTenant = createAsyncThunk(
   "tenants/edit",
   async ({ id, ...tenant }: Tenant) => {
-    const response = await axios.put(`/tenants/${id}`, tenant);
+    const response = await axiosInstance.put(`/tenants/${id}`, tenant);
     return response.data;
   }
 );
@@ -52,7 +52,7 @@ export const editTenant = createAsyncThunk(
 export const deleteTenant = createAsyncThunk(
   "tenants/delete",
   async (id: number) => {
-    await axios.delete(`/tenants/${id}`);
+    await axiosInstance.delete(`/tenants/${id}`);
     return id;
   }
 );

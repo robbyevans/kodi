@@ -1,50 +1,45 @@
-import React, { useState } from "react";
-import { useAdmins } from "../redux/admins/useAdmins";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAdmins } from "../../redux/hooks/useAdmin";
 
-const AdminLogin: React.FC = () => {
-  const { login, logout, isAuthenticated, loading, error } = useAdmins();
+const AdminLoginPage = () => {
+  const { isAuthenticated, loading, error, login } = useAdmins();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin-dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleLogin = () => {
     login(email, password);
   };
 
-  if (isAuthenticated) {
-    return (
-      <div>
-        <p>You are logged in as admin.</p>
-        <button onClick={logout}>Logout</button>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <h1>Admin Login</h1>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button type="submit" disabled={loading}>
-        Login
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin} disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
       </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </form>
+      {error && <p>{error}</p>}
+    </div>
   );
 };
 
-export default AdminLogin;
+export default AdminLoginPage;

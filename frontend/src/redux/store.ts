@@ -4,7 +4,7 @@ import housesReducer from "./slices/houseSlice";
 import tenantsReducer from "./slices/tenantsSlice";
 import adminsReducer from "./slices/adminSlice";
 
-export const store = configureStore({
+ const store = configureStore({
   reducer: {
     properties: propertiesReducer,
     houses: housesReducer,
@@ -12,6 +12,8 @@ export const store = configureStore({
     admins: adminsReducer,
   },
 });
+
+export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

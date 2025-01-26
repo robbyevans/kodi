@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../utils";
 
 interface Property {
   id: number;
@@ -22,7 +22,7 @@ const initialState: PropertiesState = {
 export const fetchProperties = createAsyncThunk(
   "properties/fetchAll",
   async () => {
-    const response = await axios.get("/properties");
+    const response = await axiosInstance.get("/properties");
     return response.data;
   }
 );
@@ -30,7 +30,7 @@ export const fetchProperties = createAsyncThunk(
 export const fetchPropertyById = createAsyncThunk(
   "properties/fetchById",
   async (id: number) => {
-    const response = await axios.get(`/properties/${id}`);
+    const response = await axiosInstance.get(`/properties/${id}`);
     return response.data;
   }
 );
@@ -38,7 +38,7 @@ export const fetchPropertyById = createAsyncThunk(
 export const addProperty = createAsyncThunk(
   "properties/add",
   async (property: Omit<Property, "id">) => {
-    const response = await axios.post("/properties", property);
+    const response = await axiosInstance.post("/properties", property);
     return response.data;
   }
 );
@@ -46,7 +46,7 @@ export const addProperty = createAsyncThunk(
 export const editProperty = createAsyncThunk(
   "properties/edit",
   async ({ id, ...property }: Property) => {
-    const response = await axios.put(`/properties/${id}`, property);
+    const response = await axiosInstance.put(`/properties/${id}`, property);
     return response.data;
   }
 );
@@ -54,7 +54,7 @@ export const editProperty = createAsyncThunk(
 export const deleteProperty = createAsyncThunk(
   "properties/delete",
   async (id: number) => {
-    await axios.delete(`/properties/${id}`);
+    await axiosInstance.delete(`/properties/${id}`);
     return id;
   }
 );

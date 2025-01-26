@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../utils";
 
 interface House {
   id: number;
@@ -23,14 +23,14 @@ const initialState: HousesState = {
 
 // Thunks
 export const fetchHouses = createAsyncThunk("houses/fetchAll", async () => {
-  const response = await axios.get("/houses");
+  const response = await axiosInstance.get("/houses");
   return response.data;
 });
 
 export const fetchHouseById = createAsyncThunk(
   "houses/fetchById",
   async (id: number) => {
-    const response = await axios.get(`/houses/${id}`);
+    const response = await axiosInstance.get(`/houses/${id}`);
     return response.data;
   }
 );
@@ -38,7 +38,7 @@ export const fetchHouseById = createAsyncThunk(
 export const addHouse = createAsyncThunk(
   "houses/add",
   async (house: Omit<House, "id">) => {
-    const response = await axios.post("/houses", house);
+    const response = await axiosInstance.post("/houses", house);
     return response.data;
   }
 );
@@ -46,7 +46,7 @@ export const addHouse = createAsyncThunk(
 export const editHouse = createAsyncThunk(
   "houses/edit",
   async ({ id, ...house }: House) => {
-    const response = await axios.put(`/houses/${id}`, house);
+    const response = await axiosInstance.put(`/houses/${id}`, house);
     return response.data;
   }
 );
@@ -54,7 +54,7 @@ export const editHouse = createAsyncThunk(
 export const deleteHouse = createAsyncThunk(
   "houses/delete",
   async (id: number) => {
-    await axios.delete(`/houses/${id}`);
+    await axiosInstance.delete(`/houses/${id}`);
     return id;
   }
 );
