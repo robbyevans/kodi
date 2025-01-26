@@ -21,11 +21,45 @@ const initialState: HousesState = {
   error: null,
 };
 
-export const fetchHouses = createAsyncThunk("houses/fetchHouses", async () => {
+// Thunks
+export const fetchHouses = createAsyncThunk("houses/fetchAll", async () => {
   const response = await axios.get("/houses");
   return response.data;
 });
 
+export const fetchHouseById = createAsyncThunk(
+  "houses/fetchById",
+  async (id: number) => {
+    const response = await axios.get(`/houses/${id}`);
+    return response.data;
+  }
+);
+
+export const addHouse = createAsyncThunk(
+  "houses/add",
+  async (house: Omit<House, "id">) => {
+    const response = await axios.post("/houses", house);
+    return response.data;
+  }
+);
+
+export const editHouse = createAsyncThunk(
+  "houses/edit",
+  async ({ id, ...house }: House) => {
+    const response = await axios.put(`/houses/${id}`, house);
+    return response.data;
+  }
+);
+
+export const deleteHouse = createAsyncThunk(
+  "houses/delete",
+  async (id: number) => {
+    await axios.delete(`/houses/${id}`);
+    return id;
+  }
+);
+
+// Slice
 const housesSlice = createSlice({
   name: "houses",
   initialState,
@@ -34,7 +68,6 @@ const housesSlice = createSlice({
     builder
       .addCase(fetchHouses.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(fetchHouses.fulfilled, (state, action) => {
         state.loading = false;
@@ -43,6 +76,22 @@ const housesSlice = createSlice({
       .addCase(fetchHouses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch houses";
+      })
+      .addCase(fetchHouseById.fulfilled, (state, action) => {
+        state.data = state.data.map((house) =>
+          house.id === action.payload.id ? action.payload : house
+        );
+      })
+      .addCase(addHouse.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+      })
+      .addCase(editHouse.fulfilled, (state, action) => {
+        state.data = state.data.map((house) =>
+          house.id === action.payload.id ? action.payload : house
+        );
+      })
+      .addCase(deleteHouse.fulfilled, (state, action) => {
+        state.data = state.data.filter((house) => house.id !== action.payload);
       });
   },
 });
