@@ -1,11 +1,18 @@
-import { useEffect } from "react";
-import * as S from "./styles";
+import React from "react";
+import * as S from "./styles"; // Shorthand import for styles
+import { House } from "../../redux/slices/houseSlice";
 
 interface PropertyPageProps {
-  houses: any[];
+  houses: House[];
   loading: boolean;
-  error: string | null;
-  paymentData: any[];
+  error: any;
+  paymentData: {
+    houseNumber: string;
+    rentPaid: number;
+    balance: number;
+    paymentDate: string; // Added date of payment
+    paymentMode: string; // Added mode of payment
+  }[];
   downloadPDF: () => void;
 }
 
@@ -16,18 +23,13 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
   paymentData,
   downloadPDF,
 }) => {
-  useEffect(() => {
-    if (houses.length > 0) {
-      // Optionally handle any additional logic when the page is loaded
-    }
-  }, [houses]);
+  if (loading) return <S.LoadingMessage>Loading...</S.LoadingMessage>;
+  if (error)
+    return <S.ErrorMessage>Error loading property data.</S.ErrorMessage>;
 
-  if (loading) return <S.LoadingMessage>Loading houses...</S.LoadingMessage>;
-  if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
-  console.log("houses", houses);
   return (
     <S.PropertyPageContainer>
-      <S.Header>Houses for {houses[0]?.property?.name}</S.Header>
+      <S.Header>Houses</S.Header>
       <S.TableContainer>
         <S.Table>
           <thead>
@@ -37,43 +39,38 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
               <S.TableHeader>Tenant Contact</S.TableHeader>
               <S.TableHeader>Payable Rent</S.TableHeader>
               <S.TableHeader>Rent Paid</S.TableHeader>
-              <S.TableHeader>Rent Deposit</S.TableHeader>
               <S.TableHeader>Balance</S.TableHeader>
               <S.TableHeader>Date of Payment</S.TableHeader>
               <S.TableHeader>Mode of Payment</S.TableHeader>
-              <S.TableHeader>Rent Cleared</S.TableHeader>
               <S.TableHeader>Status</S.TableHeader>
             </tr>
           </thead>
           <tbody>
             {houses.map((house) => {
-              const paymentInfo = paymentData.find(
-                (payment) => payment.id === house.id
+              const payment = paymentData.find(
+                (data) => data.houseNumber === house.house_number
               );
+
+              const rentPaid = payment?.rentPaid || 0;
+              const balance = payment?.balance || house.payable_rent;
+              const paymentDate = payment?.paymentDate || "N/A";
+              const paymentMode = payment?.paymentMode || "N/A";
+              const status = balance === 0;
+
               return (
-                <tr key={house.id}>
+                <S.TableRow key={house.id}>
                   <S.TableData>{house.house_number}</S.TableData>
-                  <S.TableData>{house.tenant?.name || "vacant"}</S.TableData>
+                  <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
                   <S.TableData>
-                    {house.tenant?.phone_number || "vacant"}
+                    {house.tenant?.phone_number || "Vacant"}
                   </S.TableData>
                   <S.TableData>{house.payable_rent}</S.TableData>
-                  <S.TableData>{paymentInfo?.rentPaid || 0}</S.TableData>
-                  <S.TableData>{0}</S.TableData>
-                  <S.TableData>
-                    {paymentInfo ? paymentInfo.balance : house.payable_rent}
-                  </S.TableData>
-                  <S.TableData>{paymentInfo?.paymentDate || "N/A"}</S.TableData>
-                  <S.TableData>
-                    {paymentInfo?.modeOfPayment || "N/A"}
-                  </S.TableData>
-                  <S.TableData>
-                    {paymentInfo?.balance === 0 ? "✅" : "❌"}
-                  </S.TableData>
-                  <S.TableData>
-                    {paymentInfo?.balance === 0 ? "Cleared" : "Pending"}
-                  </S.TableData>
-                </tr>
+                  <S.TableData>{rentPaid}</S.TableData>
+                  <S.TableData>{balance}</S.TableData>
+                  <S.TableData>{paymentDate}</S.TableData>
+                  <S.TableData>{paymentMode}</S.TableData>
+                  <S.TableData>{status ? "✅" : "❌"}</S.TableData>
+                </S.TableRow>
               );
             })}
           </tbody>

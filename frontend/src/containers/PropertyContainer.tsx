@@ -1,77 +1,99 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 import { useProperties } from "../redux/hooks/useProperties";
 import { useHouses } from "../redux/hooks/useHouses";
-import axios from "axios";
-// import { sendTextMessage, sendEmailReceipt } from "../../utils/notifications";
+import {
+  sendTextMessage,
+  sendEmailReceipt,
+} from "../components/Utils/notifications";
 import * as S from "../components/PropertyPage/styles";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
-import jsPDF from "jspdf";
-import { useParams } from "react-router-dom";
 
 const PropertyContainer = () => {
   const { houses, getPropertyHouses, loading, error } = useHouses();
-  const { getPropertyById, data } = useProperties();
+  const { getPropertyById } = useProperties();
   const [paymentData, setPaymentData] = useState<any[]>([]);
   const { propertyId } = useParams<{ propertyId: string }>();
-  useEffect(() => {
-    getPropertyById(Number(propertyId));
-    getPropertyHouses(Number(propertyId));
-  }, []);
 
+  // Fetch property and houses on component mount
   useEffect(() => {
-    if (houses) {
-      houses.forEach((house) => {
-        axios.get(`api/mpesa/${house.id}`).then((response) => {
-          const payment = response.data.payment;
-
-          updateHouseRentPayment(house.id, payment);
-        });
-      });
+    if (propertyId) {
+      getPropertyById(Number(propertyId));
+      getPropertyHouses(Number(propertyId));
     }
+  }, [propertyId]);
+
+  // Fetch Mpesa payments for each house
+  useEffect(() => {
+    const fetchPayments = async () => {
+      if (houses.length > 0) {
+        const paymentPromises = houses.map((house) =>
+          axios.get(`/api/mpesa/${house.id}`).then((response) => {
+            const payment = response.data.payment;
+            updateHouseRentPayment(house.id, payment);
+          })
+        );
+        await Promise.all(paymentPromises);
+      }
+    };
+
+    fetchPayments();
   }, [houses]);
 
+  // Update rent payment and notify tenant
   const updateHouseRentPayment = (houseId: number, payment: any) => {
     const houseToUpdate = houses.find((house) => house.id === houseId);
-    if (houseToUpdate) {
-      const newBalance = houseToUpdate.payable_rent - payment.amount;
-      setPaymentData((prevData) => [
-        ...prevData,
-        {
-          ...houseToUpdate,
-          rentPaid: payment.amount,
-          balance: newBalance,
-          modeOfPayment: payment.mode,
-          paymentDate: payment.date,
-        },
-      ]);
 
-      // if (newBalance === 0) {
-      //   sendTextMessage(houseToUpdate.tenant.phone_number, "Rent cleared");
-      //   sendEmailReceipt(houseToUpdate.tenant.email, houseToUpdate);
-      // } else {
-      //   sendTextMessage(
-      //     houseToUpdate.tenant.phone_number,
-      //     "Rent balance pending"
-      //   );
-      //   sendEmailReceipt(houseToUpdate.tenant.email, houseToUpdate);
-      // }
+    if (houseToUpdate && houseToUpdate.tenant) {
+      const newBalance = houseToUpdate.payable_rent - payment?.amount;
+
+      const updatedPayment = {
+        houseNumber: houseToUpdate.house_number,
+        tenantName: houseToUpdate.tenant.name,
+        tenantContact: houseToUpdate.tenant.phone_number,
+        payableRent: houseToUpdate.payable_rent,
+        rentPaid: payment?.amount,
+        balance: newBalance,
+        paymentDate: payment?.date,
+        modeOfPayment: payment?.mode,
+      };
+
+      setPaymentData((prevData) => [...prevData, updatedPayment]);
+
+      // Send notifications
+      if (newBalance === 0) {
+        sendTextMessage(
+          houseToUpdate.tenant.phone_number,
+          "Your rent has been cleared. Thank you!"
+        );
+        sendEmailReceipt(houseToUpdate.tenant.email, updatedPayment);
+      } else {
+        sendTextMessage(
+          houseToUpdate.tenant.phone_number,
+          `Your rent balance is KES ${newBalance}. Please clear it soon.`
+        );
+        sendEmailReceipt(houseToUpdate.tenant.email, updatedPayment);
+      }
     }
   };
 
+  // Generate PDF report
   const downloadPDF = () => {
     const doc = new jsPDF();
     const tableData = paymentData.map((payment) => [
-      payment.house_number,
-      payment.tenant?.name || "vacant",
-      payment.tenant?.phone_number || "vacant",
-      payment.payable_rent,
+      payment.houseNumber,
+      payment.tenantName || "Vacant",
+      payment.tenantContact || "Vacant",
+      payment.payableRent,
       payment.rentPaid,
-      payment.depositMonth || "0",
       payment.balance,
       payment.paymentDate,
       payment.modeOfPayment,
       payment.balance === 0 ? "✅" : "❌",
-      payment.balance === 0 ? "Cleared" : "Pending",
     ]);
 
     doc.autoTable({
@@ -82,12 +104,10 @@ const PropertyContainer = () => {
           "Tenant Contact",
           "Payable Rent",
           "Rent Paid",
-          "Rent Deposit",
           "Balance",
           "Payment Date",
           "Mode of Payment",
-          "Rent Cleared",
-          "Status",
+          "Cleared?",
         ],
       ],
       body: tableData,
@@ -98,12 +118,6 @@ const PropertyContainer = () => {
       year: "numeric",
     });
     doc.save(`${monthYear}-Rent-Payment.pdf`);
-
-    axios
-      .post(`/api/saveRentData`, { paymentData, monthYear })
-      .then((response) => {
-        console.log("Data saved to spreadsheet: ", response);
-      });
   };
 
   return (
