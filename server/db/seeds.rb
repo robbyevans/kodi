@@ -1,12 +1,17 @@
 # db/seeds.rb
 
-# Create Admin
-# Create Admin
+# Create systemAdmin (Ensure it's created only once)
+Admin.find_or_create_by!(email: 'systemadmin@example.com') do |admin|
+  admin.password = '@systemAdim001'
+  admin.role = 'system_admin'
+end
+
+# Create Admin (Regular admin with properties)
 admin = Admin.create!(
   email: 'johndoe@gmail.com',
-  password: '@johndoe001'  # Use password instead of password_digest
+  password: '@johndoe001',
+  role: 'admin'
 )
-
 
 # Create Properties for the Admin
 property_1 = admin.properties.create!(name: 'Annex Estate')

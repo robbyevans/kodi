@@ -1,48 +1,65 @@
-// File 2: /frontend/src/redux/hooks/useAdmin.ts
-
 import { useAppDispatch, useAppSelector } from "../utils";
-import { loginAdmin, logoutAdmin, signupAdmin } from "../slices/adminSlice";
+import { loginAdmin, logoutAdmin, addAdmin } from "../slices/adminSlice";
 import {
-  selectIsAdminAuthenticated,
+  selectCurrentAdmin,
+  selectAdminRole,
   selectAdminsLoading,
   selectAdminsError,
+  selectIsAdminAuthenticated,
 } from "../selectors/adminSelectors";
 
 export const useAdmins = () => {
   const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector(selectIsAdminAuthenticated);
+  const currentAdmin = useAppSelector(selectCurrentAdmin);
+  const role = useAppSelector(selectAdminRole);
   const loading = useAppSelector(selectAdminsLoading);
   const error = useAppSelector(selectAdminsError);
+  const isAuthenticated = useAppSelector(selectIsAdminAuthenticated);
 
   const login = (email: string, password: string) => {
     dispatch(loginAdmin({ email, password }));
-  };
-
-  const signup = async (
-    email: string,
-    password: string,
-    passwordConfirmation: string
-  ) => {
-    if (password !== passwordConfirmation) {
-      return { success: false, message: "Passwords do not match" };
-    }
-    try {
-      await dispatch(
-        signupAdmin({
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-        })
-      ).unwrap(); // Ensures errors are properly caught
-      return { success: true };
-    } catch (error: any) {
-      return { success: false, message: error.message || "Signup failed" };
-    }
   };
 
   const logout = () => {
     dispatch(logoutAdmin());
   };
 
-  return { isAuthenticated, loading, error, login, signup, logout };
+  const addNewAdmin = async (
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+    role: string
+  ) => {
+    if (password !== passwordConfirmation) {
+      return { success: false, message: "Passwords do not match" };
+    }
+
+    try {
+      await dispatch(
+        addAdmin({
+          email,
+          password,
+          password_confirmation: passwordConfirmation,
+          role,
+        })
+      ).unwrap();
+      return { success: true };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message || "Failed to add admin",
+      };
+    }
+  };
+
+  return {
+    currentAdmin,
+    isAuthenticated,
+    role,
+    loading,
+    error,
+    login,
+    logout,
+    addNewAdmin,
+  };
 };

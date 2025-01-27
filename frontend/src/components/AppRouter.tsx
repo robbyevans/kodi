@@ -1,29 +1,38 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import AdminLoginPage from "../components/Auth/AdminLogin";
 import AdminDashboardPage from "../components/Dashboard/Dashboard";
 import HousesPage from "../components/HousePage/HousePage";
 import PropertiesPage from "../components/PropertyPage/PropertyPage";
 import TenantsPage from "../components/TenantPage/TenantPage";
-import { useAdmins } from "../redux/hooks/useAdmin"; // Assuming this is where isAuthenticated comes from
+import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
+import { useAdmins } from "../redux/hooks/useAdmin"; // Access authentication state and role
 
 const AppRouter = () => {
-  const { isAuthenticated } = useAdmins(); // Accessing the authentication state
+  const { isAuthenticated, role } = useAdmins(); // Get role and auth state
+
+  const renderDashboard = () => {
+    if (!isAuthenticated) return <Navigate to="/admin-login" />;
+    return role === "systemAdmin" ? (
+      <SystemAdminPage />
+    ) : (
+      <AdminDashboardPage />
+    );
+  };
 
   return (
     <Router>
       <Routes>
-        {/* If authenticated, go to dashboard, else go to login */}
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <AdminDashboardPage /> : <AdminLoginPage />
-          }
-        />
         <Route path="/admin-login" element={<AdminLoginPage />} />
-        <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin-dashboard" element={renderDashboard()} />
         <Route path="/houses" element={<HousesPage />} />
         <Route path="/properties" element={<PropertiesPage />} />
         <Route path="/tenants" element={<TenantsPage />} />
+        <Route path="/" element={<Navigate to="/admin-dashboard" />} />
       </Routes>
     </Router>
   );
