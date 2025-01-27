@@ -11,7 +11,7 @@ interface AdminState {
   role: string | null; // Added `role`
   loading: boolean;
   error: string | null;
-  currentAdmin: { name: string; email: string; role: string } | null; // Stores current admin details
+  currentAdmin: { email: string; role: string } | null; // Stores current admin details
 }
 
 const initialState: AdminState = {
@@ -79,10 +79,15 @@ const adminsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginAdmin.fulfilled, (state) => {
+      .addCase(loginAdmin.fulfilled, (state, action) => {
+        console.log("Login response:", action.payload);
         state.loading = false;
         state.isAuthenticated = true;
-        state.error = null; // Clear any previous errors
+        state.error = null;
+        state.currentAdmin = {
+          email: action.payload.email,
+          role: action.payload.role,
+        };
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
@@ -91,7 +96,8 @@ const adminsSlice = createSlice({
 
       .addCase(logoutAdmin.fulfilled, (state) => {
         state.isAuthenticated = false;
-        state.error = null; // Clear any previous errors
+        state.error = null;
+        state.currentAdmin = null; // Clear currentAdmin on logout
       })
       .addCase(logoutAdmin.rejected, (state, action) => {
         state.error = action.payload as string | null; // Store the error in the state

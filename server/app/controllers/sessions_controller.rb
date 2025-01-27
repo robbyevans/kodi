@@ -4,7 +4,13 @@ class SessionsController < ApplicationController
 
     if admin && admin.authenticate(params[:password])
       session[:admin_id] = admin.id
-      render json: { message: 'Logged in successfully', admin_id: admin.id }, status: :ok
+      # Return admin details along with the login message
+      render json: {
+        message: 'Logged in successfully',
+        admin_id: admin.id,
+        email: admin.email,
+        role: admin.role
+      }, status: :ok
     else
       render json: { errors: ['Invalid email or password'] }, status: :unauthorized
     end

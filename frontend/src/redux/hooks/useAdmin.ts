@@ -52,6 +52,8 @@ export const useAdmins = () => {
     }
   };
 
+  console.log("currentAdmin", currentAdmin);
+
   return {
     currentAdmin,
     isAuthenticated,
