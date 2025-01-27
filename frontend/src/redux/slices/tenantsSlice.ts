@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 
-interface Tenant {
+export interface Tenant {
   id: number;
   name: string;
   email: string;

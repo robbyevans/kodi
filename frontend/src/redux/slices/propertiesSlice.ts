@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
+import { House } from "./houseSlice";
 
 interface Property {
   id: number;
   name: string;
+  houses: House[] | null;
 }
 
 interface PropertiesState {
@@ -78,7 +80,15 @@ const propertiesSlice = createSlice({
         state.error = action.error.message || "Failed to fetch properties";
       })
       .addCase(fetchPropertyById.fulfilled, (state, action) => {
-        state.data = [action.payload]; // Directly set the fetched property
+        const updatedProperty = action.payload;
+        const existingIndex = state.data.findIndex(
+          (property) => property.id === updatedProperty.id
+        );
+        if (existingIndex >= 0) {
+          state.data[existingIndex] = updatedProperty; // Update if exists
+        } else {
+          state.data.push(updatedProperty); // Add new property if it doesn't exist
+        }
       })
       .addCase(addProperty.fulfilled, (state, action) => {
         state.data.push(action.payload);

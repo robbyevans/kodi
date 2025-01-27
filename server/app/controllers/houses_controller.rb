@@ -3,16 +3,17 @@ class HousesController < ApplicationController
 
   def index
     if params[:property_id]
-      @houses = House.where(property_id: params[:property_id])
+      @houses = House.where(property_id: params[:property_id]).includes(:tenant)
     else
-      @houses = House.all
+      @houses = House.includes(:tenant).all
     end
-    render json: @houses
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email] } })
   end
 
   def show
-    render json: @house
+    render json: @house.as_json(include: { tenant: { only: [:id, :name, :email] } })
   end
+  
 
   def create
     @house = House.new(house_params)

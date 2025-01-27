@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
+import { Tenant } from "./tenantsSlice";
 
 export interface House {
   id: number;
   house_number: string;
   payable_rent: number;
-  tenant_id: number;
+  tenant: Tenant | null;
   property_id: number;
 }
 

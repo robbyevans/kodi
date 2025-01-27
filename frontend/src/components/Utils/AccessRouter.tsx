@@ -16,12 +16,13 @@ const AccessRouter: React.FC<AccessRouterProps> = ({ children }) => {
       navigate("/admin-login");
     } else if (role === "admin") {
       // If the user is an admin, stay on the current page
+      console.log("this is causing the error");
       navigate("/admin-dashboard");
     } else if (role === "systemAdmin") {
       // If the user is a system admin, navigate to system admin page
       navigate("/system-admin");
     }
-  }, [isAuthenticated, role, navigate]);
+  }, [isAuthenticated, role]);
 
   return <>{children}</>;
 };

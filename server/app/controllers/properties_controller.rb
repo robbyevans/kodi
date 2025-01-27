@@ -2,12 +2,12 @@ class PropertiesController < ApplicationController
   before_action :set_property, only: %i[show update destroy]
 
   def index
-    @properties = Property.all
-    render json: @properties
+    @properties = Property.includes(:houses).all
+    render json: @properties.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
   end
 
   def show
-    render json: @property
+    render json: @property.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
   end
 
   def create
