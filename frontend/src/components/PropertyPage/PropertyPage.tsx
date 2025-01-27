@@ -24,7 +24,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
 
   if (loading) return <S.LoadingMessage>Loading houses...</S.LoadingMessage>;
   if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
-
+  console.log("houses", houses);
   return (
     <S.PropertyPageContainer>
       <S.Header>Houses for {houses[0]?.property?.name}</S.Header>

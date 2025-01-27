@@ -7,11 +7,11 @@ class HousesController < ApplicationController
     else
       @houses = House.includes(:tenant).all
     end
-    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email] } })
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
   end
 
   def show
-    render json: @house.as_json(include: { tenant: { only: [:id, :name, :email] } })
+    render json: @house.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
   end
   
 
