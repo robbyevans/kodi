@@ -1,8 +1,7 @@
-// File: /frontend/src/components/Auth/AdminLogin.tsx
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
+import * as S from "./styles";
 
 const AdminLoginPage = () => {
   const { isAuthenticated, loading, error, login, role } = useAdmins();
@@ -10,7 +9,6 @@ const AdminLoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // useEffect hook to listen to changes in authentication and role
   useEffect(() => {
     if (isAuthenticated) {
       if (role === "admin") {
@@ -19,32 +17,32 @@ const AdminLoginPage = () => {
         navigate("/system-admin");
       }
     }
-  }, [isAuthenticated, role, navigate]); // Dependency array includes both isAuthenticated and role
+  }, [isAuthenticated, role, navigate]);
 
   const handleLogin = () => {
-    login(email, password); // Trigger the login action
+    login(email, password);
   };
 
   return (
-    <div>
-      <h1>Admin Login</h1>
-      <input
+    <S.Container>
+      <S.Title>Admin Login</S.Title>
+      <S.Input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
+      <S.Input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin} disabled={loading}>
+      <S.Button onClick={handleLogin} disabled={loading}>
         {loading ? "Logging in..." : "Login"}
-      </button>
-      {error && <p>{error}</p>}
-    </div>
+      </S.Button>
+      {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+    </S.Container>
   );
 };
 

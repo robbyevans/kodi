@@ -1,47 +1,77 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLoginPage from "../components/Auth/AdminLogin";
 import AdminDashboardPage from "../components/Dashboard/Dashboard";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
 import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
-import { useAdmins } from "../redux/hooks/useAdmin"; // Access authentication state and role
+import { useAdmins } from "../redux/hooks/useAdmin";
+import AccessRouter from "./Utils/AccessRouter";
+import Navbar from "../components/Navbar/Navbar"; // Import Navbar
 
 const AppRouter = () => {
-  const { isAuthenticated, role } = useAdmins(); // Get authentication status and role
-
-  // Handle redirection based on authentication and role
-  const getRedirectRoute = () => {
-    if (!isAuthenticated) {
-      return "/admin-login"; // Redirect to login page if not authenticated
-    } else if (role === "admin") {
-      return "/admin-dashboard"; // Redirect to admin dashboard
-    } else if (role === "systemAdmin") {
-      return "/system-admin"; // Redirect to system admin page
-    }
-    return "/admin-login"; // Default fallback to login if role is unknown
-  };
+  const { isAuthenticated } = useAdmins();
 
   return (
-    <Router>
+    <>
+      {/* Conditionally render Navbar based on authentication status */}
+      {isAuthenticated && <Navbar />}
+
       <Routes>
-        {/* Login Page */}
-        <Route path="/admin-login" element={<AdminLoginPage />} />
+        {/* Login Page (always accessible if not authenticated) */}
+        <Route
+          path="/admin-login"
+          element={
+            <AccessRouter>
+              <AdminLoginPage />
+            </AccessRouter>
+          }
+        />
 
         {/* Protected Routes */}
-        <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
-        <Route path="/system-admin" element={<SystemAdminPage />} />
-        <Route path="/property/:propertyId" element={<PropertyPage />} />
-        <Route path="/tenants" element={<TenantsPage />} />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <AccessRouter>
+              <AdminDashboardPage />
+            </AccessRouter>
+          }
+        />
+        <Route
+          path="/system-admin"
+          element={
+            <AccessRouter>
+              <SystemAdminPage />
+            </AccessRouter>
+          }
+        />
+        <Route
+          path="/property/:propertyId"
+          element={
+            <AccessRouter>
+              <PropertyPage />
+            </AccessRouter>
+          }
+        />
+        <Route
+          path="/tenants"
+          element={
+            <AccessRouter>
+              <TenantsPage />
+            </AccessRouter>
+          }
+        />
 
-        {/* Default Route */}
-        <Route path="/" element={<Navigate to={getRedirectRoute()} />} />
+        {/* Default Route: Redirect to login if not authenticated */}
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to={isAuthenticated ? "/admin-dashboard" : "/admin-login"}
+            />
+          }
+        />
       </Routes>
-    </Router>
+    </>
   );
 };
 
