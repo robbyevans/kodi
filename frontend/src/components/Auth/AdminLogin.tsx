@@ -1,3 +1,5 @@
+// File: /frontend/src/components/Auth/AdminLogin.tsx
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
@@ -8,19 +10,19 @@ const AdminLoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  console.log("isAuthenticated", isAuthenticated);
-  console.log("role", role);
-
+  // useEffect hook to listen to changes in authentication and role
   useEffect(() => {
-    if (isAuthenticated && role === "admin") {
-      navigate("/admin-dashboard");
-    } else if (isAuthenticated && role === "systemAdmin") {
-      navigate("/system-admin");
+    if (isAuthenticated) {
+      if (role === "admin") {
+        navigate("/admin-dashboard");
+      } else if (role === "systemAdmin") {
+        navigate("/system-admin");
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, role, navigate]); // Dependency array includes both isAuthenticated and role
 
   const handleLogin = () => {
-    login(email, password);
+    login(email, password); // Trigger the login action
   };
 
   return (

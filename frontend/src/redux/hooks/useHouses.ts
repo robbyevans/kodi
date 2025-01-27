@@ -1,21 +1,39 @@
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../utils";
-import { fetchHouses } from "../slices/houseSlice";
 import {
-  selectHouses,
+  fetchHouses,
+  fetchPropertyHouses,
+  fetchHouseById,
+} from "../slices/houseSlice";
+import {
   selectHousesLoading,
   selectHousesError,
+  selectHouses,
 } from "../selectors/houseSelector";
 
 export const useHouses = () => {
   const dispatch = useAppDispatch();
-  const data = useAppSelector(selectHouses);
+  const houses = useAppSelector(selectHouses);
   const loading = useAppSelector(selectHousesLoading);
   const error = useAppSelector(selectHousesError);
 
-  useEffect(() => {
+  const getAllHouses = () => {
     dispatch(fetchHouses());
-  }, [dispatch]);
+  };
 
-  return { data, loading, error };
+  const getPropertyHouses = (propertyId: number) => {
+    dispatch(fetchPropertyHouses(propertyId));
+  };
+
+  const getHouseById = (id: number) => {
+    dispatch(fetchHouseById(id));
+  };
+
+  return {
+    getAllHouses,
+    getHouseById,
+    getPropertyHouses,
+    houses,
+    loading,
+    error,
+  };
 };

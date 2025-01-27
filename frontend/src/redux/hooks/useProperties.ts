@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../utils";
-import { fetchProperties } from "../slices/propertiesSlice";
+import { fetchProperties, fetchPropertyById } from "../slices/propertiesSlice";
 import {
   selectProperties,
   selectPropertiesLoading,
@@ -17,5 +17,9 @@ export const useProperties = () => {
     dispatch(fetchProperties());
   }, [dispatch]);
 
-  return { data, loading, error };
+  const getPropertyById = (id: number) => {
+    dispatch(fetchPropertyById(id));
+  };
+
+  return { data, loading, error, getPropertyById };
 };

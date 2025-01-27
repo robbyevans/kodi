@@ -2,7 +2,11 @@ class HousesController < ApplicationController
   before_action :set_house, only: %i[show update destroy]
 
   def index
-    @houses = House.all
+    if params[:property_id]
+      @houses = House.where(property_id: params[:property_id])
+    else
+      @houses = House.all
+    end
     render json: @houses
   end
 

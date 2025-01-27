@@ -2,7 +2,12 @@ class TenantsController < ApplicationController
   before_action :set_tenant, only: %i[show update destroy]
 
   def index
-    @tenants = Tenant.all
+    if params[:property_id]
+      # Fetch tenants related to the houses of the given property
+      @tenants = Tenant.joins(:houses).where(houses: { property_id: params[:property_id] })
+    else
+      @tenants = Tenant.all
+    end
     render json: @tenants
   end
 

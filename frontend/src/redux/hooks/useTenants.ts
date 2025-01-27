@@ -1,21 +1,39 @@
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../utils";
-import { fetchTenants } from "../slices/tenantsSlice";
 import {
-  selectTenants,
+  fetchTenants,
+  fetchPropertyTenants,
+  fetchTenantById,
+} from "../slices/tenantsSlice";
+import {
   selectTenantsLoading,
   selectTenantsError,
+  selectTenants,
 } from "../selectors/tenantSelectors";
 
 export const useTenants = () => {
   const dispatch = useAppDispatch();
-  const data = useAppSelector(selectTenants);
   const loading = useAppSelector(selectTenantsLoading);
+  const tenants = useAppSelector(selectTenants);
   const error = useAppSelector(selectTenantsError);
 
-  useEffect(() => {
+  const getAllTenants = () => {
     dispatch(fetchTenants());
-  }, [dispatch]);
+  };
 
-  return { data, loading, error };
+  const getPropertyTenants = (propertyId: number) => {
+    dispatch(fetchPropertyTenants(propertyId));
+  };
+
+  const getTenantById = (id: number) => {
+    dispatch(fetchTenantById(id));
+  };
+
+  return {
+    getAllTenants,
+    getPropertyTenants,
+    getTenantById,
+    tenants,
+    loading,
+    error,
+  };
 };

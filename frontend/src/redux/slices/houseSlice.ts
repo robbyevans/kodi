@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 
-interface House {
+export interface House {
   id: number;
   house_number: string;
   payable_rent: number;
@@ -26,6 +26,16 @@ export const fetchHouses = createAsyncThunk("houses/fetchAll", async () => {
   const response = await axiosInstance.get("/houses");
   return response.data;
 });
+
+export const fetchPropertyHouses = createAsyncThunk(
+  "houses/getPropertyHouses",
+  async (propertyId: number) => {
+    const response = await axiosInstance.get(
+      `/houses?property_id=${propertyId}`
+    );
+    return response.data;
+  }
+);
 
 export const fetchHouseById = createAsyncThunk(
   "houses/fetchById",
@@ -92,6 +102,17 @@ const housesSlice = createSlice({
       })
       .addCase(deleteHouse.fulfilled, (state, action) => {
         state.data = state.data.filter((house) => house.id !== action.payload);
+      })
+      .addCase(fetchPropertyHouses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPropertyHouses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchPropertyHouses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch houses";
       });
   },
 });

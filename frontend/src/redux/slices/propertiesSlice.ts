@@ -78,9 +78,7 @@ const propertiesSlice = createSlice({
         state.error = action.error.message || "Failed to fetch properties";
       })
       .addCase(fetchPropertyById.fulfilled, (state, action) => {
-        state.data = state.data.map((property) =>
-          property.id === action.payload.id ? action.payload : property
-        );
+        state.data = [action.payload]; // Directly set the fetched property
       })
       .addCase(addProperty.fulfilled, (state, action) => {
         state.data.push(action.payload);

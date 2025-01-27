@@ -25,6 +25,16 @@ export const fetchTenants = createAsyncThunk("tenants/fetchAll", async () => {
   return response.data;
 });
 
+export const fetchPropertyTenants = createAsyncThunk(
+  "tenants/getPropertyTenants",
+  async (propertyId: number) => {
+    const response = await axiosInstance.get(
+      `/tenants?property_id=${propertyId}`
+    );
+    return response.data;
+  }
+);
+
 export const fetchTenantById = createAsyncThunk(
   "tenants/fetchById",
   async (id: number) => {
@@ -92,6 +102,17 @@ const tenantsSlice = createSlice({
         state.data = state.data.filter(
           (tenant) => tenant.id !== action.payload
         );
+      })
+      .addCase(fetchPropertyTenants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPropertyTenants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchPropertyTenants.rejected, (state) => {
+        state.loading = false;
+        state.error = "Failed to fetch property tenants";
       });
   },
 });
