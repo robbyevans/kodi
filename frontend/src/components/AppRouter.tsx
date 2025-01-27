@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLoginPage from "../components/Auth/AdminLogin";
 import AdminDashboardPage from "../components/Dashboard/Dashboard";
-import PropertyPage from "../components/PropertyPage/PropertyPage";
+import PropertyContainer from "../containers/PropertyContainer";
 import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
@@ -48,7 +48,7 @@ const AppRouter = () => {
           path="/property/:propertyId"
           element={
             <AccessRouter>
-              <PropertyPage />
+              <PropertyContainer />
             </AccessRouter>
           }
         />

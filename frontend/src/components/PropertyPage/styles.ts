@@ -18,6 +18,7 @@ export const TableContainer = styled.div`
 
 export const Table = styled.table`
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -49,4 +50,18 @@ export const ErrorMessage = styled.div`
   font-size: 1.5rem;
   text-align: center;
   color: #d9534f;
+`;
+
+export const DownloadButton = styled.button`
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #2d6a4f;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  &:hover {
+    background-color: #1b3a2e;
+  }
 `;

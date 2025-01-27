@@ -28,7 +28,7 @@ const AdminDashboardPage = () => {
             key={property.id}
             onClick={() => handlePropertyClick(property.id)}
           >
-            <h3>{property.name}</h3>
+            <h3>{`${property.name} - ${property.houses?.length} units`}</h3>
             <span>View Details</span>
           </S.PropertyCard>
         ))}
