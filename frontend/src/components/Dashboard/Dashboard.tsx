@@ -1,4 +1,5 @@
 import { useAdmins } from "../../redux/hooks/useAdmin";
+import PropertiesList from "../Properties/PropertiesList";
 
 const AdminDashboardPage = () => {
   const { logout } = useAdmins();
@@ -7,7 +8,7 @@ const AdminDashboardPage = () => {
     <div>
       <h1>Admin Dashboard</h1>
       <button onClick={logout}>Logout</button>
-      {/* Display other dashboard elements here */}
+      <PropertiesList />
     </div>
   );
 };

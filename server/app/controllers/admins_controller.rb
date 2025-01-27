@@ -1,5 +1,3 @@
-# File 5: /server/app/controllers/admins_controller.rb
-
 class AdminsController < ApplicationController
   def create
     @admin = Admin.new(admin_params)

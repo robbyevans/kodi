@@ -3,6 +3,7 @@ import { useProperties } from "../../redux/hooks/useProperties";
 
 const PropertiesList: React.FC = () => {
   const { data, loading, error } = useProperties();
+  console.log("data", data);
 
   if (loading) return <p>Loading properties...</p>;
   if (error) return <p>Error: {error}</p>;
