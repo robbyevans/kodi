@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_26_173746) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_27_082351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_26_173746) do
   create_table "houses", force: :cascade do |t|
     t.string "house_number"
     t.decimal "payable_rent"
-    t.bigint "tenant_id", null: false
+    t.bigint "tenant_id"
     t.bigint "property_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -36,6 +36,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_26_173746) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_properties_on_admin_id"
   end
 
   create_table "tenants", force: :cascade do |t|
@@ -48,4 +50,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_26_173746) do
 
   add_foreign_key "houses", "properties"
   add_foreign_key "houses", "tenants"
+  add_foreign_key "properties", "admins"
 end
