@@ -8,6 +8,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3000", // Replace with your backend's base URL
+  // withCredentials: true,
 });
 
 export default axiosInstance;

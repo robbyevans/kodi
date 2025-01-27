@@ -1,16 +1,13 @@
-class AdminsController < ApplicationController
-  def new
-    @admin = Admin.new
-  end
+# File 5: /server/app/controllers/admins_controller.rb
 
+class AdminsController < ApplicationController
   def create
     @admin = Admin.new(admin_params)
 
     if @admin.save
-      session[:admin_id] = @admin.id
-      redirect_to properties_path, notice: 'Admin created and logged in.'
+      render json: { message: 'Admin created successfully' }, status: :created
     else
-      render :new
+      render json: { errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
