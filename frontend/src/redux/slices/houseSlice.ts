@@ -28,8 +28,8 @@ export const fetchHouses = createAsyncThunk("houses/fetchAll", async () => {
   return response.data;
 });
 
-export const fetchPropertyHouses = createAsyncThunk(
-  "houses/getPropertyHouses",
+export const fetchHousesByProperty = createAsyncThunk(
+  "houses/getHousesByProperty",
   async (propertyId: number) => {
     const response = await axiosInstance.get(
       `/houses?property_id=${propertyId}`
@@ -104,14 +104,14 @@ const housesSlice = createSlice({
       .addCase(deleteHouse.fulfilled, (state, action) => {
         state.data = state.data.filter((house) => house.id !== action.payload);
       })
-      .addCase(fetchPropertyHouses.pending, (state) => {
+      .addCase(fetchHousesByProperty.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchPropertyHouses.fulfilled, (state, action) => {
+      .addCase(fetchHousesByProperty.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchPropertyHouses.rejected, (state, action) => {
+      .addCase(fetchHousesByProperty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch houses";
       });

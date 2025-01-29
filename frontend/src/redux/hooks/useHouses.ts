@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../utils";
 import {
   fetchHouses,
-  fetchPropertyHouses,
+  fetchHousesByProperty,
   fetchHouseById,
 } from "../slices/houseSlice";
 import {
@@ -20,8 +20,8 @@ export const useHouses = () => {
     dispatch(fetchHouses());
   };
 
-  const getPropertyHouses = (propertyId: number) => {
-    dispatch(fetchPropertyHouses(propertyId));
+  const getHousesByProperty = (propertyId: number) => {
+    dispatch(fetchHousesByProperty(propertyId));
   };
 
   const getHouseById = (id: number) => {
@@ -31,7 +31,7 @@ export const useHouses = () => {
   return {
     getAllHouses,
     getHouseById,
-    getPropertyHouses,
+    getHousesByProperty,
     houses,
     loading,
     error,

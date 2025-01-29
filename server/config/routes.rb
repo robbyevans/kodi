@@ -10,5 +10,10 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
+  # Mpesa routes
+  post '/api/mpesa/register_urls', to: 'mpesa#register_urls'
+  post '/api/mpesa/validation', to: 'mpesa#validation'
+  post '/api/mpesa/confirmation', to: 'mpesa#confirmation'
+
   root 'properties#index'
 end

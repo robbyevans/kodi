@@ -97,10 +97,15 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
     crass (1.0.6)
+    csv (3.3.2)
     date (3.4.1)
     debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dotenv (3.1.7)
+    dotenv-rails (3.1.7)
+      dotenv (= 3.1.7)
+      railties (>= 6.1)
     drb (2.2.1)
     error_highlight (0.7.0)
     erubi (1.13.1)
@@ -108,6 +113,10 @@ GEM
       i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
@@ -138,6 +147,8 @@ GEM
     mini_mime (1.1.5)
     minitest (5.25.4)
     msgpack (1.7.5)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     net-imap (0.5.5)
       date
       net-protocol
@@ -315,8 +326,10 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  dotenv-rails
   error_highlight (>= 0.4.0)
   faker
+  httparty
   importmap-rails
   jbuilder
   pg (~> 1.1)

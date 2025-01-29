@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_27_093852) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_28_161526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_27_093852) do
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_houses_on_property_id"
     t.index ["tenant_id"], name: "index_houses_on_tenant_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "transaction_id", null: false
+    t.string "bill_ref_number", null: false
+    t.string "msisdn", null: false
+    t.decimal "transaction_amount", precision: 10, scale: 2, null: false
+    t.string "transaction_type", null: false
+    t.datetime "payment_date", null: false
+    t.string "short_code", null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bill_ref_number", "msisdn"], name: "index_payments_on_bill_ref_number_and_msisdn"
+    t.index ["transaction_id"], name: "index_payments_on_transaction_id", unique: true
   end
 
   create_table "properties", force: :cascade do |t|
