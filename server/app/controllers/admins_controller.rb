@@ -4,9 +4,14 @@ class AdminsController < ApplicationController
   def create
     @admin = Admin.new(admin_params)
     @admin.role = 'admin' # Default role is admin
-
+  
     if @admin.save
-      render json: { message: 'Admin created successfully' }, status: :created
+      render json: { 
+        message: 'Admin created successfully',
+        email: @admin.email,
+        role: @admin.role,
+        admin_id: @admin.id # Include admin_id in the response
+      }, status: :created
     else
       render json: { errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end

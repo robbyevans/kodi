@@ -2,14 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { House } from "./houseSlice";
 
-interface Property {
+export interface IProperty {
   id: number;
+  admin_id: number;
   name: string;
   houses: House[] | null;
 }
 
 interface PropertiesState {
-  data: Property[];
+  data: IProperty[];
   loading: boolean;
   error: string | null;
 }
@@ -39,7 +40,7 @@ export const fetchPropertyById = createAsyncThunk(
 
 export const addProperty = createAsyncThunk(
   "properties/add",
-  async (property: Omit<Property, "id">) => {
+  async (property: IProperty) => {
     const response = await axiosInstance.post("/properties", property);
     return response.data;
   }
@@ -47,7 +48,7 @@ export const addProperty = createAsyncThunk(
 
 export const editProperty = createAsyncThunk(
   "properties/edit",
-  async ({ id, ...property }: Property) => {
+  async ({ id, ...property }: IProperty) => {
     const response = await axiosInstance.put(`/properties/${id}`, property);
     return response.data;
   }

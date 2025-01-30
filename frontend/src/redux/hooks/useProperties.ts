@@ -1,25 +1,25 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../utils";
-import { fetchProperties, fetchPropertyById } from "../slices/propertiesSlice";
+import { useAppDispatch, useAppSelector } from "../hooks"; // Update import
+import { fetchPropertyById, addProperty } from "../slices/propertiesSlice";
 import {
   selectProperties,
   selectPropertiesLoading,
   selectPropertiesError,
 } from "../selectors/propertySelectors";
+import { IProperty } from "../slices/propertiesSlice";
 
 export const useProperties = () => {
-  const dispatch = useAppDispatch();
-  const data = useAppSelector(selectProperties);
+  const dispatch = useAppDispatch(); // Use useAppDispatch
+  const data = useAppSelector(selectProperties); // Use useAppSelector
   const loading = useAppSelector(selectPropertiesLoading);
   const error = useAppSelector(selectPropertiesError);
-
-  useEffect(() => {
-    dispatch(fetchProperties());
-  }, [dispatch]);
 
   const getPropertyById = (id: number) => {
     dispatch(fetchPropertyById(id));
   };
 
-  return { data, loading, error, getPropertyById };
+  const addNewProperty = (property: IProperty) => {
+    dispatch(addProperty(property));
+  };
+
+  return { data, loading, error, getPropertyById, addProperty: addNewProperty };
 };

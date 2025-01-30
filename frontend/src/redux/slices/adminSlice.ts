@@ -11,7 +11,7 @@ interface AdminState {
   role: string | null;
   loading: boolean;
   error: string | null;
-  currentAdmin: { email: string; role: string } | null;
+  currentAdmin: { email: string; role: string; admin_id: number } | null; // Add admin_id
 }
 
 // Retrieve stored authentication and role from localStorage
@@ -19,6 +19,7 @@ const storedIsAuthenticated =
   localStorage.getItem("isAuthenticated") === "true";
 const storedRole = localStorage.getItem("role");
 const storedEmail = localStorage.getItem("email");
+const storedAdminId = localStorage.getItem("adminId"); // Retrieve admin_id from localStorage
 
 // Initialize state based on localStorage values
 const initialState: AdminState = {
@@ -27,7 +28,11 @@ const initialState: AdminState = {
   loading: false,
   error: null,
   currentAdmin: storedIsAuthenticated
-    ? { email: storedEmail || "", role: storedRole || "" }
+    ? {
+        email: storedEmail || "",
+        role: storedRole || "",
+        admin_id: storedAdminId ? parseInt(storedAdminId) : -1, // Parse admin_id as a number
+      }
     : null,
 };
 
@@ -36,6 +41,7 @@ export const loginAdmin = createAsyncThunk(
   "admins/loginAdmin",
   async (credentials: AdminCredentials) => {
     const response = await axiosInstance.post("/login", credentials);
+    console.log("response", response);
     return response.data;
   }
 );
@@ -47,9 +53,11 @@ export const logoutAdmin = createAsyncThunk(
     try {
       await axiosInstance.delete("/logout");
       return { message: "Logged out successfully" };
-    } catch (error: any) {
-      console.error("Logout error:", error);
-      return rejectWithValue(error.response?.data || error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -69,10 +77,10 @@ export const addAdmin = createAsyncThunk(
     try {
       const response = await axiosInstance.post("/admins", newAdmin);
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to add admin"
-      );
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -94,6 +102,7 @@ const adminsSlice = createSlice({
         state.currentAdmin = {
           email: action.payload.email,
           role: action.payload.role,
+          admin_id: action.payload.admin_id, // Include admin_id from the response
         };
         state.error = null;
 
@@ -101,6 +110,7 @@ const adminsSlice = createSlice({
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("role", action.payload.role);
         localStorage.setItem("email", action.payload.email);
+        localStorage.setItem("adminId", action.payload.admin_id); // Save admin_id to localStorage
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;

@@ -42,11 +42,13 @@ export const useAdmins = () => {
         })
       ).unwrap();
       return { success: true };
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message || "Failed to add admin",
-      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          success: false,
+          message: error.message || "Failed to add admin",
+        };
+      }
     }
   };
 

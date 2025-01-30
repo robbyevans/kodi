@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../utils";
+import { useAppDispatch, useAppSelector } from "../hooks"; // Update import
 import {
   fetchHouses,
   fetchHousesByProperty,
@@ -11,8 +11,8 @@ import {
 } from "../selectors/houseSelector";
 
 export const useHouses = () => {
-  const dispatch = useAppDispatch();
-  const houses = useAppSelector(selectHouses);
+  const dispatch = useAppDispatch(); // Use useAppDispatch
+  const houses = useAppSelector(selectHouses); // Use useAppSelector
   const loading = useAppSelector(selectHousesLoading);
   const error = useAppSelector(selectHousesError);
 
