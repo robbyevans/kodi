@@ -1,8 +1,8 @@
-// File: /frontend/src/components/Footer/styles.ts
+
 import styled from "styled-components";
 
 export const FooterContainer = styled.footer`
-  background-color: #034d3c; /* Deep green */
+  background-color: #034d3c;
   color: white;
   text-align: center;
   padding: 0.8rem;

@@ -5,10 +5,8 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
   background-color: #f7fdf7; /* Light green background */
-  padding: 20px;
 `;
 
 export const Title = styled.h1`

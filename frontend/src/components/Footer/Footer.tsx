@@ -5,7 +5,7 @@ import * as S from "./styles";
 const Footer: React.FC = () => {
   return (
     <S.FooterContainer>
-      <S.FooterText>© COPYRIGHT KODI 2025</S.FooterText>
+      <S.FooterText>© KODI 2025</S.FooterText>
     </S.FooterContainer>
   );
 };

@@ -1,17 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import Footer from "./components/Footer/Footer";
 import AppRouter from "./components/AppRouter";
+import HOCWrapper from "./components/HOCWrapper";
 
 const App: React.FC = () => {
   return (
     <>
       <Router>
-        <div style={{ padding: "1rem", marginBottom: "4rem" }}>
+        <HOCWrapper>
           <AppRouter />
-        </div>
-        <Footer />
+        </HOCWrapper>
       </Router>
     </>
   );

@@ -23,11 +23,11 @@ const storedEmail = localStorage.getItem("email");
 // Initialize state based on localStorage values
 const initialState: AdminState = {
   isAuthenticated: storedIsAuthenticated,
-  role: storedRole || "", // Default role to an empty string if null
+  role: storedRole || "",
   loading: false,
   error: null,
   currentAdmin: storedIsAuthenticated
-    ? { email: storedEmail || "", role: storedRole || "" } // Default email and role to empty strings
+    ? { email: storedEmail || "", role: storedRole || "" }
     : null,
 };
 

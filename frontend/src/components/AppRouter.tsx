@@ -6,7 +6,8 @@ import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "./Utils/AccessRouter";
-import Navbar from "../components/Navbar/Navbar"; // Import Navbar
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
@@ -71,6 +72,7 @@ const AppRouter = () => {
           }
         />
       </Routes>
+      <Footer />
     </>
   );
 };

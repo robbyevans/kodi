@@ -1,23 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAdmins } from "../../redux/hooks/useAdmin";
 import * as S from "./styles";
 
 const AdminLoginPage = () => {
-  const { isAuthenticated, loading, error, login, role } = useAdmins();
+  const { loading, error, login } = useAdmins();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (role === "admin") {
-        navigate("/admin-dashboard");
-      } else if (role === "systemAdmin") {
-        navigate("/system-admin");
-      }
-    }
-  }, [isAuthenticated, role, navigate]);
 
   const handleLogin = () => {
     login(email, password);

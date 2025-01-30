@@ -6,8 +6,8 @@ import "jspdf-autotable";
 
 import { useProperties } from "../redux/hooks/useProperties";
 import { useHouses } from "../redux/hooks/useHouses";
-import { usePayment } from "../redux/hooks/usePayment";
-import { IPayment } from "../redux/slices/paymentSlice";
+// import { usePayment } from "../redux/hooks/usePayment";
+// import { IPayment } from "../redux/slices/paymentSlice";
 // import {
 //   sendTextMessage,
 //   sendEmailReceipt,
@@ -18,7 +18,7 @@ import PropertyPage from "../components/PropertyPage/PropertyPage";
 const PropertyContainer = () => {
   const { getPropertyById } = useProperties();
   const { houses, getHousesByProperty, loading, error } = useHouses();
-  const { payments, loading, error } = usePayment();
+  // const { payments, loading, error } = usePayment();
   const [paymentData, setPaymentData] = useState<any[]>([]);
   const { propertyId } = useParams<{ propertyId: string }>();
 
@@ -33,16 +33,16 @@ const PropertyContainer = () => {
   // Filter only paymentData whose bill_ref_number match the houses in this property
   const [filteredPayments, setFilteredPayments] = useState<IPayment[]>([]);
 
-  useEffect(() => {
-    if (propertyId && houses.length > 0 && payments.length > 0) {
-      // Filter payments by propertyId or related criteria
-      setFilteredPayments(
-        payments.filter(
-          (payment) => payment.bill_ref_number === houses?.house_number
-        )
-      );
-    }
-  }, [propertyId, payments]);
+  // useEffect(() => {
+  //   if (propertyId && houses.length > 0 && payments.length > 0) {
+  //     // Filter payments by propertyId or related criteria
+  //     setFilteredPayments(
+  //       payments.filter(
+  //         (payment) => payment.bill_ref_number === houses?.house_number
+  //       )
+  //     );
+  //   }
+  // }, [propertyId, payments]);
 
   // Fetch Mpesa payments for each house
   useEffect(() => {

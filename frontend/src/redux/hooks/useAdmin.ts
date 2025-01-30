@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../utils";
 import { loginAdmin, logoutAdmin, addAdmin } from "../slices/adminSlice";
 import {
   selectCurrentAdmin,
-  selectAdminRole,
   selectAdminsLoading,
   selectAdminsError,
   selectIsAdminAuthenticated,
@@ -11,7 +10,6 @@ import {
 export const useAdmins = () => {
   const dispatch = useAppDispatch();
   const currentAdmin = useAppSelector(selectCurrentAdmin);
-  const role = useAppSelector(selectAdminRole);
   const loading = useAppSelector(selectAdminsLoading);
   const error = useAppSelector(selectAdminsError);
   const isAuthenticated = useAppSelector(selectIsAdminAuthenticated);
@@ -55,7 +53,6 @@ export const useAdmins = () => {
   return {
     currentAdmin,
     isAuthenticated,
-    role,
     loading,
     error,
     login,
