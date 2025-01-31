@@ -3,7 +3,7 @@ import axiosInstance from "../utils";
 import { House } from "./houseSlice";
 
 export interface IProperty {
-  id: number;
+  id?: number; // Make id optional
   admin_id: number;
   name: string;
   houses: House[] | null;
@@ -40,8 +40,8 @@ export const fetchPropertyById = createAsyncThunk(
 
 export const addProperty = createAsyncThunk(
   "properties/add",
-  async (property: IProperty) => {
-    const response = await axiosInstance.post("/properties", property);
+  async (property: Omit<IProperty, "id">) => {
+    const response = await axiosInstance.post("/properties", { property });
     return response.data;
   }
 );

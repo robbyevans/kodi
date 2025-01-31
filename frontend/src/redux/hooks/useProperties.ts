@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../hooks"; // Update import
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { fetchPropertyById, addProperty } from "../slices/propertiesSlice";
 import {
   selectProperties,
@@ -8,8 +8,8 @@ import {
 import { IProperty } from "../slices/propertiesSlice";
 
 export const useProperties = () => {
-  const dispatch = useAppDispatch(); // Use useAppDispatch
-  const data = useAppSelector(selectProperties); // Use useAppSelector
+  const dispatch = useAppDispatch();
+  const data = useAppSelector(selectProperties);
   const loading = useAppSelector(selectPropertiesLoading);
   const error = useAppSelector(selectPropertiesError);
 
@@ -17,7 +17,7 @@ export const useProperties = () => {
     dispatch(fetchPropertyById(id));
   };
 
-  const addNewProperty = (property: IProperty) => {
+  const addNewProperty = (property: Omit<IProperty, "id">) => {
     dispatch(addProperty(property));
   };
 
