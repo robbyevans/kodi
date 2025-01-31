@@ -41,7 +41,6 @@ export const fetchPropertyById = createAsyncThunk(
 export const addProperty = createAsyncThunk(
   "properties/add",
   async (property: Omit<IProperty, "id">) => {
-    // Wrap in 'property' key for Rails strong params
     const response = await axiosInstance.post("/properties", {
       property: {
         name: property.name,

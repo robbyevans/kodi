@@ -3,7 +3,7 @@ import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
 import * as S from "./styles";
 
-const AdminLoginPage = () => {
+const Auth = () => {
   const { loading, error, currentAdmin, isAuthenticated, login } = useAdmins();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,4 +46,4 @@ const AdminLoginPage = () => {
   );
 };
 
-export default AdminLoginPage;
+export default Auth;

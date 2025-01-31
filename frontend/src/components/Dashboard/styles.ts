@@ -47,6 +47,7 @@ export const AddPropertyButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-top: 25px;
 
   &:hover {
     background-color: #357abd; /* Slightly darker blue */

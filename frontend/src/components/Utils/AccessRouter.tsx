@@ -15,7 +15,7 @@ const AccessRouter: React.FC<AccessRouterProps> = ({ children }) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/admin-login");
+      navigate("/auth");
     }
   }, [isAuthenticated, navigate]);
 

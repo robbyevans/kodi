@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   skip_before_action :verify_authenticity_token
 
-  private
+  helper_method :current_admin # Makes current_admin available in views and controllers
 
   def current_admin
     @current_admin ||= Admin.find_by(id: session[:admin_id])

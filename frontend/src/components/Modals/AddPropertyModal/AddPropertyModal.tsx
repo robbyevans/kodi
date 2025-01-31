@@ -14,14 +14,15 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 }) => {
   const [propertyName, setPropertyName] = useState("");
   const { addProperty } = useProperties();
-  const { currentAdmin } = useAdmins(); // Get the current admin
+  const { currentAdmin } = useAdmins();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (currentAdmin) {
       await addProperty({
         name: propertyName,
-        admin_id: currentAdmin.admin_id, // Send flat object
+        houses: [],
+        admin_id: currentAdmin.admin_id,
       });
       onClose();
     } else {

@@ -1,6 +1,6 @@
-# File: /server/app/controllers/properties_controller.rb
 class PropertiesController < ApplicationController
   before_action :authorize_admin, only: [:create, :update, :destroy]
+  before_action :set_property, only: [:show, :update, :destroy]
 
   def index
     @properties = Property.includes(:houses).all
@@ -12,6 +12,8 @@ class PropertiesController < ApplicationController
   end
 
   def create
+    Rails.logger.debug "Received params for property creation: #{params.inspect}" # Log incoming params
+
     @property = Property.new(property_params)
 
     if @property.save
@@ -45,6 +47,9 @@ class PropertiesController < ApplicationController
   end
 
   def authorize_admin
+    Rails.logger.debug "Current Admin: #{current_admin.inspect}" # Log current_admin
+    Rails.logger.debug "@property.admin_id: #{@property&.admin_id}" # Log @property.admin_id
+
     unless current_admin && current_admin.id == @property.admin_id
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end

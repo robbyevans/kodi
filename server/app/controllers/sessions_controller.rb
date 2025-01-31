@@ -1,11 +1,10 @@
 class SessionsController < ApplicationController
-
   def create
     admin = Admin.find_by(email: params[:email])
 
     if admin && admin.authenticate(params[:password])
       session[:admin_id] = admin.id
-      # Return admin details along with the login message
+      Rails.logger.debug "Session set: #{session[:admin_id]}"  # Debugging session
       render json: {
         message: 'Logged in successfully',
         admin_id: admin.id,
@@ -13,21 +12,18 @@ class SessionsController < ApplicationController
         role: admin.role
       }, status: :ok
     else
+      Rails.logger.debug "Login failed for email: #{params[:email]}"
       render json: { errors: ['Invalid email or password'] }, status: :unauthorized
     end
   end
 
-  def destroy
-    session[:admin_id] = nil
-    render json: { message: 'Logged out successfully' }, status: :ok
-  end
-
   def current_admin
-    if current_admin = Admin.find_by(id: session[:admin_id])
+    Rails.logger.debug "Session ID at current_admin: #{session[:admin_id]}" # Debugging session
+    if admin = Admin.find_by(id: session[:admin_id])
       render json: {
-        admin_id: current_admin.id,
-        email: current_admin.email,
-        role: current_admin.role
+        admin_id: admin.id,
+        email: admin.email,
+        role: admin.role
       }, status: :ok
     else
       render json: { error: 'Not logged in' }, status: :unauthorized

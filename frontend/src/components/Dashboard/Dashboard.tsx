@@ -29,11 +29,7 @@ const AdminDashboardPage = () => {
   return (
     <S.DashboardContainer>
       <S.DashboardHeader>Admin Dashboard</S.DashboardHeader>
-      <S.ButtonContainer>
-        <S.AddPropertyButton onClick={handleAddPropertyClick}>
-          Add Property
-        </S.AddPropertyButton>
-      </S.ButtonContainer>
+
       <S.PropertyListContainer>
         <S.PropertyListHeading>Your Properties</S.PropertyListHeading>
         {data.map((property) => (
@@ -46,6 +42,11 @@ const AdminDashboardPage = () => {
           </S.PropertyCard>
         ))}
       </S.PropertyListContainer>
+      <S.ButtonContainer>
+        <S.AddPropertyButton onClick={handleAddPropertyClick}>
+          Add Property
+        </S.AddPropertyButton>
+      </S.ButtonContainer>
       <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </S.DashboardContainer>
   );

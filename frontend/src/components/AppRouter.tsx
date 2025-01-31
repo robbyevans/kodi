@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AdminLoginPage from "../components/Auth/AdminLogin";
+import Auth from "./Auth/Auth";
 import AdminDashboardPage from "../components/Dashboard/Dashboard";
 import PropertyContainer from "../containers/PropertyContainer";
 import TenantsPage from "../components/TenantPage/TenantPage";
@@ -21,10 +21,10 @@ const AppRouter = () => {
       <Routes>
         {/* Login Page (always accessible if not authenticated) */}
         <Route
-          path="/admin-login"
+          path="/auth"
           element={
             <AccessRouter>
-              <AdminLoginPage />
+              <Auth />
             </AccessRouter>
           }
         />
@@ -75,9 +75,7 @@ const AppRouter = () => {
         <Route
           path="/"
           element={
-            <Navigate
-              to={isAuthenticated ? "/admin-dashboard" : "/admin-login"}
-            />
+            <Navigate to={isAuthenticated ? "/admin-dashboard" : "/auth"} />
           }
         />
       </Routes>
