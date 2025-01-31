@@ -33,7 +33,7 @@ export const useAdmins = () => {
     }
 
     try {
-      await dispatch(
+      const response = await dispatch(
         addAdmin({
           email,
           password,
@@ -41,7 +41,7 @@ export const useAdmins = () => {
           role,
         })
       ).unwrap();
-      return { success: true };
+      return { success: true, admin_id: response.admin_id };
     } catch (error) {
       if (error instanceof Error) {
         return {

@@ -21,10 +21,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     if (currentAdmin) {
       await addProperty({
         name: propertyName,
-        houses: [],
-        admin_id: currentAdmin.admin_id, // Include the admin_id in the payload
+        admin_id: currentAdmin.admin_id, // Send flat object
       });
-      onClose(); // Close the modal after submission
+      onClose();
     } else {
       alert("You must be logged in as an admin to add a property.");
     }

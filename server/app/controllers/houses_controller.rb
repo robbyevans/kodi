@@ -1,5 +1,5 @@
 class HousesController < ApplicationController
-  before_action :set_house, only: %i[show update destroy]
+  before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
   def index
     if params[:property_id]
@@ -39,6 +39,13 @@ class HousesController < ApplicationController
   end
 
   private
+
+  def authorize_property_owner
+    property = Property.find(params[:property_id])
+    unless property.admin_id == current_admin.id
+      render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
+  end
 
   def set_house
     @house = House.find(params[:id])

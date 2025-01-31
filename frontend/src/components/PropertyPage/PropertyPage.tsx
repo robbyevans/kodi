@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import * as S from "./styles"; // Shorthand import for styles
 import { House } from "../../redux/slices/houseSlice";
+
+import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
 
 interface PropertyPageProps {
   houses: House[];
   loading: boolean;
+  propertyId: number; // Add propertyId prop
   error: any;
   paymentData: {
     houseNumber: string;
@@ -21,8 +24,11 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
   loading,
   error,
   paymentData,
+  propertyId,
   downloadPDF,
 }) => {
+  const [isHouseModalOpen, setIsHouseModalOpen] = useState(false);
+
   if (loading) return <S.LoadingMessage>Loading...</S.LoadingMessage>;
   if (error)
     return <S.ErrorMessage>Error loading property data.</S.ErrorMessage>;
@@ -76,6 +82,12 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           </tbody>
         </S.Table>
       </S.TableContainer>
+      {/* Add the modal */}
+      <AddHouseModal
+        isOpen={isHouseModalOpen}
+        onClose={() => setIsHouseModalOpen(false)}
+        propertyId={propertyId}
+      />
       <S.DownloadButton onClick={downloadPDF}>Download PDF</S.DownloadButton>
     </S.PropertyPageContainer>
   );

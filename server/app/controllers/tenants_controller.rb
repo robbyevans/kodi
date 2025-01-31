@@ -1,5 +1,5 @@
 class TenantsController < ApplicationController
-  before_action :set_tenant, only: %i[show update destroy]
+  before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
   def index
     if params[:property_id]
@@ -40,6 +40,13 @@ class TenantsController < ApplicationController
 
   private
 
+  def authorize_property_owner
+    house = House.find_by(tenant_id: params[:id])
+    unless house && house.property.admin_id == current_admin.id
+      render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
+  end
+
   def set_tenant
     @tenant = Tenant.find(params[:id])
   end
@@ -47,4 +54,5 @@ class TenantsController < ApplicationController
   def tenant_params
     params.require(:tenant).permit(:name, :phone_number, :email)
   end
+  
 end

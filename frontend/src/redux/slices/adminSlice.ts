@@ -85,6 +85,31 @@ export const addAdmin = createAsyncThunk(
   }
 );
 
+export const updateAdmin = createAsyncThunk(
+  "admins/updateAdmin",
+  async (
+    updatedAdmin: {
+      admin_id: number;
+      email?: string;
+      password?: string;
+      password_confirmation?: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/admins/${updatedAdmin.admin_id}`,
+        { admin: updatedAdmin }
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 // Admin slice for handling authentication state
 const adminsSlice = createSlice({
   name: "admins",
@@ -121,19 +146,31 @@ const adminsSlice = createSlice({
         state.error = null;
         state.currentAdmin = null; // Clear currentAdmin on logout
 
-        // Clear localStorage on logout
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("role");
         localStorage.removeItem("email");
+        localStorage.removeItem("adminId"); // Clear admin_id
       })
       .addCase(logoutAdmin.rejected, (state, action) => {
         state.error = action.payload as string | null; // Store the error in the state
       })
-      .addCase(addAdmin.fulfilled, (state) => {
-        state.error = null; // Admin added successfully
+      .addCase(addAdmin.fulfilled, (state, action) => {
+        state.error = null;
+        state.currentAdmin = {
+          email: action.payload.email,
+          role: action.payload.role,
+          admin_id: action.payload.admin_id,
+        };
       })
       .addCase(addAdmin.rejected, (state, action) => {
         state.error = action.payload as string | null; // Handle error
+      })
+      .addCase(updateAdmin.fulfilled, (state, action) => {
+        state.currentAdmin = {
+          ...state.currentAdmin!,
+          email: action.payload.email,
+        };
+        localStorage.setItem("email", action.payload.email);
       });
   },
 });

@@ -1,5 +1,6 @@
+# File: /server/app/controllers/properties_controller.rb
 class PropertiesController < ApplicationController
-  before_action :set_property, only: %i[show update destroy]
+  before_action :authorize_admin, only: [:create, :update, :destroy]
 
   def index
     @properties = Property.includes(:houses).all
@@ -40,6 +41,12 @@ class PropertiesController < ApplicationController
   end
 
   def property_params
-    params.require(:property).permit(:name)
+    params.require(:property).permit(:name, :admin_id)
+  end
+
+  def authorize_admin
+    unless current_admin && current_admin.id == @property.admin_id
+      render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
   end
 end

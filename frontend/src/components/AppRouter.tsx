@@ -8,6 +8,7 @@ import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "./Utils/AccessRouter";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
+import SettingsPage from "../components/SettingsPage/SettingsPage";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
@@ -58,6 +59,14 @@ const AppRouter = () => {
           element={
             <AccessRouter>
               <TenantsPage />
+            </AccessRouter>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <AccessRouter>
+              <SettingsPage />
             </AccessRouter>
           }
         />

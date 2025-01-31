@@ -6,12 +6,7 @@ import "jspdf-autotable";
 
 import { useProperties } from "../redux/hooks/useProperties";
 import { useHouses } from "../redux/hooks/useHouses";
-// import { usePayment } from "../redux/hooks/usePayment";
-// import { IPayment } from "../redux/slices/paymentSlice";
-// import {
-//   sendTextMessage,
-//   sendEmailReceipt,
-// } from "../components/Utils/notifications";
+
 import * as S from "../components/PropertyPage/styles";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
 
@@ -19,7 +14,7 @@ const PropertyContainer = () => {
   const { getPropertyById } = useProperties();
   const { houses, getHousesByProperty, loading, error } = useHouses();
   // const { payments, loading, error } = usePayment();
-  const [paymentData, setPaymentData] = useState<any[]>([]);
+  const [paymentData] = useState<any[]>([]);
   const { propertyId } = useParams<{ propertyId: string }>();
 
   // Fetch property and houses on this property on component mount
@@ -30,21 +25,6 @@ const PropertyContainer = () => {
     }
   }, [propertyId]);
 
-  // Filter only paymentData whose bill_ref_number match the houses in this property
-  const [filteredPayments, setFilteredPayments] = useState<IPayment[]>([]);
-
-  // useEffect(() => {
-  //   if (propertyId && houses.length > 0 && payments.length > 0) {
-  //     // Filter payments by propertyId or related criteria
-  //     setFilteredPayments(
-  //       payments.filter(
-  //         (payment) => payment.bill_ref_number === houses?.house_number
-  //       )
-  //     );
-  //   }
-  // }, [propertyId, payments]);
-
-  // Fetch Mpesa payments for each house
   useEffect(() => {
     const fetchPayments = async () => {
       if (houses.length > 0) {
@@ -61,44 +41,6 @@ const PropertyContainer = () => {
     fetchPayments();
   }, [houses]);
 
-  // Update rent payment and notify tenant
-  // const updateHouseRentPayment = (houseId: number, payment: any) => {
-  //   const houseToUpdate = houses.find((house) => house.id === houseId);
-
-  //   if (houseToUpdate && houseToUpdate.tenant) {
-  //     const newBalance = houseToUpdate.payable_rent - payment?.amount;
-
-  //     const updatedPayment = {
-  //       houseNumber: houseToUpdate.house_number,
-  //       tenantName: houseToUpdate.tenant.name,
-  //       tenantContact: houseToUpdate.tenant.phone_number,
-  //       payableRent: houseToUpdate.payable_rent,
-  //       rentPaid: payment?.amount,
-  //       balance: newBalance,
-  //       paymentDate: payment?.date,
-  //       modeOfPayment: payment?.mode,
-  //     };
-
-  //     setPaymentData((prevData) => [...prevData, updatedPayment]);
-
-  //     // Send notifications
-  //     if (newBalance === 0) {
-  //       sendTextMessage(
-  //         houseToUpdate.tenant.phone_number,
-  //         "Your rent has been cleared. Thank you!"
-  //       );
-  //       sendEmailReceipt(houseToUpdate.tenant.email, updatedPayment);
-  //     } else {
-  //       sendTextMessage(
-  //         houseToUpdate.tenant.phone_number,
-  //         `Your rent balance is KES ${newBalance}. Please clear it soon.`
-  //       );
-  //       sendEmailReceipt(houseToUpdate.tenant.email, updatedPayment);
-  //     }
-  //   }
-  // };
-
-  // Generate PDF report
   const downloadPDF = () => {
     const doc = new jsPDF();
     const tableData = paymentData.map((payment) => [

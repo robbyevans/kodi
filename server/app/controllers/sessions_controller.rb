@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+
   def create
     admin = Admin.find_by(email: params[:email])
 
@@ -19,5 +20,17 @@ class SessionsController < ApplicationController
   def destroy
     session[:admin_id] = nil
     render json: { message: 'Logged out successfully' }, status: :ok
+  end
+
+  def current_admin
+    if current_admin = Admin.find_by(id: session[:admin_id])
+      render json: {
+        admin_id: current_admin.id,
+        email: current_admin.email,
+        role: current_admin.role
+      }, status: :ok
+    else
+      render json: { error: 'Not logged in' }, status: :unauthorized
+    end
   end
 end

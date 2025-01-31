@@ -1,6 +1,7 @@
 // File: /frontend/src/components/Navbar/Navbar.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAdmins } from "../../redux/hooks/useAdmin";
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -11,13 +12,12 @@ import * as S from "./styles";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAdmins();
 
   const handleBack = () => navigate(-1);
   const handleForward = () => navigate(1);
-  const handleLogout = () => {
-    // Logout logic here
-    console.log("Logging out...");
-  };
+
+  const navigateToSettings = () => navigate("/settings");
 
   return (
     <S.NavbarContainer>
@@ -28,10 +28,10 @@ const Navbar: React.FC = () => {
         <FiArrowRight />
       </S.NavButton>
       <S.Title>App Name</S.Title>
-      <S.IconButton>
+      <S.IconButton onClick={navigateToSettings}>
         <FiSettings />
       </S.IconButton>
-      <S.IconButton onClick={handleLogout}>
+      <S.IconButton onClick={logout}>
         <FiLogOut />
       </S.IconButton>
     </S.NavbarContainer>
