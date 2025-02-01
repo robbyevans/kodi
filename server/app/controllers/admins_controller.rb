@@ -7,8 +7,13 @@ class AdminsController < ApplicationController
     @admin.role = 'admin' # Default role is admin
   
     if @admin.save
+      # Generate a token after successfully saving the admin
+      token = encode_jwt(@admin.id)
+
+      # Respond with the token, admin details, and message
       render json: { 
         message: 'Admin created successfully',
+        token: token, # Return the token here
         email: @admin.email,
         role: @admin.role,
         admin_id: @admin.id # Include admin_id in the response
@@ -32,7 +37,6 @@ class AdminsController < ApplicationController
     @admin.destroy
     head :no_content
   end
-
 
   # Admin login action
   def login
