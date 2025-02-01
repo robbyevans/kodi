@@ -1,3 +1,5 @@
+# File 4: /server/app/controllers/properties_controller.rb
+
 class PropertiesController < ApplicationController
   before_action :authorize_admin, only: [:create, :update, :destroy]
   before_action :set_property, only: [:show, :update, :destroy]
@@ -7,14 +9,8 @@ class PropertiesController < ApplicationController
     render json: @properties.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
   end
 
-  def show
-    render json: @property.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
-  end
-
   def create
-    Rails.logger.debug "Received params for property creation: #{params.inspect}" # Log incoming params
-
-    @property = Property.new(property_params)
+    @property = current_admin.properties.new(property_params)
 
     if @property.save
       render json: @property, status: :created
@@ -38,17 +34,12 @@ class PropertiesController < ApplicationController
 
   private
 
-  def set_property
-    @property = Property.find(params[:id])
-  end
-
   def property_params
-    params.require(:property).permit(:name, :admin_id)
+    params.require(:property).permit(:name) # Remove :admin_id from permitted params
   end
 
   def authorize_admin
-    Rails.logger.debug "Current Admin: #{current_admin.inspect}" # Log current_admin
-    Rails.logger.debug "@property.admin_id: #{@property&.admin_id}" # Log @property.admin_id
+    return if action_name == 'create' # Creation is authorized via current_admin
 
     unless current_admin && current_admin.id == @property.admin_id
       render json: { error: 'Unauthorized' }, status: :unauthorized

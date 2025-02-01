@@ -1,3 +1,4 @@
+// adminSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 
@@ -7,114 +8,68 @@ interface AdminCredentials {
 }
 
 interface AdminState {
-  isAuthenticated: boolean;
-  role: string | null;
+  admin: null | { email: string; role: string; admin_id: number };
+  token: string | null;
   loading: boolean;
   error: string | null;
-  currentAdmin: { email: string; role: string; admin_id: number } | null; // Add admin_id
 }
 
-// Retrieve stored authentication and role from localStorage
-const storedIsAuthenticated =
-  localStorage.getItem("isAuthenticated") === "true";
-const storedRole = localStorage.getItem("role");
-const storedEmail = localStorage.getItem("email");
-const storedAdminId = localStorage.getItem("adminId"); // Retrieve admin_id from localStorage
-
-// Initialize state based on localStorage values
 const initialState: AdminState = {
-  isAuthenticated: storedIsAuthenticated,
-  role: storedRole || "",
+  admin: null,
+  token: null,
   loading: false,
   error: null,
-  currentAdmin: storedIsAuthenticated
-    ? {
-        email: storedEmail || "",
-        role: storedRole || "",
-        admin_id: storedAdminId ? parseInt(storedAdminId) : -1, // Parse admin_id as a number
-      }
-    : null,
 };
 
-// Async thunk for logging in the admin
+// Async thunk for login
 export const loginAdmin = createAsyncThunk(
-  "admins/loginAdmin",
-  async (credentials: AdminCredentials) => {
-    const response = await axiosInstance.post("/login", credentials);
-    console.log("response", response);
-    return response.data;
-  }
-);
-
-// Async thunk for logging out the admin
-export const logoutAdmin = createAsyncThunk(
-  "admins/logoutAdmin",
-  async (_, { rejectWithValue }) => {
+  "admin/loginAdmin",
+  async (credentials: AdminCredentials, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete("/logout");
-      return { message: "Logged out successfully" };
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue("An unknown error occurred");
+      const response = await axiosInstance.post("/login", credentials);
+      const { token, admin } = response.data;
+
+      // Store the token in localStorage
+      localStorage.setItem("auth_token", token);
+      console.log(localStorage.getItem("auth_token"));
+
+      return { token, admin };
+    } catch (error: any) {
+      // Handling both API and network errors
+      const errorMessage =
+        error.response?.data?.error || "Something went wrong";
+      return rejectWithValue(errorMessage);
     }
   }
 );
 
-// Async thunk for adding a new admin
-export const addAdmin = createAsyncThunk(
-  "admins/addAdmin",
-  async (
-    newAdmin: {
-      email: string;
-      password: string;
-      password_confirmation: string;
-      role: string;
-    },
-    { rejectWithValue }
-  ) => {
+export const signupAdmin = createAsyncThunk(
+  "admin/signup",
+  async (credentials: AdminCredentials, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/admins", newAdmin);
-      return response.data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
+      const response = await axiosInstance.post("/signup", {
+        admin: credentials, // Nest the credentials under the 'admin' key
+      });
+      return response.data; // Return new admin data
+    } catch (error: any) {
+      // Handling both API and network errors
+      const errorMessage =
+        error.response?.data?.error || "Error occurred during signup";
+      return rejectWithValue(errorMessage);
     }
   }
 );
-
-export const updateAdmin = createAsyncThunk(
-  "admins/updateAdmin",
-  async (
-    updatedAdmin: {
-      admin_id: number;
-      email?: string;
-      password?: string;
-      password_confirmation?: string;
-    },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await axiosInstance.patch(
-        `/admins/${updatedAdmin.admin_id}`,
-        { admin: updatedAdmin }
-      );
-      return response.data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
-
-// Admin slice for handling authentication state
-const adminsSlice = createSlice({
-  name: "admins",
+const adminSlice = createSlice({
+  name: "admin",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.admin = null;
+      state.token = null;
+      state.loading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAdmin.pending, (state) => {
@@ -123,56 +78,29 @@ const adminsSlice = createSlice({
       })
       .addCase(loginAdmin.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
-        state.currentAdmin = {
-          email: action.payload.email,
-          role: action.payload.role,
-          admin_id: action.payload.admin_id, // Include admin_id from the response
-        };
-        state.error = null;
-
-        // Save to localStorage on successful login
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("role", action.payload.role);
-        localStorage.setItem("email", action.payload.email);
-        localStorage.setItem("adminId", action.payload.admin_id); // Save admin_id to localStorage
+        state.token = action.payload.token;
+        state.admin = action.payload.admin;
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to log in";
+        state.error = action.payload as string;
       })
-      .addCase(logoutAdmin.fulfilled, (state) => {
-        state.isAuthenticated = false;
+      .addCase(signupAdmin.pending, (state) => {
+        state.loading = true;
         state.error = null;
-        state.currentAdmin = null; // Clear currentAdmin on logout
-
-        localStorage.removeItem("isAuthenticated");
-        localStorage.removeItem("role");
-        localStorage.removeItem("email");
-        localStorage.removeItem("adminId"); // Clear admin_id
       })
-      .addCase(logoutAdmin.rejected, (state, action) => {
-        state.error = action.payload as string | null; // Store the error in the state
+      .addCase(signupAdmin.fulfilled, (state, action) => {
+        state.admin = action.payload.admin;
+        state.token = action.payload.token;
+        state.loading = false;
       })
-      .addCase(addAdmin.fulfilled, (state, action) => {
-        state.error = null;
-        state.currentAdmin = {
-          email: action.payload.email,
-          role: action.payload.role,
-          admin_id: action.payload.admin_id,
-        };
-      })
-      .addCase(addAdmin.rejected, (state, action) => {
-        state.error = action.payload as string | null; // Handle error
-      })
-      .addCase(updateAdmin.fulfilled, (state, action) => {
-        state.currentAdmin = {
-          ...state.currentAdmin!,
-          email: action.payload.email,
-        };
-        localStorage.setItem("email", action.payload.email);
+      .addCase(signupAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export default adminsSlice.reducer;
+export const { logout } = adminSlice.actions;
+
+export default adminSlice.reducer;

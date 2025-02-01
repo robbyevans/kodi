@@ -12,7 +12,7 @@ import * as S from "./styles";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { logout } = useAdmins();
+  const { handleLogout } = useAdmins();
 
   const handleBack = () => navigate(-1);
   const handleForward = () => navigate(1);
@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
       <S.IconButton onClick={navigateToSettings}>
         <FiSettings />
       </S.IconButton>
-      <S.IconButton onClick={logout}>
+      <S.IconButton onClick={handleLogout}>
         <FiLogOut />
       </S.IconButton>
     </S.NavbarContainer>

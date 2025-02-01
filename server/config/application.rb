@@ -12,13 +12,21 @@ module Server
   class Application < Rails::Application
     config.load_defaults 7.2
 
-    config.autoload_lib(ignore: %w[assets tasks])
+    # Disable CSRF protection for API
+    config.api_only = true
+    config.action_controller.allow_forgery_protection = false
 
+    # CORS Configuration for Frontend
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'  # Change this to a specific domain in production
-        resource '*', headers: :any, methods: %i[get post patch put delete options head]
+        origins 'http://localhost:5173'  # Change this to your production domain when needed
+        resource '*', 
+          headers: :any, 
+          methods: %i[get post patch put delete options head], 
+          credentials: true
       end
     end
+
   end
 end
+

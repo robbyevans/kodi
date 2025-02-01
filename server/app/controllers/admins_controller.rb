@@ -1,7 +1,8 @@
 class AdminsController < ApplicationController
-  before_action :authorize_system_admin, only: [:create]
 
+  # Admin creation action
   def create
+    Rails.logger.debug "Admin params: #{admin_params.inspect}"
     @admin = Admin.new(admin_params)
     @admin.role = 'admin' # Default role is admin
   
@@ -17,16 +18,43 @@ class AdminsController < ApplicationController
     end
   end
 
-  private
-  
-  def authorize_system_admin
-    unless current_admin&.role == 'system_admin'
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+  def update
+    @admin = Admin.find(params[:id])
+    if @admin.update(admin_params)
+      render json: @admin
+    else
+      render json: @admin.errors, status: :unprocessable_entity
     end
   end
 
+  def destroy
+    @admin = Admin.find(params[:id])
+    @admin.destroy
+    head :no_content
+  end
+
+
+  # Admin login action
+  def login
+    admin = Admin.find_by(email: params[:email])
+
+    if admin && admin.authenticate(params[:password]) # Authenticate the admin
+      # If login is successful, generate the JWT token
+      token = encode_jwt(admin.id)
+      
+      # Respond with the token and admin details
+      render json: { 
+        token: token, 
+        admin: { email: admin.email, role: admin.role, admin_id: admin.id }
+      }, status: :ok
+    else
+      render json: { error: 'Invalid email or password' }, status: :unauthorized
+    end
+  end
+
+  private
+  
   def admin_params
     params.require(:admin).permit(:email, :password, :password_confirmation, :role)
   end
-
 end

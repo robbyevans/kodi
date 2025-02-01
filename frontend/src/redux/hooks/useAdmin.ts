@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../utils";
-import { loginAdmin, logoutAdmin, addAdmin } from "../slices/adminSlice";
+import { signupAdmin, loginAdmin, logout } from "../slices/adminSlice";
 import {
   selectCurrentAdmin,
   selectAdminsLoading,
@@ -14,42 +14,16 @@ export const useAdmins = () => {
   const error = useAppSelector(selectAdminsError);
   const isAuthenticated = useAppSelector(selectIsAdminAuthenticated);
 
-  const login = (email: string, password: string) => {
+  const handleLogin = (email: string, password: string) => {
     dispatch(loginAdmin({ email, password }));
   };
 
-  const logout = () => {
-    dispatch(logoutAdmin());
+  const handleSignup = (email: string, password: string) => {
+    dispatch(signupAdmin({ email, password }));
   };
 
-  const addNewAdmin = async (
-    email: string,
-    password: string,
-    passwordConfirmation: string,
-    role: string
-  ) => {
-    if (password !== passwordConfirmation) {
-      return { success: false, message: "Passwords do not match" };
-    }
-
-    try {
-      const response = await dispatch(
-        addAdmin({
-          email,
-          password,
-          password_confirmation: passwordConfirmation,
-          role,
-        })
-      ).unwrap();
-      return { success: true, admin_id: response.admin_id };
-    } catch (error) {
-      if (error instanceof Error) {
-        return {
-          success: false,
-          message: error.message || "Failed to add admin",
-        };
-      }
-    }
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return {
@@ -57,8 +31,8 @@ export const useAdmins = () => {
     isAuthenticated,
     loading,
     error,
-    login,
-    logout,
-    addNewAdmin,
+    handleLogin,
+    handleLogout,
+    handleSignup,
   };
 };

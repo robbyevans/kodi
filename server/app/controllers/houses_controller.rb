@@ -1,19 +1,13 @@
+# File 3: /server/app/controllers/houses_controller.rb
+
 class HousesController < ApplicationController
+  before_action :set_house, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
   def index
-    if params[:property_id]
-      @houses = House.where(property_id: params[:property_id]).includes(:tenant)
-    else
-      @houses = House.includes(:tenant).all
-    end
+    @houses = House.includes(:tenant).all
     render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
   end
-
-  def show
-    render json: @house.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
-  end
-  
 
   def create
     @house = House.new(house_params)
@@ -40,16 +34,24 @@ class HousesController < ApplicationController
 
   private
 
+  private
+
+  def set_house
+    @house = House.find(params[:id])
+  end
+
   def authorize_property_owner
-    property = Property.find(params[:property_id])
+    if action_name == 'create'
+      property = Property.find(params[:house][:property_id])
+    else
+      property = @house.property
+    end
+
     unless property.admin_id == current_admin.id
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 
-  def set_house
-    @house = House.find(params[:id])
-  end
 
   def house_params
     params.require(:house).permit(:house_number, :payable_rent, :tenant_id, :property_id)

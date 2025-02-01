@@ -1,11 +1,41 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
-  skip_before_action :verify_authenticity_token
+  protect_from_forgery with: :null_session
 
-  helper_method :current_admin # Makes current_admin available in views and controllers
+  # Skip authentication for the admin signup (POST /signup)
+  before_action :authenticate_admin, except: [:create]
 
-  def current_admin
-    @current_admin ||= Admin.find_by(id: session[:admin_id])
+  private
+
+  def authenticate_admin
+    token = request.headers['Authorization']&.split(' ')&.last
+
+    if token.nil?
+      render json: { error: 'Token is missing' }, status: :unauthorized
+      return
+    end
+
+    decoded_token = decode_jwt(token)
+    if decoded_token
+      @current_admin = Admin.find_by(id: decoded_token['admin_id'])
+      render json: { error: 'Admin not found' }, status: :unauthorized if @current_admin.nil?
+    else
+      render json: { error: 'Invalid or expired token' }, status: :unauthorized
+    end
+  end
+
+  def encode_jwt(admin_id)
+    payload = { admin_id: admin_id, exp: 24.hours.from_now.to_i }
+    JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
+  end
+
+  def decode_jwt(token)
+    begin
+      decoded = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
+      decoded.first # Return the payload hash
+    rescue JWT::ExpiredSignature
+      nil
+    rescue JWT::DecodeError
+      nil
+    end
   end
 end

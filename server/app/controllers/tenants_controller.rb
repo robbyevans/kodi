@@ -1,29 +1,33 @@
+# File 10: /server/app/controllers/tenants_controller.rb
+
 class TenantsController < ApplicationController
+  before_action :set_tenant, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
   def index
-    if params[:property_id]
-      # Fetch tenants related to the houses of the given property
-      @tenants = Tenant.joins(:houses).where(houses: { property_id: params[:property_id] })
-    else
-      @tenants = Tenant.all
-    end
+    @tenants = Tenant.all
     render json: @tenants
-  end
-
-  def show
-    render json: @tenant
   end
 
   def create
     @tenant = Tenant.new(tenant_params)
+    house = House.find(params[:house_id])
 
-    if @tenant.save
-      render json: @tenant, status: :created
-    else
-      render json: @tenant.errors, status: :unprocessable_entity
+    if house.property.admin != current_admin
+      return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
+
+    ActiveRecord::Base.transaction do
+      @tenant.save!
+      house.update!(tenant: @tenant)
+    end
+
+
+    render json: @tenant, status: :created
+  rescue ActiveRecord::RecordInvalid
+    render json: @tenant.errors, status: :unprocessable_entity
   end
+
 
   def update
     if @tenant.update(tenant_params)
@@ -40,19 +44,18 @@ class TenantsController < ApplicationController
 
   private
 
-  def authorize_property_owner
-    house = House.find_by(tenant_id: params[:id])
-    unless house && house.property.admin_id == current_admin.id
-      render json: { error: 'Unauthorized' }, status: :unauthorized
-    end
-  end
-
   def set_tenant
     @tenant = Tenant.find(params[:id])
+  end
+
+  def authorize_property_owner
+    house = @tenant&.houses&.first || House.find(params[:house_id])
+    unless house.property.admin == current_admin
+      render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
   end
 
   def tenant_params
     params.require(:tenant).permit(:name, :phone_number, :email)
   end
-  
 end
