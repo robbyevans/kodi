@@ -1,5 +1,3 @@
-# File 4: /server/app/controllers/properties_controller.rb
-
 class PropertiesController < ApplicationController
   before_action :authorize_admin, only: [:create, :update, :destroy]
   before_action :set_property, only: [:show, :update, :destroy]
@@ -8,11 +6,13 @@ class PropertiesController < ApplicationController
     @properties = current_admin.properties.includes(:houses)
     render json: @properties.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
   end
-  
+
+  def show
+    render json: @property
+  end
 
   def create
     @property = current_admin.properties.new(property_params)
-
     if @property.save
       render json: @property, status: :created
     else
@@ -35,8 +35,12 @@ class PropertiesController < ApplicationController
 
   private
 
+  def set_property
+    @property = Property.find(params[:id])
+  end
+
   def property_params
-    params.require(:property).permit(:name) # Remove :admin_id from permitted params
+    params.require(:property).permit(:name)
   end
 
   def authorize_admin

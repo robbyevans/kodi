@@ -104,9 +104,8 @@ const adminSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.admin = action.payload.admin;
-        console.log("action.payload.admin", action.payload.admin);
 
-        storeAuthData(action.payload.token, action.payload.admin); // Store auth data in localStorage
+        storeAuthData(action.payload.token, action.payload.admin);
       })
       .addCase(loginAdmin.rejected, (state, action) => {
         state.loading = false;
@@ -120,9 +119,8 @@ const adminSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.admin = action.payload.admin;
-        console.log("action.payload.admin", action.payload.admin);
 
-        storeAuthData(action.payload.token, action.payload.admin); // Store auth data in localStorage
+        storeAuthData(action.payload.token, action.payload.admin);
       })
       .addCase(signupAdmin.rejected, (state, action) => {
         state.loading = false;

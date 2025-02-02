@@ -47,7 +47,6 @@ export const fetchPropertyById = createAsyncThunk(
 export const addProperty = createAsyncThunk(
   "properties/add",
   async (property: Omit<IProperty, "id">) => {
-    console.log("property", property);
     const response = await axiosInstance.post("/properties", {
       property: {
         name: property.name,

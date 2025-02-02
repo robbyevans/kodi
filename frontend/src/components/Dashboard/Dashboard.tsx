@@ -1,18 +1,14 @@
 import { useState } from "react";
-import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "../../redux/hooks/useProperties";
 import * as S from "./styles";
 import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
 
 const AdminDashboardPage = () => {
-  const { isAuthenticated } = useAdmins();
   const navigate = useNavigate();
   const { data, loading, error } = useProperties();
 
-  console.log("data", data);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log("isAuthenticated", isAuthenticated);
 
   const handleAddPropertyClick = () => {
     setIsModalOpen(true);

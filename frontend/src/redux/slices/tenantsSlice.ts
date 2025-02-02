@@ -72,23 +72,22 @@ export const addTenant = createAsyncThunk(
   }
 );
 
-// Edit a tenant by ID (non-nested route)
 export const editTenant = createAsyncThunk(
   "tenants/edit",
-  async (tenantData: ITenant) => {
-    const response = await axiosInstance.put(`/tenants/${tenantData.id}`, {
-      tenantData,
-    });
+  async ({ houseId, tenantData }: { houseId: number; tenantData: ITenant }) => {
+    const response = await axiosInstance.put(
+      `/houses/${houseId}/tenants/${tenantData.id}`,
+      { tenant: tenantData }
+    );
     return response.data;
   }
 );
 
-// Delete a tenant by ID
 export const deleteTenant = createAsyncThunk(
   "tenants/delete",
-  async (id: number) => {
-    await axiosInstance.delete(`/tenants/${id}`);
-    return id;
+  async ({ houseId, tenantId }: { houseId: number; tenantId: number }) => {
+    await axiosInstance.delete(`/houses/${houseId}/tenants/${tenantId}`);
+    return tenantId;
   }
 );
 

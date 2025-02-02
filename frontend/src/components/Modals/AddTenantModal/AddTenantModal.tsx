@@ -50,7 +50,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
     }
 
     if (editingTenant) {
-      handleEditTenant({
+      handleEditTenant(house.id, {
         id: editingTenant.id,
         name: tenantName,
         email: tenantEmail,
@@ -127,7 +127,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
                         "Are you sure you want to delete this tenant?"
                       );
                       if (confirmDelete) {
-                        handleDeleteTenant(tenant.id);
+                        handleDeleteTenant(house.id, tenant.id);
                       }
                     }}
                   >

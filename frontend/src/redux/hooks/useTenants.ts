@@ -41,12 +41,12 @@ export const useTenants = () => {
     dispatch(addTenant({ houseId, tenantData }));
   };
 
-  const handleDeleteTenant = (tenantId: number) => {
-    dispatch(deleteTenant(tenantId));
+  const handleDeleteTenant = (houseId: number, tenantId: number) => {
+    dispatch(deleteTenant({ houseId, tenantId }));
   };
 
-  const handleEditTenant = (tenantData: ITenant) => {
-    dispatch(editTenant(tenantData));
+  const handleEditTenant = (houseId: number, tenantData: ITenant) => {
+    dispatch(editTenant({ houseId, tenantData }));
   };
 
   return {

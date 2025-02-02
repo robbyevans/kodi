@@ -21,7 +21,6 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = getAuthToken();
     if (token) {
-      console.log("Attaching token to request headers:", token); // Add this line for debugging
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
