@@ -74,6 +74,8 @@ export const signupAdmin = createAsyncThunk(
       const response = await axiosInstance.post("/signup", {
         admin: credentials,
       });
+      const { token, admin } = response.data;
+      storeAuthData(token, admin);
       return response.data;
     } catch (error: any) {
       const errorMessage =
