@@ -5,10 +5,12 @@ class TenantsController < ApplicationController
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
   def index
-    @tenants = Tenant.all
-    render json: @tenants
+    tenants = Tenant.joins(houses: :property).where(properties: { admin_id: current_admin.id }).distinct
+    tenants = tenants.where(houses: { property_id: params[:property_id] }) if params[:property_id].present?
+    render json: tenants
   end
-
+  
+  
   def create
     @tenant = Tenant.new(tenant_params)
     house = House.find(params[:house_id])
