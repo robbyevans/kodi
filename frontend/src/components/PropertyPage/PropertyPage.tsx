@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import * as S from "./styles"; // Shorthand import for styles
-import { House } from "../../redux/slices/houseSlice";
+import { IHouse } from "../../redux/slices/houseSlice";
 
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
+import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 
 interface PropertyPageProps {
-  houses: House[];
+  houses: IHouse[];
   loading: boolean;
-  propertyId: number; // Add propertyId prop
-  error: any;
-  paymentData: {
-    houseNumber: string;
-    rentPaid: number;
-    balance: number;
-    paymentDate: string; // Added date of payment
-    paymentMode: string; // Added mode of payment
-  }[];
+  propertyId: number;
+  propertyName: string;
+  error: string | null;
   downloadPDF: () => void;
 }
 
@@ -23,11 +18,18 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
   houses,
   loading,
   error,
-  paymentData,
   propertyId,
+  propertyName,
   downloadPDF,
 }) => {
   const [isHouseModalOpen, setIsHouseModalOpen] = useState(false);
+  const [selectedHouse, setSelectedHouse] = useState<IHouse | null>(null);
+  const [isTenantModalOpen, setIsTenantModalOpen] = useState(false);
+
+  const openTenantModal = (house: IHouse) => {
+    setSelectedHouse(house);
+    setIsTenantModalOpen(true);
+  };
 
   if (loading) return <S.LoadingMessage>Loading...</S.LoadingMessage>;
   if (error)
@@ -35,7 +37,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
 
   return (
     <S.PropertyPageContainer>
-      <S.Header>Houses</S.Header>
+      <S.Header>Houses for {propertyName}</S.Header>
       <S.TableContainer>
         <S.Table>
           <thead>
@@ -52,42 +54,52 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
             </tr>
           </thead>
           <tbody>
-            {houses.map((house) => {
-              const payment = paymentData.find(
-                (data) => data.houseNumber === house.house_number
-              );
-
-              const rentPaid = payment?.rentPaid || 0;
-              const balance = payment?.balance || house.payable_rent;
-              const paymentDate = payment?.paymentDate || "N/A";
-              const paymentMode = payment?.paymentMode || "N/A";
-              const status = balance === 0;
-
-              return (
-                <S.TableRow key={house.id}>
-                  <S.TableData>{house.house_number}</S.TableData>
-                  <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
-                  <S.TableData>
-                    {house.tenant?.phone_number || "Vacant"}
-                  </S.TableData>
-                  <S.TableData>{house.payable_rent}</S.TableData>
-                  <S.TableData>{rentPaid}</S.TableData>
-                  <S.TableData>{balance}</S.TableData>
-                  <S.TableData>{paymentDate}</S.TableData>
-                  <S.TableData>{paymentMode}</S.TableData>
-                  <S.TableData>{status ? "✅" : "❌"}</S.TableData>
-                </S.TableRow>
-              );
-            })}
+            {houses.map((house) => (
+              <S.TableRow key={house.id} onClick={() => openTenantModal(house)}>
+                <S.TableData>{house.house_number}</S.TableData>
+                <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
+                <S.TableData>
+                  {house.tenant?.phone_number || "Vacant"}
+                </S.TableData>
+                <S.TableData>{house.payable_rent}</S.TableData>
+                <S.TableData>{null}</S.TableData>
+                <S.TableData>{null}</S.TableData>
+                <S.TableData>{null}</S.TableData>
+                <S.TableData>{null}</S.TableData>
+                <S.TableData>{house.tenant ? "✅" : "❌"}</S.TableData>
+              </S.TableRow>
+            ))}
           </tbody>
         </S.Table>
       </S.TableContainer>
-      {/* Add the modal */}
-      <AddHouseModal
-        isOpen={isHouseModalOpen}
-        onClose={() => setIsHouseModalOpen(false)}
-        propertyId={propertyId}
-      />
+      <S.ButtonContainer>
+        <S.AddPropertyButton
+          onClick={() => {
+            setIsHouseModalOpen(true);
+          }}
+        >
+          Add New House
+        </S.AddPropertyButton>
+      </S.ButtonContainer>
+
+      {/* House Modal */}
+      {isHouseModalOpen && (
+        <AddHouseModal
+          isOpen={isHouseModalOpen}
+          onClose={() => setIsHouseModalOpen(false)}
+          propertyId={propertyId}
+        />
+      )}
+
+      {/* Tenant Modal */}
+      {selectedHouse && (
+        <AddTenantModal
+          house={selectedHouse}
+          visible={isTenantModalOpen}
+          onClose={() => setIsTenantModalOpen(false)}
+        />
+      )}
+
       <S.DownloadButton onClick={downloadPDF}>Download PDF</S.DownloadButton>
     </S.PropertyPageContainer>
   );

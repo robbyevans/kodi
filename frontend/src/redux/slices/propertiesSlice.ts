@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
-import { House } from "./houseSlice";
+import { IHouse } from "./houseSlice";
 
 export interface IProperty {
   id?: number; // Make id optional
   admin_id: number;
   name: string;
-  houses: House[] | null;
+  houses: IHouse[] | null;
 }
 
 interface PropertiesState {

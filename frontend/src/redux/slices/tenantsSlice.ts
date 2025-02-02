@@ -1,7 +1,8 @@
+// File: /frontend/src/redux/slices/tenantsSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 
-export interface Tenant {
+export interface ITenant {
   id: number;
   name: string;
   email: string;
@@ -9,7 +10,7 @@ export interface Tenant {
 }
 
 interface TenantsState {
-  data: Tenant[];
+  data: ITenant[];
   loading: boolean;
   error: string | null;
 }
@@ -36,6 +37,16 @@ export const fetchPropertyTenants = createAsyncThunk(
   }
 );
 
+// Fetch tenants for a given house (nested route)
+export const fetchTenantsByHouse = createAsyncThunk(
+  "tenants/getByHouse",
+  async (houseId: number) => {
+    const response = await axiosInstance.get(`/houses/${houseId}/tenants`);
+    return response.data;
+  }
+);
+
+// Fetch a single tenant by ID (non-nested route)
 export const fetchTenantById = createAsyncThunk(
   "tenants/fetchById",
   async (id: number) => {
@@ -44,22 +55,35 @@ export const fetchTenantById = createAsyncThunk(
   }
 );
 
+// Add a tenant to a specific house (nested route)
 export const addTenant = createAsyncThunk(
   "tenants/add",
-  async (tenant: Omit<Tenant, "id">) => {
-    const response = await axiosInstance.post("/tenants", tenant);
+  async ({
+    houseId,
+    tenantData,
+  }: {
+    houseId: number;
+    tenantData: Omit<ITenant, "id">;
+  }) => {
+    const response = await axiosInstance.post(`/houses/${houseId}/tenants`, {
+      tenant: tenantData,
+    });
     return response.data;
   }
 );
 
+// Edit a tenant by ID (non-nested route)
 export const editTenant = createAsyncThunk(
   "tenants/edit",
-  async ({ id, ...tenant }: Tenant) => {
-    const response = await axiosInstance.put(`/tenants/${id}`, tenant);
+  async (tenantData: ITenant) => {
+    const response = await axiosInstance.put(`/tenants/${tenantData.id}`, {
+      tenantData,
+    });
     return response.data;
   }
 );
 
+// Delete a tenant by ID
 export const deleteTenant = createAsyncThunk(
   "tenants/delete",
   async (id: number) => {
@@ -68,24 +92,13 @@ export const deleteTenant = createAsyncThunk(
   }
 );
 
-// Slice
+// Slice definition
 const tenantsSlice = createSlice({
   name: "tenants",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTenants.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchTenants.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchTenants.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch tenants";
-      })
       .addCase(fetchTenantById.fulfilled, (state, action) => {
         state.data = state.data.map((tenant) =>
           tenant.id === action.payload.id ? action.payload : tenant
@@ -104,16 +117,16 @@ const tenantsSlice = createSlice({
           (tenant) => tenant.id !== action.payload
         );
       })
-      .addCase(fetchPropertyTenants.pending, (state) => {
+      .addCase(fetchTenantsByHouse.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchPropertyTenants.fulfilled, (state, action) => {
+      .addCase(fetchTenantsByHouse.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchPropertyTenants.rejected, (state) => {
+      .addCase(fetchTenantsByHouse.rejected, (state, action) => {
         state.loading = false;
-        state.error = "Failed to fetch property tenants";
+        state.error = action.error.message || "Failed to fetch tenants";
       });
   },
 });

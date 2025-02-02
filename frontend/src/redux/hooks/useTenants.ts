@@ -3,6 +3,11 @@ import {
   fetchTenants,
   fetchPropertyTenants,
   fetchTenantById,
+  fetchTenantsByHouse,
+  addTenant,
+  editTenant,
+  deleteTenant,
+  ITenant,
 } from "../slices/tenantsSlice";
 import {
   selectTenantsLoading,
@@ -28,10 +33,30 @@ export const useTenants = () => {
     dispatch(fetchTenantById(id));
   };
 
+  const getTenantByHouse = (houseId: number) => {
+    dispatch(fetchTenantsByHouse(houseId));
+  };
+
+  const addNewTenant = (houseId: number, tenantData: Omit<ITenant, "id">) => {
+    dispatch(addTenant({ houseId, tenantData }));
+  };
+
+  const handleDeleteTenant = (tenantId: number) => {
+    dispatch(deleteTenant(tenantId));
+  };
+
+  const handleEditTenant = (tenantData: ITenant) => {
+    dispatch(editTenant(tenantData));
+  };
+
   return {
     getAllTenants,
     getPropertyTenants,
     getTenantById,
+    getTenantByHouse,
+    addNewTenant,
+    handleDeleteTenant,
+    handleEditTenant,
     tenants,
     loading,
     error,

@@ -1,8 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../hooks"; // Update import
+import { IHouse } from "../slices/houseSlice";
 import {
-  fetchHouses,
+  fetchAllHouses,
   fetchHousesByProperty,
   fetchHouseById,
+  addHouse,
 } from "../slices/houseSlice";
 import {
   selectHousesLoading,
@@ -17,7 +19,7 @@ export const useHouses = () => {
   const error = useAppSelector(selectHousesError);
 
   const getAllHouses = () => {
-    dispatch(fetchHouses());
+    dispatch(fetchAllHouses());
   };
 
   const getHousesByProperty = (propertyId: number) => {
@@ -28,10 +30,23 @@ export const useHouses = () => {
     dispatch(fetchHouseById(id));
   };
 
+  const addHouseToProperty = (
+    propertyId: number,
+    houseData: Omit<IHouse, "id" | "property_id">
+  ) => {
+    dispatch(
+      addHouse({
+        propertyId,
+        houseData,
+      })
+    );
+  };
+
   return {
     getAllHouses,
     getHouseById,
     getHousesByProperty,
+    addHouseToProperty,
     houses,
     loading,
     error,

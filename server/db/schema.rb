@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_01_084611) do
   create_table "houses", force: :cascade do |t|
     t.string "house_number"
     t.decimal "payable_rent"
-    t.bigint "tenant_id"
+    t.bigint "tenant_id" # Foreign key to tenant
     t.bigint "property_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

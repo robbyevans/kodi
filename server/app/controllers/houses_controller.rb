@@ -1,19 +1,20 @@
 class HousesController < ApplicationController
+  before_action :set_property, only: [:index, :create]
   before_action :set_house, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
+  # GET /properties/:property_id/houses
   def index
-    # Start by scoping houses to properties owned by the current admin.
-    houses = House.joins(:property).where(properties: { admin_id: current_admin.id })
-    
-    # Optional filtering: filter by property_id if provided.
-    houses = houses.where(property_id: params[:property_id]) if params[:property_id].present?
-    
-    render json: houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
+    # Ensure that the property belongs to the current admin:
+    property = current_admin.properties.find(params[:property_id])
+    @houses = property.houses.includes(:tenant)
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
   end
 
+  # POST /properties/:property_id/houses
   def create
-    @house = House.new(house_params)
+    # Because the URL provides property_id, we use the associated property directly:
+    @house = @property.houses.new(house_params)
     if @house.save
       render json: @house, status: :created
     else
@@ -21,6 +22,7 @@ class HousesController < ApplicationController
     end
   end
 
+  # PUT/PATCH /houses/:id
   def update
     if @house.update(house_params)
       render json: @house, status: :ok
@@ -29,6 +31,7 @@ class HousesController < ApplicationController
     end
   end
 
+  # DELETE /houses/:id
   def destroy
     @house.destroy
     head :no_content
@@ -36,22 +39,28 @@ class HousesController < ApplicationController
 
   private
 
+  def set_property
+    # Look up the property via the nested parameter and ensure it belongs to current_admin
+    @property = current_admin.properties.find(params[:property_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Property not found or unauthorized' }, status: :unauthorized
+  end
+
   def set_house
     @house = House.find(params[:id])
   end
 
   def authorize_property_owner
-    property = if action_name == 'create'
-                 Property.find(params[:house][:property_id])
-               else
-                 @house.property
-               end
+    # When creating, @property is already set by set_property
+    # When updating/deleting, check that the house's property belongs to the current admin
+    property = params[:property_id] ? @property : @house.property
     unless property.admin_id == current_admin.id
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 
   def house_params
-    params.require(:house).permit(:house_number, :payable_rent, :tenant_id, :property_id)
+    # With the property_id coming from the URL, you may remove it from the permitted params if desired.
+    params.require(:house).permit(:house_number, :payable_rent, :tenant_id)
   end
 end

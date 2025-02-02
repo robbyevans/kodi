@@ -14,15 +14,15 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({
   propertyId,
 }) => {
   const [houseNumber, setHouseNumber] = useState("");
-  const [payableRent, setPayableRent] = useState("");
-  const { addHouse } = useHouses();
+  const [payableRent, setPayableRent] = useState();
+  const { addHouseToProperty } = useHouses();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addHouse({
+    await addHouseToProperty(propertyId, {
       house_number: houseNumber,
-      payable_rent: Number(payableRent),
-      property_id: propertyId,
+      payable_rent: payableRent || 0,
+      tenant: null,
     });
     onClose();
   };
@@ -48,8 +48,9 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({
             <input
               type="number"
               value={payableRent}
-              onChange={(e) => setPayableRent(e.target.value)}
+              onChange={(e) => setPayableRent(Number(e.target.value))}
               required
+              placeholder="KSH"
             />
           </S.FormGroup>
           <S.ButtonContainer>

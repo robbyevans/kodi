@@ -105,3 +105,24 @@ export const DownloadButton = styled.button`
     background-color: #1b3a2e;
   }
 `;
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+export const AddPropertyButton = styled.button`
+  background-color: #4285f4; /* Blue */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 25px;
+
+  &:hover {
+    background-color: #357abd; /* Slightly darker blue */
+  }
+`;

@@ -1,17 +1,18 @@
+// File: /frontend/src/redux/slices/houseSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
-import { Tenant } from "./tenantsSlice";
+import { ITenant } from "./tenantsSlice";
 
-export interface House {
+export interface IHouse {
   id: number;
   house_number: string;
   payable_rent: number;
-  tenant: Tenant | null;
+  tenant: ITenant | null;
   property_id: number;
 }
 
 interface HousesState {
-  data: House[];
+  data: IHouse[];
   loading: boolean;
   error: string | null;
 }
@@ -23,21 +24,23 @@ const initialState: HousesState = {
 };
 
 // Thunks
-export const fetchHouses = createAsyncThunk("houses/fetchAll", async () => {
+export const fetchAllHouses = createAsyncThunk("houses/fetchAll", async () => {
   const response = await axiosInstance.get("/houses");
   return response.data;
 });
 
+// Fetch houses for a given property
 export const fetchHousesByProperty = createAsyncThunk(
   "houses/getHousesByProperty",
   async (propertyId: number) => {
     const response = await axiosInstance.get(
-      `/houses?property_id=${propertyId}`
+      `/properties/${propertyId}/houses`
     );
     return response.data;
   }
 );
 
+// Fetch a single house by its ID (non-nested URL)
 export const fetchHouseById = createAsyncThunk(
   "houses/fetchById",
   async (id: number) => {
@@ -46,22 +49,35 @@ export const fetchHouseById = createAsyncThunk(
   }
 );
 
+// Add a new house to a property. Note that we now require propertyId.
 export const addHouse = createAsyncThunk(
   "houses/add",
-  async (house: Omit<House, "id">) => {
-    const response = await axiosInstance.post("/houses", house);
+  async ({
+    propertyId,
+    houseData,
+  }: {
+    propertyId: number;
+    houseData: Omit<IHouse, "id" | "property_id">;
+  }) => {
+    const response = await axiosInstance.post(
+      `/properties/${propertyId}/houses`,
+      { house: houseData }
+    );
     return response.data;
   }
 );
 
+// Edit a house using its ID (non-nested URL)
 export const editHouse = createAsyncThunk(
   "houses/edit",
-  async ({ id, ...house }: House) => {
-    const response = await axiosInstance.put(`/houses/${id}`, house);
+  async ({ id, ...house }: IHouse) => {
+    // Here we wrap the data in an object if your controller expects a root key
+    const response = await axiosInstance.put(`/houses/${id}`, { house });
     return response.data;
   }
 );
 
+// Delete a house by its ID
 export const deleteHouse = createAsyncThunk(
   "houses/delete",
   async (id: number) => {
@@ -70,28 +86,25 @@ export const deleteHouse = createAsyncThunk(
   }
 );
 
-// Slice
+// Slice definition
 const housesSlice = createSlice({
   name: "houses",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchHouses.pending, (state) => {
+      .addCase(fetchHouseById.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchHouses.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchHouses.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch houses";
-      })
       .addCase(fetchHouseById.fulfilled, (state, action) => {
+        state.loading = false;
         state.data = state.data.map((house) =>
           house.id === action.payload.id ? action.payload : house
         );
+      })
+      .addCase(fetchHouseById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch house";
       })
       .addCase(addHouse.fulfilled, (state, action) => {
         state.data.push(action.payload);
