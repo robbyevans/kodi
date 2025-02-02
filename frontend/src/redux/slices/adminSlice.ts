@@ -53,11 +53,7 @@ export const loginAdmin = createAsyncThunk(
   async (credentials: AdminCredentials, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/login", credentials);
-      const { token, admin } = response.data;
-
-      storeAuthData(token, admin); // Store auth data only in localStorage
-
-      return { token, admin };
+      return response.data;
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error || "Something went wrong";
@@ -74,8 +70,6 @@ export const signupAdmin = createAsyncThunk(
       const response = await axiosInstance.post("/signup", {
         admin: credentials,
       });
-      const { token, admin } = response.data;
-      storeAuthData(token, admin);
       return response.data;
     } catch (error: any) {
       const errorMessage =
@@ -110,6 +104,7 @@ const adminSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.admin = action.payload.admin;
+        console.log("action.payload.admin", action.payload.admin);
 
         storeAuthData(action.payload.token, action.payload.admin); // Store auth data in localStorage
       })
@@ -125,6 +120,7 @@ const adminSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.admin = action.payload.admin;
+        console.log("action.payload.admin", action.payload.admin);
 
         storeAuthData(action.payload.token, action.payload.admin); // Store auth data in localStorage
       })

@@ -14,12 +14,14 @@ class AdminsController < ApplicationController
 
       # Respond with the token, admin details, and message
       render json: { 
-        message: 'Admin created successfully',
-        token: token, # Return the token here
+      message: 'Admin created successfully',
+      token: token, # Return the token here
+      admin: { 
         email: @admin.email,
         role: @admin.role,
-        admin_id: @admin.id # Include admin_id in the response
-      }, status: :created
+        admin_id: @admin.id 
+      }
+    }, status: :created
     else
       render json: { errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end

@@ -8,6 +8,7 @@ const Auth = () => {
   const {
     loading,
     error,
+    role,
     currentAdmin,
     isAuthenticated,
     handleLogin,
@@ -38,8 +39,9 @@ const Auth = () => {
     }
   };
 
-  const isAdmin = currentAdmin?.role === "admin";
-  console.log("isAdmin", isAdmin);
+  const isAdmin = role === "admin";
+  console.log("currentAdmin", currentAdmin);
+  console.log("role", role);
   console.log("isAuthenticated", isAuthenticated);
 
   useEffect(() => {
