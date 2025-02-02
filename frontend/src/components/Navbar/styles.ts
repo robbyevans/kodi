@@ -1,13 +1,15 @@
 // File: /frontend/src/components/Navbar/styles.ts
 import styled from "styled-components";
+import { colors, spacing, shadows } from "../../styles/foundation";
 
 export const NavbarContainer = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #034d3c; /* Deep green */
-  color: white;
-  padding: 0.8rem 1.5rem;
+  background: ${colors.primary};
+  color: ${colors.text.inverted};
+  padding: ${spacing.md} ${spacing.xl};
+  box-shadow: ${shadows.md};
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -34,23 +36,28 @@ export const NavButton = styled.button`
 
 export const Title = styled.h1`
   font-size: 1.5rem;
-  flex-grow: 1;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 1.2rem;
-  }
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 `;
 
 export const IconButton = styled.button`
   background: none;
   border: none;
-  color: white;
-  font-size: 1.5rem;
+  color: ${colors.text.inverted};
+  padding: ${spacing.xs};
   cursor: pointer;
-  margin-left: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
 
   &:hover {
-    color: #e6f4ea; /* Light green */
+    color: ${colors.accent};
+    transform: scale(1.1);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
   }
 `;

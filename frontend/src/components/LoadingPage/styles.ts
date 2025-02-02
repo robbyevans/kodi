@@ -1,8 +1,20 @@
 import styled, { keyframes } from "styled-components";
+import { colors } from "../../styles/foundation";
 
 const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const pulse = keyframes`
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+`;
+
+const progress = keyframes`
+  from { width: 0; }
+  to { width: 100%; }
 `;
 
 export const LoadingContainer = styled.div`
@@ -11,16 +23,36 @@ export const LoadingContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #282c34;
-  color: white;
-  font-family: Arial, sans-serif;
+  background: ${colors.primary};
+  color: ${colors.background};
 `;
 
-export const FadeIn = styled.h1`
-  opacity: 0;
-  animation: ${fadeIn} 2s ease-in forwards;
+export const LogoContainer = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+`;
 
-  &.delay {
-    animation-delay: 1s;
-  }
+export const AnimatedIcon = styled.div`
+  animation: ${pulse} 2s ease-in-out infinite;
+  margin-bottom: 1rem;
+`;
+
+export const FadeInText = styled.h1`
+  font-size: 2.5rem;
+  animation: ${fadeIn} 1s ease-out;
+  letter-spacing: 2px;
+`;
+
+export const ProgressBar = styled.div`
+  width: 300px;
+  height: 4px;
+  background: ${colors.secondary}40;
+  border-radius: 2px;
+  overflow: hidden;
+`;
+
+export const ProgressFill = styled.div`
+  height: 100%;
+  background: ${colors.background};
+  animation: ${progress} 2s ease-in-out infinite;
 `;

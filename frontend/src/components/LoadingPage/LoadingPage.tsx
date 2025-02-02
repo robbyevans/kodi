@@ -1,11 +1,18 @@
-import React from "react";
+import { FiHome } from "react-icons/fi";
 import * as S from "./styles";
 
 const LoadingPage = () => {
   return (
     <S.LoadingContainer>
-      <S.FadeIn>KODI</S.FadeIn>
-      <S.FadeIn className="delay">Property management made easy</S.FadeIn>
+      <S.LogoContainer>
+        <S.AnimatedIcon>
+          <FiHome size={64} />
+        </S.AnimatedIcon>
+        <S.FadeInText>PropertySuite</S.FadeInText>
+      </S.LogoContainer>
+      <S.ProgressBar>
+        <S.ProgressFill />
+      </S.ProgressBar>
     </S.LoadingContainer>
   );
 };
