@@ -2,26 +2,37 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   # Skip authentication for the admin signup (POST /signup)
-  before_action :authenticate_admin, except: [:create]
+  before_action :authenticate_admin
+
+   # Add this helper method to make current_admin accessible in controllers
+   def current_admin
+    @current_admin
+  end
+  helper_method :current_admin
+
 
   private
 
   def authenticate_admin
     token = request.headers['Authorization']&.split(' ')&.last
 
-    if token.nil?
+    unless token
       render json: { error: 'Token is missing' }, status: :unauthorized
       return
     end
 
     decoded_token = decode_jwt(token)
-    if decoded_token
-      @current_admin = Admin.find_by(id: decoded_token['admin_id'])
-      render json: { error: 'Admin not found' }, status: :unauthorized if @current_admin.nil?
-    else
+    unless decoded_token
       render json: { error: 'Invalid or expired token' }, status: :unauthorized
+      return
+    end
+
+    @current_admin = Admin.find_by(id: decoded_token['admin_id'])
+    unless @current_admin
+      render json: { error: 'Admin not found' }, status: :unauthorized
     end
   end
+
 
   def encode_jwt(admin_id)
     payload = { admin_id: admin_id, exp: 24.hours.from_now.to_i }

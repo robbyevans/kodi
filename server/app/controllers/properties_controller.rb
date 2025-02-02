@@ -39,7 +39,7 @@ class PropertiesController < ApplicationController
   end
 
   def authorize_admin
-    return if action_name == 'create' # Creation is authorized via current_admin
+    return if action_name == 'create' # Already authorized via current_admin
 
     unless current_admin && current_admin.id == @property.admin_id
       render json: { error: 'Unauthorized' }, status: :unauthorized

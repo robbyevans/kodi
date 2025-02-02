@@ -24,9 +24,15 @@ const initialState: PropertiesState = {
 // Thunks
 export const fetchProperties = createAsyncThunk(
   "properties/fetchAll",
-  async () => {
-    const response = await axiosInstance.get("/properties");
-    return response.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/properties"); // ✅ Token auto-attached
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch properties"
+      );
+    }
   }
 );
 
@@ -41,6 +47,7 @@ export const fetchPropertyById = createAsyncThunk(
 export const addProperty = createAsyncThunk(
   "properties/add",
   async (property: Omit<IProperty, "id">) => {
+    console.log("property", property);
     const response = await axiosInstance.post("/properties", {
       property: {
         name: property.name,

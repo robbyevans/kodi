@@ -15,6 +15,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [propertyName, setPropertyName] = useState("");
   const { addProperty } = useProperties();
   const { currentAdmin } = useAdmins();
+  console.log("currentAdmin", currentAdmin);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -39,6 +39,8 @@ const Auth = () => {
   };
 
   const isAdmin = currentAdmin?.role === "admin";
+  console.log("isAdmin", isAdmin);
+  console.log("isAuthenticated", isAuthenticated);
 
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
