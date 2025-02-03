@@ -5,6 +5,7 @@ import { useTenants } from "../../redux/hooks/useTenants";
 import { FiPlus } from "react-icons/fi";
 import * as S from "./styles";
 import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
+import Notification from "../Notification/Notification";
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
@@ -14,6 +15,19 @@ const AdminDashboardPage = () => {
 
   const handleAddPropertyClick = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+
+  const [date, setDate] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setDate(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedDate = date.toLocaleDateString();
+  const formattedTime = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   useEffect(() => {
     console.log("tenants", tenants);
@@ -26,8 +40,14 @@ const AdminDashboardPage = () => {
   return (
     <S.DashboardContainer>
       <S.DashboardHeader>
-        <h1>Property Management Dashboard</h1>
-        <p>Manage your properties efficiently</p>
+        <div>
+          <h1>Dashboard</h1>
+          <p>Find your property listing and stats below</p>
+        </div>
+        <p>Date: {formattedDate}</p>
+        <p>Time: {formattedTime}</p>
+
+        <Notification />
       </S.DashboardHeader>
 
       <S.ContentWrapper>

@@ -23,6 +23,9 @@ export const DashboardHeader = styled.header`
   background: ${colors.background};
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.sm};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   h1 {
     font-family: ${fonts.secondary};
@@ -97,7 +100,8 @@ export const PropertyCard = styled.div`
 export const PropertyImage = styled.div`
   height: 180px;
   background: ${colors.neutral[200]};
-  background-image: url("https://via.placeholder.com/400x200");
+  /* background-image: url("src/assets/apartment-placeholder.png"); */
+
   background-size: cover;
   background-position: center;
 `;
@@ -215,4 +219,10 @@ export const LoadingMessage = styled.p`
   color: ${colors.success};
   font-size: ${fontSizes.base};
   text-align: center;
+`;
+
+export const DateDisplay = styled.span`
+  font-size: ${fontSizes.base};
+  font-weight: ${fontWeights.medium};
+  color: ${colors.text.secondary};
 `;
