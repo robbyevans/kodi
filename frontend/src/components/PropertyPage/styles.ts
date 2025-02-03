@@ -26,7 +26,7 @@ export const Header = styled.h1`
 export const TableContainer = styled.div`
   overflow-x: auto;
   margin: ${spacing.lg} 0;
-  border-radius: ${borderRadius.lg};
+  border-radius: ${borderRadius.sm};
   box-shadow: ${shadows.md};
   background: ${colors.background};
 `;
@@ -38,8 +38,8 @@ export const Table = styled.table`
 
 export const TableHeader = styled.th`
   padding: ${spacing.md};
-  background: ${colors.primary};
-  color: ${colors.text.inverted};
+  background: #dcdcdc;
+  color: #717171;
   font-weight: ${fontWeights.semibold};
   text-align: left;
 `;
@@ -47,6 +47,18 @@ export const TableHeader = styled.th`
 export const TableData = styled.td`
   padding: ${spacing.md};
   border-bottom: 1px solid ${colors.neutral[200]};
+  color: ${colors.text.secondary};
+
+  &:last-child {
+    text-align: center;
+  }
+`;
+
+export const IconTableData = styled.div`
+  display: flex;
+  padding-left: 5px;
+  gap: 12px;
+  padding: 1rem 1rem 1rem 5px;
   color: ${colors.text.secondary};
 
   &:last-child {
@@ -88,12 +100,12 @@ export const ButtonContainer = styled.div`
 `;
 
 export const AddPropertyButton = styled.button`
-  background: ${colors.success};
-  color: ${colors.text.inverted};
+  background: ${colors.background};
+  color: ${colors.primary};
   font-size: ${fontSizes.sm};
   font-weight: ${fontWeights.semibold};
   padding: ${spacing.md} ${spacing.lg};
-  border: none;
+  border: 1px solid ${colors.primary};
   border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background 0.3s;
@@ -119,4 +131,11 @@ export const DownloadButton = styled.button`
   &:hover {
     background: ${colors.success};
   }
+`;
+
+export const DownloadWRapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
 `;

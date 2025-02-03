@@ -3,6 +3,10 @@ import * as S from "./styles";
 import { IHouse } from "../../redux/slices/houseSlice";
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
+import { MdSimCardDownload } from "react-icons/md";
+import { FiMoreVertical } from "react-icons/fi";
+import { colors } from "../../styles/foundation";
+import { TbSquareChevronRightFilled } from "react-icons/tb";
 
 interface PropertyPageProps {
   houses: IHouse[];
@@ -36,6 +40,14 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
 
   return (
     <S.PropertyPageContainer>
+      <S.DownloadWRapper>
+        <MdSimCardDownload
+          size="30px"
+          onClick={downloadPDF}
+          color={colors.primary}
+        />
+      </S.DownloadWRapper>
+
       <S.Header>Houses for {propertyName}</S.Header>
       <S.TableContainer>
         <S.Table>
@@ -55,7 +67,12 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           <tbody>
             {houses.map((house) => (
               <S.TableRow key={house.id} onClick={() => openTenantModal(house)}>
-                <S.TableData>{house.house_number}</S.TableData>
+                <S.TableData>
+                  <S.IconTableData>
+                    <TbSquareChevronRightFilled color={colors.primary} />
+                    {house.house_number}
+                  </S.IconTableData>
+                </S.TableData>
                 <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
                 <S.TableData>
                   {house.tenant?.phone_number || "Vacant"}
@@ -73,7 +90,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
       </S.TableContainer>
       <S.ButtonContainer>
         <S.AddPropertyButton onClick={() => setIsHouseModalOpen(true)}>
-          Add New House
+          + Add New House
         </S.AddPropertyButton>
       </S.ButtonContainer>
 
@@ -92,8 +109,6 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           onClose={() => setIsTenantModalOpen(false)}
         />
       )}
-
-      <S.DownloadButton onClick={downloadPDF}>Download PDF</S.DownloadButton>
     </S.PropertyPageContainer>
   );
 };

@@ -18,14 +18,17 @@ const PropertyContainer = () => {
 
   const { propertyId } = useParams<{ propertyId: string }>();
 
-  // Fetch property and houses on this property on component mount
   useEffect(() => {
     if (propertyId) {
       getPropertyById(Number(propertyId));
     }
   }, [propertyId]);
 
-  const houses = propertyData[0]?.houses || [];
+  const selectedProperty = propertyData.find(
+    (property) => property.id === Number(propertyId)
+  );
+
+  const houses = selectedProperty?.houses || [];
 
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -52,7 +55,7 @@ const PropertyContainer = () => {
     <S.PropertyPageContainer>
       <PropertyPage
         houses={houses}
-        propertyName={propertyData[0].name}
+        propertyName={selectedProperty?.name || ""}
         loading={loading}
         error={error}
         propertyId={Number(propertyId)}
