@@ -30,7 +30,11 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <ToastMessage message={toastMessage} type={messageType} clearToastMessage={clearToastMessage}/>
+      <ToastMessage
+        message={toastMessage}
+        type={messageType}
+        clearToastMessage={clearToastMessage}
+      />
       {children}
     </>
   );
