@@ -44,9 +44,9 @@ const ToastMessage: React.FC<ToastProps> = ({
   if (!message) return null; // Hide component if no message
 
   return (
-    <S.ToastContainer type={type} exiting={exiting}>
+    <S.ToastContainer type={type} exiting={exiting ? true : undefined}>
       <S.Message>{message}</S.Message>
-      <S.Button onClick={clearToastMessage}>&times;</S.Button>
+      <S.Button onClick={clearToastMessage}>close</S.Button>
       <S.ProgressBar progress={progress} />
     </S.ToastContainer>
   );

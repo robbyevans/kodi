@@ -29,9 +29,7 @@ const AdminDashboardPage = () => {
     minute: "2-digit",
   });
 
-  useEffect(() => {
-    console.log("tenants", tenants);
-  }, [tenants]);
+  useEffect(() => {}, [tenants]);
 
   if (loading)
     return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;
