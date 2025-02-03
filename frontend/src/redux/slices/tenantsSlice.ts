@@ -1,7 +1,7 @@
-// File: /frontend/src/redux/slices/tenantsSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { fetchProperties } from "./propertiesSlice";
+import { showToast } from "./toastSlice";
 
 export interface ITenant {
   id: number;
@@ -38,7 +38,6 @@ export const fetchPropertyTenants = createAsyncThunk(
   }
 );
 
-// Fetch tenants for a given house (nested route)
 export const fetchTenantsByHouse = createAsyncThunk(
   "tenants/getByHouse",
   async (houseId: number) => {
@@ -47,7 +46,6 @@ export const fetchTenantsByHouse = createAsyncThunk(
   }
 );
 
-// Fetch a single tenant by ID (non-nested route)
 export const fetchTenantById = createAsyncThunk(
   "tenants/fetchById",
   async (id: number) => {
@@ -56,7 +54,6 @@ export const fetchTenantById = createAsyncThunk(
   }
 );
 
-// Add a tenant to a specific house (nested route)
 export const addTenant = createAsyncThunk(
   "tenants/add",
   async (
@@ -64,14 +61,22 @@ export const addTenant = createAsyncThunk(
       houseId,
       tenantData,
     }: { houseId: number; tenantData: Omit<ITenant, "id"> },
-    thunkAPI
+    { dispatch, rejectWithValue }
   ) => {
-    const response = await axiosInstance.post(`/houses/${houseId}/tenants`, {
-      tenant: tenantData,
-    });
-    // Extract dispatch from thunkAPI and then dispatch fetchProperties
-    thunkAPI.dispatch(fetchProperties());
-    return response.data;
+    try {
+      const response = await axiosInstance.post(`/houses/${houseId}/tenants`, {
+        tenant: tenantData,
+      });
+
+      dispatch(fetchProperties());
+      dispatch(
+        showToast({ message: "Tenant added successfully!", type: "success" })
+      ); // Show success toast
+      return response.data;
+    } catch (error: any) {
+      dispatch(showToast({ message: "Failed to add Tenant", type: "error" }));
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
@@ -79,14 +84,24 @@ export const editTenant = createAsyncThunk(
   "tenants/edit",
   async (
     { houseId, tenantData }: { houseId: number; tenantData: ITenant },
-    thunkAPI
+    { dispatch, rejectWithValue }
   ) => {
-    const response = await axiosInstance.put(
-      `/houses/${houseId}/tenants/${tenantData.id}`,
-      { tenant: tenantData }
-    );
-    thunkAPI.dispatch(fetchProperties());
-    return response.data;
+    try {
+      const response = await axiosInstance.put(
+        `/houses/${houseId}/tenants/${tenantData.id}`,
+        { tenant: tenantData }
+      );
+      dispatch(fetchProperties());
+      dispatch(
+        showToast({ message: "Tenant updated successfully!", type: "success" })
+      );
+      return response.data;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to update Tenant", type: "error" })
+      );
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
@@ -94,12 +109,21 @@ export const deleteTenant = createAsyncThunk(
   "tenants/delete",
   async (
     { houseId, tenantId }: { houseId: number; tenantId: number },
-    thunkAPI
+    { dispatch, rejectWithValue }
   ) => {
-    await axiosInstance.delete(`/houses/${houseId}/tenants/${tenantId}`);
-    // Dispatch fetchProperties to update house data
-    thunkAPI.dispatch(fetchProperties());
-    return tenantId;
+    try {
+      await axiosInstance.delete(`/houses/${houseId}/tenants/${tenantId}`);
+      dispatch(fetchProperties());
+      dispatch(
+        showToast({ message: "Tenant deleted successfully!", type: "success" })
+      ); // Show success toast
+      return tenantId;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to delete Tenant", type: "error" })
+      ); // Show error toast
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 

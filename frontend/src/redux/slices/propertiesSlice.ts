@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { IHouse } from "./houseSlice";
+import { showToast } from "./toastSlice";
 
 export interface IProperty {
   id?: number; // Make id optional
@@ -24,14 +25,21 @@ const initialState: PropertiesState = {
 // Thunks
 export const fetchProperties = createAsyncThunk(
   "properties/fetchAll",
-  async (_, { rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/properties"); // ✅ Token auto-attached
+      const response = await axiosInstance.get("/properties");
+      // dispatch(
+      //   showToast({
+      //     message: "Properties fetched successfully!",
+      //     type: "success",
+      //   })
+      // ); // Show success toast
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch properties"
+      dispatch(
+        showToast({ message: "Failed to fetch properties", type: "error" })
       );
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -39,38 +47,76 @@ export const fetchProperties = createAsyncThunk(
 export const fetchPropertyById = createAsyncThunk(
   "properties/fetchById",
   async (id: number) => {
-    console.log("property-by-id-fetched");
     const response = await axiosInstance.get(`/properties/${id}`);
+    // dispatch(
+    //   showToast({ message: "Property fetched successfully!", type: "success" })
+    // ); // Show success toast
     return response.data;
   }
 );
 
 export const addProperty = createAsyncThunk(
   "properties/add",
-  async (property: Omit<IProperty, "id">) => {
-    const response = await axiosInstance.post("/properties", {
-      property: {
-        name: property.name,
-        admin_id: property.admin_id,
-      },
-    });
-    return response.data;
+  async (property: Omit<IProperty, "id">, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/properties", {
+        property: {
+          name: property.name,
+          admin_id: property.admin_id,
+        },
+      });
+      dispatch(
+        showToast({ message: "Property added successfully!", type: "success" })
+      );
+      return response.data;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to add new property", type: "error" })
+      );
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
 export const editProperty = createAsyncThunk(
   "properties/edit",
-  async ({ id, ...property }: IProperty) => {
-    const response = await axiosInstance.put(`/properties/${id}`, property);
-    return response.data;
+  async ({ id, ...property }: IProperty, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`/properties/${id}`, property);
+      dispatch(
+        showToast({
+          message: "Property updated successfully!",
+          type: "success",
+        })
+      );
+      return response.data;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to update property", type: "error" })
+      );
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
 export const deleteProperty = createAsyncThunk(
   "properties/delete",
-  async (id: number) => {
-    await axiosInstance.delete(`/properties/${id}`);
-    return id;
+  async (id: number, { dispatch, rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/properties/${id}`);
+      dispatch(
+        showToast({
+          message: "Property deleted successfully!",
+          type: "success",
+        })
+      );
+      return id;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to fetch properties", type: "error" })
+      ); // Show error toast
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 

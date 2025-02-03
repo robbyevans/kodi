@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { ITenant } from "./tenantsSlice";
+import { showToast } from "./toastSlice"; // Import showToast action
 
 export interface IHouse {
   id: number;
@@ -29,7 +30,6 @@ export const fetchAllHouses = createAsyncThunk("houses/fetchAll", async () => {
   return response.data;
 });
 
-// Fetch houses for a given property
 export const fetchHousesByProperty = createAsyncThunk(
   "houses/getHousesByProperty",
   async (propertyId: number) => {
@@ -40,7 +40,6 @@ export const fetchHousesByProperty = createAsyncThunk(
   }
 );
 
-// Fetch a single house by its ID (non-nested URL)
 export const fetchHouseById = createAsyncThunk(
   "houses/fetchById",
   async (id: number) => {
@@ -49,40 +48,65 @@ export const fetchHouseById = createAsyncThunk(
   }
 );
 
-// Add a new house to a property. Note that we now require propertyId.
 export const addHouse = createAsyncThunk(
   "houses/add",
-  async ({
-    propertyId,
-    houseData,
-  }: {
-    propertyId: number;
-    houseData: Omit<IHouse, "id" | "property_id">;
-  }) => {
-    const response = await axiosInstance.post(
-      `/properties/${propertyId}/houses`,
-      { house: houseData }
-    );
-    return response.data;
+  async (
+    {
+      propertyId,
+      houseData,
+    }: {
+      propertyId: number;
+      houseData: Omit<IHouse, "id" | "property_id">;
+    },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post(
+        `/properties/${propertyId}/houses`,
+        { house: houseData }
+      );
+      dispatch(
+        showToast({ message: "House added successfully!", type: "success" })
+      );
+      return response.data;
+    } catch (error: any) {
+      dispatch(
+        showToast({ message: "Failed to add new House", type: "error" })
+      ); // Show error toast
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
-// Edit a house using its ID (non-nested URL)
 export const editHouse = createAsyncThunk(
   "houses/edit",
-  async ({ id, ...house }: IHouse) => {
-    // Here we wrap the data in an object if your controller expects a root key
-    const response = await axiosInstance.put(`/houses/${id}`, { house });
-    return response.data;
+  async ({ id, ...house }: IHouse, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`/houses/${id}`, { house });
+      dispatch(
+        showToast({ message: "House updated successfully!", type: "success" })
+      );
+      return response.data;
+    } catch (error: any) {
+      dispatch(showToast({ message: "Failed to update House", type: "error" })); // Show error toast
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 
-// Delete a house by its ID
 export const deleteHouse = createAsyncThunk(
   "houses/delete",
-  async (id: number) => {
-    await axiosInstance.delete(`/houses/${id}`);
-    return id;
+  async (id: number, { dispatch, rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`/houses/${id}`);
+      dispatch(
+        showToast({ message: "House deleted successfully!", type: "success" })
+      );
+      return id;
+    } catch (error: any) {
+      dispatch(showToast({ message: "Failed to delete House", type: "error" })); // Show error toast
+      return rejectWithValue(error.response?.data);
+    }
   }
 );
 

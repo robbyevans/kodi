@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as S from "./styles"; // Shorthand import for styles
+import * as S from "./styles";
 import { IHouse } from "../../redux/slices/houseSlice";
 
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";

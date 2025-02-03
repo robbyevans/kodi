@@ -3,6 +3,7 @@ import propertiesReducer from "./slices/propertiesSlice";
 import housesReducer from "./slices/houseSlice";
 import tenantsReducer from "./slices/tenantsSlice";
 import adminsReducer from "./slices/adminSlice";
+import toastReducer from "./slices/toastSlice";
 // import paymentReducer from "./slices/paymentSlice";
 
 const store = configureStore({
@@ -11,7 +12,7 @@ const store = configureStore({
     houses: housesReducer,
     tenants: tenantsReducer,
     admins: adminsReducer,
-    // payment: paymentReducer,
+    toast: toastReducer,
   },
 });
 
