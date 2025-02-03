@@ -1,4 +1,3 @@
-// File: /frontend/src/styles/foundation.ts
 export const colors = {
   primary: "#034d3c", // Deep Teal (Primary Brand Color)
   secondary: "#2d6a4f", // Muted Forest Green

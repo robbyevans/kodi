@@ -7,7 +7,6 @@ import * as S from "./styles";
 const Auth = () => {
   const { loading, error, role, isAuthenticated, handleLogin, handleSignup } =
     useAdmins();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
@@ -20,9 +19,9 @@ const Auth = () => {
 
     if (!isLogin && password !== passwordConfirmation) {
       setErrorMessage("Passwords do not match. Please confirm your password.");
-      return; // Prevent further action
+      return;
     } else {
-      setErrorMessage(""); // Reset the error if passwords match
+      setErrorMessage("");
     }
 
     if (!isLogin) {
@@ -36,21 +35,21 @@ const Auth = () => {
     if (isAuthenticated && role === "admin") {
       navigate("/admin-dashboard");
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, role, navigate]);
 
   const handleGoogleSuccess = (credentialResponse: any) => {
     console.log("Google login success:", credentialResponse);
-    // Implement Google OAuth logic here (e.g., send token to backend for verification)
+    // Implement Google OAuth logic here
   };
 
   const handleGoogleError = () => {
     console.log("Google login failed");
   };
 
-  // Reset form fields when an error occurs, without clearing email and password
+  // Clear password fields on error
   useEffect(() => {
     if (error) {
-      setPassword(""); // Clear password and password confirmation fields on error
+      setPassword("");
       setPasswordConfirmation("");
     }
   }, [error]);
@@ -79,18 +78,23 @@ const Auth = () => {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
           />
         )}
+
+        {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
+        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+
         <S.Button onClick={handleSubmit} disabled={loading}>
           {loading ? "Processing..." : isLogin ? "Login" : "Signup"}
         </S.Button>
-        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-        {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
+
         <S.ToggleText>
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <S.ToggleLink onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Signup" : "Login"}
           </S.ToggleLink>
         </S.ToggleText>
+
         <S.Divider>OR</S.Divider>
+
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={handleGoogleError}

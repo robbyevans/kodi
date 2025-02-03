@@ -1,4 +1,3 @@
-// File 1: /frontend/src/components/Dashboard/Dashboard.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "../../redux/hooks/useProperties";

@@ -1,4 +1,3 @@
-// File: /frontend/src/components/Footer/Footer.tsx
 import React from "react";
 import * as S from "./styles";
 

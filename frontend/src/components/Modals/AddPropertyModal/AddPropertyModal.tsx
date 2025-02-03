@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
-import { useAdmins } from "../../../redux/hooks/useAdmin"; // Import useAdmins to get the current admin
+import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
 
 interface AddPropertyModalProps {

@@ -63,7 +63,6 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
         phone_number: tenantPhone,
       });
     }
-
     resetForm();
   };
 
@@ -100,10 +99,9 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
             </S.SubmitButton>
           </S.ButtonContainer>
         </S.FormContainer>
-
-        <h3>Existing Tenants</h3>
+        <S.SectionHeader>Existing Tenants</S.SectionHeader>
         {loading ? (
-          <p>Loading...</p>
+          <S.StatusMessage>Loading...</S.StatusMessage>
         ) : (
           <S.TenantList>
             {tenants.map((tenant: ITenant) => (
@@ -123,10 +121,11 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
                   <button
                     className="danger"
                     onClick={() => {
-                      const confirmDelete = window.confirm(
-                        "Are you sure you want to delete this tenant?"
-                      );
-                      if (confirmDelete) {
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this tenant?"
+                        )
+                      ) {
                         handleDeleteTenant(house.id, tenant.id);
                       }
                     }}

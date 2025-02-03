@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as S from "./styles";
 import { IHouse } from "../../redux/slices/houseSlice";
-
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 
@@ -73,16 +72,11 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
         </S.Table>
       </S.TableContainer>
       <S.ButtonContainer>
-        <S.AddPropertyButton
-          onClick={() => {
-            setIsHouseModalOpen(true);
-          }}
-        >
+        <S.AddPropertyButton onClick={() => setIsHouseModalOpen(true)}>
           Add New House
         </S.AddPropertyButton>
       </S.ButtonContainer>
 
-      {/* House Modal */}
       {isHouseModalOpen && (
         <AddHouseModal
           isOpen={isHouseModalOpen}
@@ -91,7 +85,6 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
         />
       )}
 
-      {/* Tenant Modal */}
       {selectedHouse && (
         <AddTenantModal
           house={selectedHouse}

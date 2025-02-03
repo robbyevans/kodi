@@ -1,4 +1,3 @@
-// File: /frontend/src/components/Auth/styles.ts
 import styled from "styled-components";
 import {
   colors,
@@ -7,7 +6,6 @@ import {
   fontWeights,
   spacing,
   borderRadius,
-  shadows,
 } from "../../styles/foundation";
 
 export const Container = styled.div`
@@ -41,7 +39,7 @@ export const Input = styled.input`
 
   &:focus {
     border-color: ${colors.primary};
-    box-shadow: ${shadows.sm} ${colors.primary}20;
+    box-shadow: 0 0 0 3px ${colors.primary}20;
     outline: none;
   }
 `;
@@ -79,22 +77,23 @@ export const ErrorMessage = styled.p`
   color: ${colors.error};
   font-size: ${fontSizes.sm};
   margin-top: ${spacing.sm};
+  text-align: center;
 `;
 
 export const ToggleText = styled.p`
-  color: ${colors.text.secondary};
   font-size: ${fontSizes.sm};
   margin-top: ${spacing.md};
+  color: ${colors.text.secondary};
 `;
 
 export const ToggleLink = styled.span`
   color: ${colors.primary};
-  cursor: pointer;
   font-weight: ${fontWeights.semibold};
+  cursor: pointer;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${colors.secondary};
+    color: ${colors.accent};
     text-decoration: underline;
   }
 `;
@@ -107,6 +106,8 @@ export const Divider = styled.div`
   align-items: center;
   text-align: center;
   color: ${colors.neutral[500]};
+  position: relative;
+  font-size: ${fontSizes.sm};
 
   &::before,
   &::after {

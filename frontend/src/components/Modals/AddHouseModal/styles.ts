@@ -1,98 +1,100 @@
 import styled from "styled-components";
+import {
+  colors,
+  fontSizes,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../../styles/foundation";
 
-// Overlay covers the entire viewport with a semi-transparent background.
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
 `;
 
-// ModalContent is the container for the modal dialog.
 export const ModalContent = styled.div`
-  background: #fff;
-  border-radius: 8px;
+  background: ${colors.background};
+  border-radius: ${borderRadius.lg};
   width: 90%;
   max-width: 500px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: ${spacing.xl};
+  box-shadow: ${shadows.md};
 `;
 
-// ModalHeader displays the title in a bold style.
 export const ModalHeader = styled.h2`
-  margin: 0 0 1.5rem;
+  margin: 0 0 ${spacing.lg};
   text-align: center;
-  color: #333;
+  color: ${colors.primary};
+  font-size: ${fontSizes["2xl"]};
 `;
 
-// FormGroup groups the label and input together.
 export const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: ${spacing.md};
   display: flex;
   flex-direction: column;
 
   label {
-    margin-bottom: 0.5rem;
-    color: #555;
+    margin-bottom: ${spacing.xs};
+    color: ${colors.text.secondary};
+    font-size: ${fontSizes.base};
     font-weight: 500;
-  }
-
-  input {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-    }
   }
 `;
 
-// ButtonContainer to hold the Cancel and Submit buttons side by side.
+export const InputField = styled.input`
+  padding: ${spacing.sm};
+  border: 1px solid ${colors.neutral[300]};
+  border-radius: ${borderRadius.md};
+  font-size: ${fontSizes.base};
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${colors.primary};
+  }
+`;
+
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 1.5rem;
-  gap: 1rem;
+  gap: ${spacing.md};
+  margin-top: ${spacing.lg};
 `;
 
-// CancelButton styles the cancel action.
 export const CancelButton = styled.button`
-  padding: 0.75rem 1.5rem;
-  background: #ccc;
+  padding: ${spacing.sm} ${spacing.md};
+  background: ${colors.neutral[300]};
   border: none;
-  border-radius: 4px;
-  color: #333;
-  font-weight: 600;
+  border-radius: ${borderRadius.md};
+  color: ${colors.text.primary};
+  font-weight: ${fontSizes.base};
   cursor: pointer;
   transition: background 0.3s ease;
 
   &:hover {
-    background: #bbb;
+    background: ${colors.neutral[200]};
   }
 `;
 
-// SubmitButton styles the submit action.
 export const SubmitButton = styled.button`
-  padding: 0.75rem 1.5rem;
-  background: #007bff;
+  padding: ${spacing.sm} ${spacing.md};
+  background: ${colors.primary};
   border: none;
-  border-radius: 4px;
-  color: #fff;
+  border-radius: ${borderRadius.md};
+  color: ${colors.text.inverted};
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
 
   &:hover {
-    background: #006ae0;
+    background: ${colors.secondary};
   }
 `;

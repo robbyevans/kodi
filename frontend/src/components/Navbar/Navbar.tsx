@@ -1,4 +1,3 @@
-// File: /frontend/src/components/Navbar/Navbar.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
@@ -14,26 +13,27 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAdmins();
 
-  const handleBack = () => navigate(-1);
-  const handleForward = () => navigate(1);
-
-  const navigateToSettings = () => navigate("/settings");
-
   return (
     <S.NavbarContainer>
-      <S.NavButton onClick={handleBack}>
-        <FiArrowLeft />
-      </S.NavButton>
-      <S.NavButton onClick={handleForward}>
-        <FiArrowRight />
-      </S.NavButton>
-      <S.Title>App Name</S.Title>
-      <S.IconButton onClick={navigateToSettings}>
-        <FiSettings />
-      </S.IconButton>
-      <S.IconButton onClick={handleLogout}>
-        <FiLogOut />
-      </S.IconButton>
+      <S.NavGroup>
+        <S.NavButton onClick={() => navigate(-1)}>
+          <FiArrowLeft />
+        </S.NavButton>
+        <S.NavButton onClick={() => navigate(1)}>
+          <FiArrowRight />
+        </S.NavButton>
+      </S.NavGroup>
+
+      <S.Title>Kodi</S.Title>
+
+      <S.NavGroup>
+        <S.IconButton onClick={() => navigate("/settings")}>
+          <FiSettings />
+        </S.IconButton>
+        <S.IconButton onClick={handleLogout}>
+          <FiLogOut />
+        </S.IconButton>
+      </S.NavGroup>
     </S.NavbarContainer>
   );
 };

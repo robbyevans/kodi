@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { colors } from "../../styles/foundation";
+import { colors, fontSizes, spacing } from "../../styles/foundation";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -25,29 +25,31 @@ export const LoadingContainer = styled.div`
   height: 100vh;
   background: ${colors.primary};
   color: ${colors.background};
+  padding: ${spacing.xl};
 `;
 
 export const LogoContainer = styled.div`
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: ${spacing["2xl"]};
 `;
 
 export const AnimatedIcon = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
-  margin-bottom: 1rem;
+  margin-bottom: ${spacing.sm};
 `;
 
 export const FadeInText = styled.h1`
-  font-size: 2.5rem;
+  font-size: ${fontSizes["3xl"]};
   animation: ${fadeIn} 1s ease-out;
   letter-spacing: 2px;
+  font-family: sans-serif;
 `;
 
 export const ProgressBar = styled.div`
   width: 300px;
   height: 4px;
   background: ${colors.secondary}40;
-  border-radius: 2px;
+  border-radius: ${spacing.xs};
   overflow: hidden;
 `;
 

@@ -1,4 +1,11 @@
 import styled from "styled-components";
+import {
+  colors,
+  fontSizes,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../../styles/foundation";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -8,43 +15,45 @@ export const ModalOverlay = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
 `;
 
 export const ModalContent = styled.div`
-  background: white;
+  background: ${colors.background};
   width: 450px;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: ${spacing.lg};
+  border-radius: ${borderRadius.lg};
+  box-shadow: ${shadows.md};
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: ${spacing.md};
 `;
 
 export const ModalHeader = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  font-size: ${fontSizes.xl};
+  font-weight: ${fontSizes.bold};
+  margin-bottom: ${spacing.sm};
   text-align: center;
+  color: ${colors.primary};
 `;
 
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: ${spacing.sm};
 
   input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    outline: none;
+    padding: ${spacing.sm};
+    border: 1px solid ${colors.neutral[300]};
+    border-radius: ${borderRadius.sm};
+    font-size: ${fontSizes.base};
+    transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: #007bff;
+      border-color: ${colors.primary};
+      outline: none;
     }
   }
 `;
@@ -52,73 +61,87 @@ export const FormContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
+  gap: ${spacing.sm};
+  margin-top: ${spacing.md};
 `;
 
 export const SubmitButton = styled.button`
-  background: #007bff;
-  color: white;
-  padding: 10px 14px;
+  background: ${colors.primary};
+  color: ${colors.text.inverted};
+  padding: ${spacing.sm} ${spacing.md};
   border: none;
-  border-radius: 5px;
+  border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: ${fontSizes.base};
+  transition: background 0.3s ease;
 
   &:hover {
-    background: #0056b3;
+    background: ${colors.secondary};
   }
 `;
 
 export const CancelButton = styled.button`
-  background: #ccc;
-  color: black;
-  padding: 10px 14px;
+  background: ${colors.neutral[300]};
+  color: ${colors.text.primary};
+  padding: ${spacing.sm} ${spacing.md};
   border: none;
-  border-radius: 5px;
+  border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: ${fontSizes.base};
+  transition: background 0.3s ease;
 
   &:hover {
-    background: #999;
+    background: ${colors.neutral[500]};
   }
 `;
 
 export const TenantList = styled.div`
-  margin-top: 16px;
+  margin-top: ${spacing.md};
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${spacing.sm};
 `;
 
 export const TenantItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background: #f9f9f9;
-  border-radius: 5px;
+  padding: ${spacing.sm};
+  background: ${colors.neutral[100]};
+  border-radius: ${borderRadius.sm};
 `;
 
 export const TenantActions = styled.div`
   display: flex;
-  gap: 8px;
+  gap: ${spacing.xs};
 
   button {
     background: none;
     border: none;
-    color: #007bff;
+    color: ${colors.primary};
     cursor: pointer;
-    font-size: 14px;
+    font-size: ${fontSizes.sm};
+    transition: color 0.2s ease;
 
     &:hover {
       text-decoration: underline;
     }
 
     &.danger {
-      color: #ff4d4f;
+      color: ${colors.error};
     }
   }
+`;
+
+export const SectionHeader = styled.h3`
+  font-size: ${fontSizes.lg};
+  text-align: center;
+  color: ${colors.primary};
+  margin-top: ${spacing.lg};
+`;
+
+export const StatusMessage = styled.p`
+  text-align: center;
+  font-size: ${fontSizes.base};
+  color: ${colors.text.secondary};
 `;

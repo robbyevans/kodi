@@ -1,10 +1,11 @@
 import styled from "styled-components";
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-`;
+import {
+  colors,
+  fontSizes,
+  spacing,
+  borderRadius,
+  shadows,
+} from "../../../styles/foundation";
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -12,71 +13,84 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 export const ModalContent = styled.div`
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  background: ${colors.background};
+  padding: ${spacing.xl};
+  border-radius: ${borderRadius.lg};
   width: 100%;
   max-width: 500px;
+  box-shadow: ${shadows.md};
 `;
 
 export const ModalHeader = styled.h2`
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #034d3c;
+  font-size: ${fontSizes["2xl"]};
+  margin-bottom: ${spacing.lg};
+  color: ${colors.primary};
+  text-align: center;
 `;
 
 export const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: ${spacing.lg};
 
   label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    color: #053a2f;
+    margin-bottom: ${spacing.xs};
+    font-size: ${fontSizes.base};
+    color: ${colors.primary};
+    font-weight: 500;
   }
 
   input {
     width: 100%;
-    padding: 0.8rem;
-    font-size: 1rem;
-    border: 1px solid #d0e6db;
-    border-radius: 8px;
+    padding: ${spacing.sm};
+    font-size: ${fontSizes.base};
+    border: 1px solid ${colors.neutral[300]};
+    border-radius: ${borderRadius.md};
+
+    &:focus {
+      outline: none;
+      border-color: ${colors.primary};
+    }
   }
 `;
 
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: ${spacing.md};
+  justify-content: flex-end;
+  margin-top: ${spacing.lg};
+`;
+
 export const CancelButton = styled.button`
-  background-color: #f44336; /* Red */
-  color: white;
+  background: ${colors.error};
+  color: ${colors.text.inverted};
+  padding: ${spacing.sm} ${spacing.md};
   border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 8px;
+  border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #d32f2f; /* Slightly darker red */
+    background: #d32f2f;
   }
 `;
 
 export const SubmitButton = styled.button`
-  background-color: #34a853; /* Green */
-  color: white;
+  background: ${colors.success};
+  color: ${colors.text.inverted};
+  padding: ${spacing.sm} ${spacing.md};
   border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 8px;
+  border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #2c8d45; /* Slightly darker green */
+    background: #2c8d45;
   }
 `;
