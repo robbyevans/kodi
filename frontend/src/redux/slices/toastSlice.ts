@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ToastState {
   message: string | null;
-  type: "success" | "error" | null;
+  type: "success" | "error" | "info" | null;
 }
 
 const initialState: ToastState = {

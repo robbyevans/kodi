@@ -1,42 +1,55 @@
 import React, { useEffect, useState } from "react";
 import * as S from "./styles";
 
-export type ToastType = "success" | "error" | "info";
+export type ToastType = "success" | "error" | "info" | null;
 
 interface ToastProps {
-  message: string;
+  message: string | null;
   type?: ToastType;
-  onClose: () => void;
+  clearToastMessage: () => void;
 }
 
-const Toast: React.FC<ToastProps> = ({
+const ToastMessage: React.FC<ToastProps> = ({
   message,
   type = "success",
-  onClose,
+  clearToastMessage,
 }) => {
+  const [exiting, setExiting] = useState(false);
   const [progress, setProgress] = useState(100);
 
+  // Auto-clear the toast after 3 seconds when a new message appears
   useEffect(() => {
+    if (!message) return;
+
+    setExiting(false);
+    setProgress(100);
+
     const interval = setInterval(() => {
-      setProgress((prev) => prev - 100 / 30);
+      setProgress((prev) => Math.max(0, prev - 100 / 30)); // 30 steps over 3 seconds
     }, 100);
 
     const timeout = setTimeout(() => {
-      onClose();
+      setExiting(true);
+      setTimeout(() => {
+        clearToastMessage();
+      }, 400); // Wait for the slideUpOut animation to finish
     }, 3000);
 
     return () => {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [onClose]);
+  }, [message, clearToastMessage]);
+
+  if (!message) return null; // Hide component if no message
 
   return (
-    <S.ToastContainer type={type}>
-      {message}
+    <S.ToastContainer type={type} exiting={exiting}>
+      <S.Message>{message}</S.Message>
+      <S.Button onClick={clearToastMessage}>&times;</S.Button>
       <S.ProgressBar progress={progress} />
     </S.ToastContainer>
   );
 };
 
-export default Toast;
+export default ToastMessage;
