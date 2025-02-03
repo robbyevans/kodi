@@ -1,6 +1,7 @@
 // File: /frontend/src/redux/slices/tenantsSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
+import { fetchProperties } from "./propertiesSlice";
 
 export interface ITenant {
   id: number;
@@ -58,35 +59,46 @@ export const fetchTenantById = createAsyncThunk(
 // Add a tenant to a specific house (nested route)
 export const addTenant = createAsyncThunk(
   "tenants/add",
-  async ({
-    houseId,
-    tenantData,
-  }: {
-    houseId: number;
-    tenantData: Omit<ITenant, "id">;
-  }) => {
+  async (
+    {
+      houseId,
+      tenantData,
+    }: { houseId: number; tenantData: Omit<ITenant, "id"> },
+    thunkAPI
+  ) => {
     const response = await axiosInstance.post(`/houses/${houseId}/tenants`, {
       tenant: tenantData,
     });
+    // Extract dispatch from thunkAPI and then dispatch fetchProperties
+    thunkAPI.dispatch(fetchProperties());
     return response.data;
   }
 );
 
 export const editTenant = createAsyncThunk(
   "tenants/edit",
-  async ({ houseId, tenantData }: { houseId: number; tenantData: ITenant }) => {
+  async (
+    { houseId, tenantData }: { houseId: number; tenantData: ITenant },
+    thunkAPI
+  ) => {
     const response = await axiosInstance.put(
       `/houses/${houseId}/tenants/${tenantData.id}`,
       { tenant: tenantData }
     );
+    thunkAPI.dispatch(fetchProperties());
     return response.data;
   }
 );
 
 export const deleteTenant = createAsyncThunk(
   "tenants/delete",
-  async ({ houseId, tenantId }: { houseId: number; tenantId: number }) => {
+  async (
+    { houseId, tenantId }: { houseId: number; tenantId: number },
+    thunkAPI
+  ) => {
     await axiosInstance.delete(`/houses/${houseId}/tenants/${tenantId}`);
+    // Dispatch fetchProperties to update house data
+    thunkAPI.dispatch(fetchProperties());
     return tenantId;
   }
 );

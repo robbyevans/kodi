@@ -3,12 +3,33 @@ class PropertiesController < ApplicationController
   before_action :set_property, only: [:show, :update, :destroy]
 
   def index
-    @properties = current_admin.properties.includes(:houses)
-    render json: @properties.as_json(include: { houses: { only: [:id, :house_number, :payable_rent] } })
+    # Eager load houses and their tenant
+    @properties = current_admin.properties.includes(houses: :tenant)
+    render json: @properties.as_json(
+      include: {
+        houses: {
+          only: [:id, :house_number, :payable_rent],
+          include: {
+            tenant: { only: [:id, :name, :email, :phone_number] }
+          }
+        }
+      }
+    )
   end
 
   def show
-    render json: @property
+    # Ensure the property has the houses and tenants loaded
+    @property = Property.includes(houses: :tenant).find(params[:id])
+    render json: @property.as_json(
+      include: {
+        houses: {
+          only: [:id, :house_number, :payable_rent],
+          include: {
+            tenant: { only: [:id, :name, :email, :phone_number] }
+          }
+        }
+      }
+    )
   end
 
   def create

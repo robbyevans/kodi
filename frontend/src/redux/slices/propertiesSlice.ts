@@ -39,6 +39,7 @@ export const fetchProperties = createAsyncThunk(
 export const fetchPropertyById = createAsyncThunk(
   "properties/fetchById",
   async (id: number) => {
+    console.log("property-by-id-fetched");
     const response = await axiosInstance.get(`/properties/${id}`);
     return response.data;
   }

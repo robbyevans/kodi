@@ -4,14 +4,17 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 import { useProperties } from "../redux/hooks/useProperties";
-import { useHouses } from "../redux/hooks/useHouses";
 
 import * as S from "../components/PropertyPage/styles";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
 
 const PropertyContainer = () => {
-  const { getPropertyById, data: propertyData } = useProperties();
-  const { houses, getHousesByProperty, loading, error } = useHouses();
+  const {
+    getPropertyById,
+    data: propertyData,
+    loading,
+    error,
+  } = useProperties();
 
   const { propertyId } = useParams<{ propertyId: string }>();
 
@@ -19,9 +22,10 @@ const PropertyContainer = () => {
   useEffect(() => {
     if (propertyId) {
       getPropertyById(Number(propertyId));
-      getHousesByProperty(Number(propertyId));
     }
   }, [propertyId]);
+
+  const houses = propertyData[0]?.houses || [];
 
   const downloadPDF = () => {
     const doc = new jsPDF();

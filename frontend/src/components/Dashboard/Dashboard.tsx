@@ -1,7 +1,8 @@
 // File 1: /frontend/src/components/Dashboard/Dashboard.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "../../redux/hooks/useProperties";
+import { useTenants } from "../../redux/hooks/useTenants";
 import { FiPlus } from "react-icons/fi";
 import * as S from "./styles";
 import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
@@ -10,9 +11,14 @@ const AdminDashboardPage = () => {
   const navigate = useNavigate();
   const { data, loading, error } = useProperties();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { tenants } = useTenants();
 
   const handleAddPropertyClick = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    console.log("tenants", tenants);
+  }, [tenants]);
 
   if (loading)
     return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;
