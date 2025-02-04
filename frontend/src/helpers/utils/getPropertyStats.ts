@@ -12,7 +12,9 @@ export const getPropertyStats = (properties: IProperty[]) => {
     const houses = property.houses || [];
 
     const totalUnitsInProperty = houses.length;
+    console.log("totalUnitsInProperty", totalUnitsInProperty);
     const occupiedUnits = houses.filter((house) => house?.tenant).length;
+    console.log("occupiedUnits", occupiedUnits);
     const totalRevenue = houses.reduce(
       (sum, house) => sum + (house?.payable_rent || 0),
       0
@@ -20,6 +22,8 @@ export const getPropertyStats = (properties: IProperty[]) => {
     const currentRevenue = houses
       .filter((house) => house?.tenant)
       .reduce((sum, house) => sum + (house?.payable_rent || 0), 0);
+
+    console.log("currentRevenue", currentRevenue);
 
     totalUnits += totalUnitsInProperty;
     totalTenants += occupiedUnits;

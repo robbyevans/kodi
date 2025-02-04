@@ -1,6 +1,7 @@
 import React from "react";
 import { FiPlus } from "react-icons/fi";
 import Sidebar from "../Sidebar/Sidebar";
+import QuickStatCard from "../StatCard/QuickStatCard"; // Import the new component
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 
@@ -8,7 +9,7 @@ interface DashboardProps {
   data: IProperty[];
   navigate: (path: string) => void;
   handleAddPropertyClick: () => void;
-  totalRevenuePercentage:number;
+  totalRevenuePercentage: number;
   totalProperties: number;
   formattedDate: string;
   formattedTime: string;
@@ -20,6 +21,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   data,
   navigate,
   handleAddPropertyClick,
+  totalRevenuePercentage,
   totalProperties,
   formattedDate,
   formattedTime,
@@ -82,21 +84,12 @@ const Dashboard: React.FC<DashboardProps> = ({
           </S.PropertyListContainer>
 
           <S.SidePanel>
-            <S.QuickStats>
-              <h3>Quick Stats</h3>
-              <S.StatItem>
-                <span>Total Properties</span>
-                <strong>{totalProperties}</strong>
-              </S.StatItem>
-              <S.StatItem>
-                <span>Total Units</span>
-                <strong>{totalUnits}</strong>
-              </S.StatItem>
-              <S.StatItem>
-                <span>Occupancy Rate</span>
-                <strong>{occupancyRate}%</strong>
-              </S.StatItem>
-            </S.QuickStats>
+            <QuickStatCard
+              totalProperties={totalProperties}
+              totalUnits={totalUnits}
+              occupancyRate={occupancyRate}
+              totalRevenuePercentage={totalRevenuePercentage}
+            />
           </S.SidePanel>
         </S.ContentWrapper>
       </S.DashboardWrapper>

@@ -16,17 +16,17 @@ const DashboardContainer = () => {
   const handleAddPropertyClick = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const [date, setDate] = useState(new Date());
-  useEffect(() => {
-    const timer = setInterval(() => setDate(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // const [date, setDate] = useState(new Date());
+  // useEffect(() => {
+  //   const timer = setInterval(() => setDate(new Date()), 1000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
-  const formattedDate = date.toLocaleDateString();
-  const formattedTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  // const formattedDate = date.toLocaleDateString();
+  // const formattedTime = date.toLocaleTimeString([], {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  // });
 
   // (Optional) Any additional logic when tenants update
   useEffect(() => {
@@ -37,8 +37,17 @@ const DashboardContainer = () => {
     return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;
   if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
 
-  const { totalUnits, occupancyRate, totalProperties, totalRevenuePercentage } =
-    getPropertyStats(propertyData);
+  const {
+    totalUnits,
+    occupancyRate,
+    totalProperties,
+    totalRevenuePercentage,
+    totalRevenueIfFullyOccupied,
+    totalCurrentRevenue,
+  } = getPropertyStats(propertyData);
+
+  console.log("totalRevenueIfFullyOccupied", totalRevenueIfFullyOccupied);
+  console.log("totalCurrentRevenue", totalCurrentRevenue);
 
   return (
     <>
@@ -47,8 +56,8 @@ const DashboardContainer = () => {
         navigate={navigate}
         handleAddPropertyClick={handleAddPropertyClick}
         totalProperties={totalProperties}
-        formattedDate={formattedDate}
-        formattedTime={formattedTime}
+        formattedDate={"0"}
+        formattedTime={"0"}
         totalRevenuePercentage={totalRevenuePercentage}
         totalUnits={totalUnits}
         occupancyRate={occupancyRate}

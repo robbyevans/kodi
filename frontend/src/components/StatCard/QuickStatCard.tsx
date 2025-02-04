@@ -1,6 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import * as S from "./styles";
+import { colors } from "../../styles/foundation";
 
 interface QuickStatCardProps {
   totalProperties: number;
@@ -9,7 +10,7 @@ interface QuickStatCardProps {
   totalRevenuePercentage: number;
 }
 
-const COLORS = ["#0088FE", "#00C49F"]; // Blue for collected revenue, Green for remaining
+const COLORS = ["#0088FE", colors.primary]; // Blue for collected revenue, Green for remaining
 
 const QuickStatCard: React.FC<QuickStatCardProps> = ({
   totalProperties,
@@ -18,12 +19,34 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
   totalRevenuePercentage,
 }) => {
   const data = [
-    { name: "Collected Revenue", value: totalRevenuePercentage },
+    { name: "Collected Revenue", value: 50 },
     { name: "Remaining Revenue", value: 100 - totalRevenuePercentage },
   ];
 
   return (
     <S.QuickStats>
+      {/* Pie Chart */}
+      <S.ChartContainer>
+        <ResponsiveContainer width="100%" height={100}>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={30}
+              outerRadius={50}
+              fill="#8884d8"
+              paddingAngle={3}
+              dataKey="value"
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </S.ChartContainer>
       <h3>Quick Stats</h3>
       <S.StatItem>
         <span>Total Properties</span>
@@ -37,29 +60,6 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         <span>Occupancy Rate</span>
         <strong>{occupancyRate}%</strong>
       </S.StatItem>
-
-      {/* Pie Chart */}
-      <S.ChartContainer>
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={50}
-              outerRadius={80}
-              fill="#8884d8"
-              paddingAngle={3}
-              dataKey="value"
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </S.ChartContainer>
     </S.QuickStats>
   );
 };

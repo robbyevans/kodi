@@ -175,29 +175,7 @@ export const SidePanel = styled.aside`
   height: fit-content;
 `;
 
-export const QuickStats = styled.div`
-  h3 {
-    font-size: ${fontSizes.xl};
-    color: ${colors.primary};
-    margin-bottom: ${spacing.lg};
-  }
-`;
 
-export const StatItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: ${spacing.sm} 0;
-  border-bottom: 1px solid ${colors.neutral[200]};
-
-  span {
-    color: ${colors.text.secondary};
-  }
-
-  strong {
-    color: ${colors.text.primary};
-    font-weight: ${fontWeights.semibold};
-  }
-`;
 
 export const EmptyState = styled.div`
   text-align: center;
