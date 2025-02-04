@@ -10,6 +10,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import * as S from "./styles";
+import Notification from "../Notification/Notification";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -50,6 +51,9 @@ const Navbar: React.FC = () => {
           <S.IconButton onClick={() => navigate("/profile")} title="Profile">
             <FiUser />
           </S.IconButton>
+          <S.IconButton>
+            <Notification />
+          </S.IconButton>
         </S.DesktopMenu>
 
         {/* Mobile Menu Button */}
@@ -77,6 +81,9 @@ const Navbar: React.FC = () => {
           </S.MobileMenuItem>
           <S.MobileMenuItem onClick={() => navigateAndClose("/profile")}>
             <FiUser /> Profile
+          </S.MobileMenuItem>
+          <S.MobileMenuItem>
+            <Notification />
           </S.MobileMenuItem>
         </S.MobileMenu>
       )}

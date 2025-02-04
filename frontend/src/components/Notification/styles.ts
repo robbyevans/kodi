@@ -9,6 +9,7 @@ export const NotificationIcon = styled.div`
   cursor: pointer;
   position: relative;
   font-size: 24px;
+  margin-bottom: -10px;
 `;
 
 export const NotificationBadge = styled.span`

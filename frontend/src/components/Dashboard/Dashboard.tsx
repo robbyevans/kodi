@@ -5,7 +5,6 @@ import { useTenants } from "../../redux/hooks/useTenants";
 import { FiPlus } from "react-icons/fi";
 import * as S from "./styles";
 import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
-import Notification from "../Notification/Notification";
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
@@ -44,8 +43,6 @@ const AdminDashboardPage = () => {
         </div>
         <p>Date: {formattedDate}</p>
         <p>Time: {formattedTime}</p>
-
-        <Notification />
       </S.DashboardHeader>
 
       <S.ContentWrapper>
