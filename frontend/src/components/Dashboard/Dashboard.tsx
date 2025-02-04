@@ -5,7 +5,7 @@ import { useTenants } from "../../redux/hooks/useTenants";
 import { FiPlus } from "react-icons/fi";
 import * as S from "./styles";
 import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
-import Navbar from "../Navbar/Navbar";
+import Sidebar from "../Sidebar/Sidebar";
 
 const AdminDashboardPage = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const AdminDashboardPage = () => {
 
   return (
     <S.DashboardContainer>
-      <Navbar />
+      <Sidebar />
       <S.DashboardWrapper>
         <S.DashboardHeader>
           <div>
