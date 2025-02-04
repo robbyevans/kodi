@@ -42,12 +42,16 @@ export const TableHeader = styled.th`
   color: #717171;
   font-weight: ${fontWeights.semibold};
   text-align: left;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 `;
 
 export const TableData = styled.td`
   padding: ${spacing.md};
   border-bottom: 1px solid ${colors.neutral[200]};
-  color: ${colors.text.secondary};
+  color: ${colors.text.primary};
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
   &:last-child {
     text-align: center;

@@ -56,5 +56,5 @@ export const ProgressBar = styled.div`
 export const ProgressFill = styled.div`
   height: 100%;
   background: ${colors.background};
-  animation: ${progress} 2s ease-in-out infinite;
+  animation: ${progress} 2s ease-in-out;
 `;
