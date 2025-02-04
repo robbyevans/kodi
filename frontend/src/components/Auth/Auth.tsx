@@ -57,7 +57,7 @@ const Auth = () => {
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <S.Container>
-        <S.Title>{isLogin ? "Admin Login" : "Admin Signup"}</S.Title>
+        <S.Title>{isLogin ? "Login" : "Signup"}</S.Title>
         <S.Input
           type="email"
           placeholder="Email"
