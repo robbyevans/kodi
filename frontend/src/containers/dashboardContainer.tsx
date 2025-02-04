@@ -5,10 +5,11 @@ import { useTenants } from "../redux/hooks/useTenants";
 import Dashboard from "../components/Dashboard/Dashboard";
 import AddPropertyModal from "../components/Modals/AddPropertyModal/AddPropertyModal";
 import * as S from "../components/Dashboard/styles";
+import { getPropertyStats } from "../helpers/utils/getPropertyStats";
 
 const DashboardContainer = () => {
   const navigate = useNavigate();
-  const { data, loading, error } = useProperties();
+  const { data: propertyData, loading, error } = useProperties();
   const { tenants } = useTenants();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -36,31 +37,19 @@ const DashboardContainer = () => {
     return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;
   if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
 
-  // Calculate total units across all properties
-  const totalUnits = data.reduce(
-    (acc, property) => acc + (property.houses?.length || 0),
-    0
-  );
-
-  // Calculate total occupied units (houses with a tenant)
-  const totalOccupied = data.reduce((acc, property) => {
-    const occupied =
-      property.houses?.filter((house) => house.tenant).length || 0;
-    return acc + occupied;
-  }, 0);
-
-  // Calculate occupancy rate as a percentage
-  const occupancyRate =
-    totalUnits > 0 ? Math.round((totalOccupied / totalUnits) * 100) : 0;
+  const { totalUnits, occupancyRate, totalProperties, totalRevenuePercentage } =
+    getPropertyStats(propertyData);
 
   return (
     <>
       <Dashboard
-        data={data}
+        data={propertyData}
         navigate={navigate}
         handleAddPropertyClick={handleAddPropertyClick}
+        totalProperties={totalProperties}
         formattedDate={formattedDate}
         formattedTime={formattedTime}
+        totalRevenuePercentage={totalRevenuePercentage}
         totalUnits={totalUnits}
         occupancyRate={occupancyRate}
       />

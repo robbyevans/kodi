@@ -8,6 +8,8 @@ interface DashboardProps {
   data: IProperty[];
   navigate: (path: string) => void;
   handleAddPropertyClick: () => void;
+  totalRevenuePercentage:number;
+  totalProperties: number;
   formattedDate: string;
   formattedTime: string;
   totalUnits: number;
@@ -18,6 +20,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   data,
   navigate,
   handleAddPropertyClick,
+  totalProperties,
   formattedDate,
   formattedTime,
   totalUnits,
@@ -83,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               <h3>Quick Stats</h3>
               <S.StatItem>
                 <span>Total Properties</span>
-                <strong>{data?.length}</strong>
+                <strong>{totalProperties}</strong>
               </S.StatItem>
               <S.StatItem>
                 <span>Total Units</span>
