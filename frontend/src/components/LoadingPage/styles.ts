@@ -22,7 +22,7 @@ export const LoadingContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  flex: 1;
   background: ${colors.primary};
   color: ${colors.background};
   padding: ${spacing.xl};

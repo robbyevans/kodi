@@ -15,7 +15,7 @@ const AppRouter = () => {
 
   return (
     <>
-      <Navbar />
+      {isAuthenticated && <Navbar />}
       <Routes>
         {/* Login Page (always accessible if not authenticated) */}
         <Route

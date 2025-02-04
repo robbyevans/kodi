@@ -12,7 +12,7 @@ import {
 export const DashboardContainer = styled.div`
   display: flex;
   background: ${colors.neutral[100]};
-  min-height: 100%;
+  overflow: scroll;
 `;
 
 export const DashboardWrapper = styled.div`
@@ -174,8 +174,6 @@ export const SidePanel = styled.aside`
   box-shadow: ${shadows.md};
   height: fit-content;
 `;
-
-
 
 export const EmptyState = styled.div`
   text-align: center;

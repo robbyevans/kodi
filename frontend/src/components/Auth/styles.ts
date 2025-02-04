@@ -13,7 +13,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  flex: 1;
   padding: ${spacing.xl};
   background: ${colors.neutral[100]};
 `;
