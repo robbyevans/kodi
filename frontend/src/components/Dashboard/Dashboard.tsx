@@ -1,40 +1,28 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useProperties } from "../../redux/hooks/useProperties";
-import { useTenants } from "../../redux/hooks/useTenants";
+import React from "react";
 import { FiPlus } from "react-icons/fi";
-import * as S from "./styles";
-import AddPropertyModal from "../Modals/AddPropertyModal/AddPropertyModal";
 import Sidebar from "../Sidebar/Sidebar";
+import * as S from "./styles";
+import { IProperty } from "../../redux/slices/propertiesSlice";
 
-const AdminDashboardPage = () => {
-  const navigate = useNavigate();
-  const { data, loading, error } = useProperties();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { tenants } = useTenants();
+interface DashboardProps {
+  data: IProperty[];
+  navigate: (path: string) => void;
+  handleAddPropertyClick: () => void;
+  formattedDate: string;
+  formattedTime: string;
+  totalUnits: number;
+  occupancyRate: number;
+}
 
-  const handleAddPropertyClick = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setDate(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formattedDate = date.toLocaleDateString();
-  const formattedTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  useEffect(() => {}, [tenants]);
-
-  if (loading)
-    return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;
-  if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
-
+const Dashboard: React.FC<DashboardProps> = ({
+  data,
+  navigate,
+  handleAddPropertyClick,
+  formattedDate,
+  formattedTime,
+  totalUnits,
+  occupancyRate,
+}) => {
   return (
     <S.DashboardContainer>
       <Sidebar />
@@ -58,7 +46,7 @@ const AdminDashboardPage = () => {
               </S.AddPropertyButton>
             </S.PropertyListHeader>
 
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
               <S.PropertyGrid>
                 {data.map((property) => (
                   <S.PropertyCard
@@ -69,7 +57,7 @@ const AdminDashboardPage = () => {
                     <S.PropertyInfo>
                       <h3>{property.name}</h3>
                       <S.PropertyStats>
-                        <span>{property?.houses?.length || 0} Units</span>
+                        <span>{property.houses?.length || 0} Units</span>
                         <span>•</span>
                         <span>KSH 1,200,000 Revenue</span>
                       </S.PropertyStats>
@@ -95,29 +83,22 @@ const AdminDashboardPage = () => {
               <h3>Quick Stats</h3>
               <S.StatItem>
                 <span>Total Properties</span>
-                <strong>{data.length}</strong>
+                <strong>{data?.length}</strong>
               </S.StatItem>
               <S.StatItem>
                 <span>Total Units</span>
-                <strong>
-                  {data.reduce(
-                    (acc, curr) => acc + (curr.houses?.length || 0),
-                    0
-                  )}
-                </strong>
+                <strong>{totalUnits}</strong>
               </S.StatItem>
               <S.StatItem>
                 <span>Occupancy Rate</span>
-                <strong>85%</strong>
+                <strong>{occupancyRate}%</strong>
               </S.StatItem>
             </S.QuickStats>
           </S.SidePanel>
         </S.ContentWrapper>
-
-        <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
       </S.DashboardWrapper>
     </S.DashboardContainer>
   );
 };
 
-export default AdminDashboardPage;
+export default Dashboard;

@@ -70,6 +70,7 @@ export const PropertyListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   margin-bottom: ${spacing.xl};
 
   h2 {
@@ -157,7 +158,6 @@ export const AddPropertyButton = styled.button`
   border: none;
   border-radius: ${borderRadius.md};
   font-size: ${fontSizes.base};
-  font-weight: ${fontWeights.semibold};
   cursor: pointer;
   transition: all 0.2s ease;
 

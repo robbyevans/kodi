@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./Auth/Auth";
-import AdminDashboardPage from "../components/Dashboard/Dashboard";
 import PropertyContainer from "../containers/PropertyContainer";
 import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "./Utils/AccessRouter";
+import DashboardContainer from "../containers/dashboardContainer";
 
 import SettingsPage from "../components/SettingsPage/SettingsPage";
 import Navbar from "./Navbar/Navbar";
@@ -32,7 +32,7 @@ const AppRouter = () => {
           path="/dashboard"
           element={
             <AccessRouter>
-              <AdminDashboardPage />
+              <DashboardContainer />
             </AccessRouter>
           }
         />
