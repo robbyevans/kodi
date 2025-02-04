@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import { FaCalendarAlt, FaMoon, FaSun } from "react-icons/fa";
 import * as S from "./styles";
 import Notification from "../Notification/Notification";
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
   const toggleCalendar = () => setShowCalendar(!showCalendar);
 
   return (
     <S.Navbar isDarkMode={isDarkMode}>
-      <S.AppName>Kodi</S.AppName>
+      <S.AppName onClick={() => navigate("/dashboard")}>Kodi</S.AppName>
       <S.NavActions>
         <S.IconButton onClick={toggleCalendar} aria-label="Toggle calendar">
           <FaCalendarAlt />
