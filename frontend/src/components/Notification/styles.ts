@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { colors, fontSizes } from "../../styles/foundation";
 
 export const NotificationContainer = styled.div`
   position: relative;
@@ -39,6 +40,7 @@ export const NotificationItem = styled.div`
   padding: 10px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
+  color: ${colors.text.primary};
 
   &:last-child {
     border-bottom: none;
@@ -46,13 +48,11 @@ export const NotificationItem = styled.div`
 `;
 
 export const NotificationTitle = styled.div`
-  font-weight: bold;
+  font-size: ${fontSizes.sm};
 `;
 
 export const NotificationContent = styled.div`
   margin-top: 5px;
-  font-size: 14px;
-  color: #555;
 `;
 
 export const CloseButton = styled.button`

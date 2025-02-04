@@ -9,7 +9,7 @@ import {
 } from "../../styles/foundation";
 
 export const SidebarContainer = styled.nav`
-  width: 250px;
+  max-width: 250px;
   background: ${colors.primary};
   color: ${colors.text.inverted};
   display: flex;
@@ -19,7 +19,6 @@ export const SidebarContainer = styled.nav`
   padding: ${spacing.lg} ${spacing.md};
 
   @media (max-width: 768px) {
-    width: 200px;
     padding: ${spacing.md} ${spacing.sm};
   }
 `;
@@ -82,7 +81,7 @@ export const MenuText = styled.span`
 `;
 
 export const LogoutItem = styled(MenuItem)`
-  margin-top: auto;
+  margin-bottom: 50px;
 
   &:hover {
     background: ${colors.error};

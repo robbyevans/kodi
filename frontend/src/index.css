@@ -3,20 +3,18 @@
 
 /* Rest of your existing index.css */
 
-html,
+/* html, */
 body {
-  height: -webkit-fill-available;
+  display: flex;
   width: -webkit-fill-available;
+  height: 100vh;
   margin: 0;
   padding: 0;
 }
 
-.body-container {
-  height: 100%;
-}
-
 #root {
   display: flex;
+  flex: 1;
   flex-direction: column;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */

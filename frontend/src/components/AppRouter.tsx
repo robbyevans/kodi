@@ -6,14 +6,16 @@ import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "./Utils/AccessRouter";
-import Footer from "../components/Footer/Footer";
+
 import SettingsPage from "../components/SettingsPage/SettingsPage";
+import Navbar from "./Navbar/Navbar";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
 
   return (
     <>
+      <Navbar />
       <Routes>
         {/* Login Page (always accessible if not authenticated) */}
         <Route
@@ -73,7 +75,7 @@ const AppRouter = () => {
           element={<Navigate to={isAuthenticated ? "/dashboard" : "/auth"} />}
         />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
