@@ -6,7 +6,6 @@ import TenantsPage from "../components/TenantPage/TenantPage";
 import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "./Utils/AccessRouter";
-import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import SettingsPage from "../components/SettingsPage/SettingsPage";
 
@@ -15,9 +14,6 @@ const AppRouter = () => {
 
   return (
     <>
-      {/* Conditionally render Navbar based on authentication status */}
-      {isAuthenticated && <Navbar />}
-
       <Routes>
         {/* Login Page (always accessible if not authenticated) */}
         <Route

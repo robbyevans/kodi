@@ -11,6 +11,13 @@ import {
 
 export const DashboardContainer = styled.div`
   display: flex;
+
+  background: ${colors.neutral[100]};
+  min-height: 100%;
+`;
+
+export const DashboardWrapper = styled.div`
+  display: flex;
   flex-direction: column;
   padding: ${spacing.xl};
   background: ${colors.neutral[100]};

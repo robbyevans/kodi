@@ -5,25 +5,27 @@ import {
   shadows,
   fontSizes,
   fontWeights,
+  borderRadius,
 } from "../../styles/foundation";
 
-export const NavbarContainer = styled.nav`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+export const SidebarContainer = styled.nav`
+  width: 250px;
   background: ${colors.primary};
   color: ${colors.text.inverted};
-  padding: ${spacing.md} ${spacing.xl};
-  box-shadow: ${shadows.md};
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  flex-wrap: wrap;
-`;
-
-export const NavbarLeft = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  box-shadow: ${shadows.md};
+  padding: ${spacing.lg} ${spacing.md};
+
+  @media (max-width: 768px) {
+    width: 200px;
+    padding: ${spacing.md} ${spacing.sm};
+  }
+`;
+
+export const SidebarHeader = styled.div`
+  margin-bottom: ${spacing.lg};
 `;
 
 export const Title = styled.h1`
@@ -34,92 +36,56 @@ export const Title = styled.h1`
 `;
 
 export const WelcomeText = styled.span`
+  display: block;
   font-size: ${fontSizes.base};
   margin-top: ${spacing.xs};
 `;
 
-export const NavbarRight = styled.div`
+export const Menu = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: ${spacing.sm};
 `;
 
-/* Desktop menu (hidden on mobile) */
-export const DesktopMenu = styled.div`
-  display: flex;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const IconButton = styled.button`
+export const MenuItem = styled.button`
   background: none;
   border: none;
-  color: ${colors.text.inverted};
-  padding: ${spacing.xs};
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
+  color: inherit;
+  width: 100%;
+  padding: ${spacing.sm};
   display: flex;
   align-items: center;
-  font-size: ${fontSizes.lg};
-  margin-left: ${spacing.sm};
+  font-size: ${fontSizes.base};
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  border-radius: ${borderRadius.sm};
 
   &:hover {
-    color: ${colors.neutral[300]};
-    transform: scale(1.1);
+    background: ${colors.secondary};
+    transform: translateX(-5px);
+  }
+
+  &:active {
+    transform: translateX(-2px);
   }
 
   svg {
+    margin-right: ${spacing.sm};
     width: 24px;
     height: 24px;
   }
 `;
 
-/* Mobile hamburger button (visible only on mobile) */
-export const MobileMenuButton = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.text.inverted};
-  padding: ${spacing.xs};
-  cursor: pointer;
-  font-size: ${fontSizes.lg};
-  display: none;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
-`;
-
-/* Mobile dropdown menu */
-export const MobileMenu = styled.div`
-  width: 100%;
-  background: ${colors.secondary};
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: ${spacing.sm} 0;
-
-  @media (min-width: 769px) {
-    display: none;
-  }
-`;
-
-export const MobileMenuItem = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.text.inverted};
-  width: 100%;
+export const MenuText = styled.span`
+  flex: 1;
   text-align: left;
-  padding: ${spacing.sm} ${spacing.xl};
-  font-size: ${fontSizes.base};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-  transition: background 0.2s ease;
+`;
+
+export const LogoutItem = styled(MenuItem)`
+  margin-top: auto;
 
   &:hover {
-    background: ${colors.primary};
+    background: ${colors.error};
+    transform: translateX(-5px);
   }
 `;

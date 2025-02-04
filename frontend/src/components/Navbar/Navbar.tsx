@@ -1,94 +1,46 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
-import {
-  FiHome,
-  FiSettings,
-  FiLogOut,
-  FiUser,
-  FiMenu,
-  FiX,
-} from "react-icons/fi";
-import * as S from "./styles";
+import { FiHome, FiSettings, FiUser, FiLogOut } from "react-icons/fi";
 import Notification from "../Notification/Notification";
+import * as S from "./styles";
 
-const Navbar: React.FC = () => {
+const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAdmins();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
-
-  const navigateAndClose = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
-  };
 
   return (
-    <S.NavbarContainer>
-      <S.NavbarLeft>
-        <S.Title>Kodi</S.Title>
-        <S.WelcomeText>Welcome Admin</S.WelcomeText>
-      </S.NavbarLeft>
-
-      <S.NavbarRight>
-        {/* Desktop Menu */}
-        <S.DesktopMenu>
-          <S.IconButton
-            onClick={() => navigate("/dashboard")}
-            title="Dashboard"
-          >
+    <S.SidebarContainer>
+      <div>
+        <S.SidebarHeader>
+          <S.Title>Kodi</S.Title>
+          <S.WelcomeText>Welcome Admin</S.WelcomeText>
+        </S.SidebarHeader>
+        <S.Menu>
+          <S.MenuItem onClick={() => navigate("/dashboard")}>
             <FiHome />
-          </S.IconButton>
-          <S.IconButton onClick={() => navigate("/settings")} title="Settings">
+            <S.MenuText>Dashboard</S.MenuText>
+          </S.MenuItem>
+          <S.MenuItem onClick={() => navigate("/settings")}>
             <FiSettings />
-          </S.IconButton>
-          <S.IconButton onClick={handleLogout} title="Logout">
-            <FiLogOut />
-          </S.IconButton>
-          <S.IconButton onClick={() => navigate("/profile")} title="Profile">
+            <S.MenuText>Settings</S.MenuText>
+          </S.MenuItem>
+          <S.MenuItem onClick={() => navigate("/profile")}>
             <FiUser />
-          </S.IconButton>
-          <S.IconButton>
+            <S.MenuText>Profile</S.MenuText>
+          </S.MenuItem>
+          <S.MenuItem>
             <Notification />
-          </S.IconButton>
-        </S.DesktopMenu>
-
-        {/* Mobile Menu Button */}
-        <S.MobileMenuButton onClick={toggleMobileMenu}>
-          {isMobileMenuOpen ? <FiX /> : <FiMenu />}
-        </S.MobileMenuButton>
-      </S.NavbarRight>
-
-      {/* Mobile Menu Dropdown */}
-      {isMobileMenuOpen && (
-        <S.MobileMenu>
-          <S.MobileMenuItem onClick={() => navigateAndClose("/dashboard")}>
-            <FiHome /> Dashboard
-          </S.MobileMenuItem>
-          <S.MobileMenuItem onClick={() => navigateAndClose("/settings")}>
-            <FiSettings /> Settings
-          </S.MobileMenuItem>
-          <S.MobileMenuItem
-            onClick={() => {
-              handleLogout();
-              setIsMobileMenuOpen(false);
-            }}
-          >
-            <FiLogOut /> Logout
-          </S.MobileMenuItem>
-          <S.MobileMenuItem onClick={() => navigateAndClose("/profile")}>
-            <FiUser /> Profile
-          </S.MobileMenuItem>
-          <S.MobileMenuItem>
-            <Notification />
-          </S.MobileMenuItem>
-        </S.MobileMenu>
-      )}
-    </S.NavbarContainer>
+            <S.MenuText>Notifications</S.MenuText>
+          </S.MenuItem>
+        </S.Menu>
+      </div>
+      <S.LogoutItem onClick={handleLogout}>
+        <FiLogOut />
+        <S.MenuText>Logout</S.MenuText>
+      </S.LogoutItem>
+    </S.SidebarContainer>
   );
 };
 
-export default Navbar;
+export default Sidebar;
