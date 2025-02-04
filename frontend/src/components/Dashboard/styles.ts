@@ -20,6 +20,8 @@ export const DashboardWrapper = styled.div`
   flex-direction: column;
   padding: ${spacing.xl};
   background: ${colors.neutral[100]};
+  overflow: scroll;
+  max-height: 100%;
 `;
 
 export const DashboardHeader = styled.header`
