@@ -18,29 +18,12 @@ export const NavbarContainer = styled.nav`
   position: sticky;
   top: 0;
   z-index: 1000;
-
-  @media (max-width: 768px) {
-    padding: 0.8rem 1.5rem;
-  }
+  flex-wrap: wrap;
 `;
 
-export const NavGroup = styled.div`
+export const NavbarLeft = styled.div`
   display: flex;
-  align-items: center;
-`;
-
-export const NavButton = styled.button`
-  background: none;
-  border: none;
-  color: ${colors.text.inverted};
-  font-size: ${fontSizes.lg};
-  cursor: pointer;
-  margin-right: ${spacing.sm};
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: ${colors.neutral[300]};
-  }
+  flex-direction: column;
 `;
 
 export const Title = styled.h1`
@@ -48,6 +31,26 @@ export const Title = styled.h1`
   font-weight: ${fontWeights.semibold};
   margin: 0;
   letter-spacing: -0.5px;
+`;
+
+export const WelcomeText = styled.span`
+  font-size: ${fontSizes.base};
+  margin-top: ${spacing.xs};
+`;
+
+export const NavbarRight = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+/* Desktop menu (hidden on mobile) */
+export const DesktopMenu = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const IconButton = styled.button`
@@ -59,6 +62,8 @@ export const IconButton = styled.button`
   transition: transform 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
+  font-size: ${fontSizes.lg};
+  margin-left: ${spacing.sm};
 
   &:hover {
     color: ${colors.neutral[300]};
@@ -68,5 +73,53 @@ export const IconButton = styled.button`
   svg {
     width: 24px;
     height: 24px;
+  }
+`;
+
+/* Mobile hamburger button (visible only on mobile) */
+export const MobileMenuButton = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.text.inverted};
+  padding: ${spacing.xs};
+  cursor: pointer;
+  font-size: ${fontSizes.lg};
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+/* Mobile dropdown menu */
+export const MobileMenu = styled.div`
+  width: 100%;
+  background: ${colors.secondary};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: ${spacing.sm} 0;
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+export const MobileMenuItem = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.text.inverted};
+  width: 100%;
+  text-align: left;
+  padding: ${spacing.sm} ${spacing.xl};
+  font-size: ${fontSizes.base};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: ${colors.primary};
   }
 `;

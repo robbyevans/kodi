@@ -33,7 +33,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (isAuthenticated && role === "admin") {
-      navigate("/admin-dashboard");
+      navigate("/dashboard");
     }
   }, [isAuthenticated, role, navigate]);
 

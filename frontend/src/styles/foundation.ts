@@ -1,14 +1,16 @@
+// ../../styles/foundation.ts
+
 export const colors = {
-  primary: "#034d3c", // Deep Teal (Primary Brand Color)
+  primary: "#034d3c", // Deep Teal
   secondary: "#2d6a4f", // Muted Forest Green
-  accent: "#d4af37", // Gold (Accent Color)
+  accent: "#d4af37", // Gold
   neutral: {
-    100: "#f8f9fa", // Lightest Gray
-    200: "#e9ecef", // Light Gray
-    300: "#dee2e6", // Medium Gray
-    500: "#6c757d", // Medium-Dark Gray
-    700: "#495057", // Dark Gray
-    900: "#212529", // Almost Black
+    100: "#f8f9fa",
+    200: "#e9ecef",
+    300: "#dee2e6",
+    500: "#6c757d",
+    700: "#495057",
+    900: "#212529",
   },
   text: {
     primary: "#212529",
@@ -22,20 +24,19 @@ export const colors = {
 };
 
 export const fonts = {
-  primary:
-    "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+  primary: "'Inter', sans-serif",
   secondary: "'Merriweather', serif",
 };
 
 export const fontSizes = {
-  xs: "0.75rem", // 12px
-  sm: "0.875rem", // 14px
-  base: "1rem", // 16px
-  lg: "1.125rem", // 18px
-  xl: "1.25rem", // 20px
-  "2xl": "1.5rem", // 24px
-  "3xl": "1.875rem", // 30px
-  "4xl": "2.25rem", // 36px
+  xs: "0.75rem",
+  sm: "0.875rem",
+  base: "1rem",
+  lg: "1.125rem",
+  xl: "1.25rem",
+  "2xl": "1.5rem",
+  "3xl": "1.875rem",
+  "4xl": "2.25rem",
 };
 
 export const fontWeights = {
@@ -46,12 +47,12 @@ export const fontWeights = {
 };
 
 export const spacing = {
-  xs: "0.25rem", // 4px
-  sm: "0.5rem", // 8px
-  md: "1rem", // 16px
-  lg: "1.5rem", // 24px
-  xl: "2rem", // 32px
-  "2xl": "3rem", // 48px
+  xs: "0.25rem",
+  sm: "0.5rem",
+  md: "1rem",
+  lg: "1.5rem",
+  xl: "2rem",
+  "2xl": "3rem",
 };
 
 export const shadows = {

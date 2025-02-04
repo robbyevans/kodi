@@ -31,7 +31,7 @@ const AppRouter = () => {
 
         {/* Protected Routes */}
         <Route
-          path="/admin-dashboard"
+          path="/dashboard"
           element={
             <AccessRouter>
               <AdminDashboardPage />
@@ -74,9 +74,7 @@ const AppRouter = () => {
         {/* Default Route: Redirect to login if not authenticated */}
         <Route
           path="/"
-          element={
-            <Navigate to={isAuthenticated ? "/admin-dashboard" : "/auth"} />
-          }
+          element={<Navigate to={isAuthenticated ? "/dashboard" : "/auth"} />}
         />
       </Routes>
       <Footer />
