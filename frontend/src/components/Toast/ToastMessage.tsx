@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
+import {
+  FaCheckCircle,
+  FaExclamationCircle,
+  FaInfoCircle,
+  FaTimes,
+} from "react-icons/fa";
 import * as S from "./styles";
 
-export type ToastType = "success" | "error" | "info" | null;
+export type ToastType = "success" | "error" | "info" | "warning";
 
 interface ToastProps {
   message: string | null;
@@ -17,7 +23,6 @@ const ToastMessage: React.FC<ToastProps> = ({
   const [exiting, setExiting] = useState(false);
   const [progress, setProgress] = useState(100);
 
-  // Auto-clear the toast after 3 seconds when a new message appears
   useEffect(() => {
     if (!message) return;
 
@@ -32,7 +37,7 @@ const ToastMessage: React.FC<ToastProps> = ({
       setExiting(true);
       setTimeout(() => {
         clearToastMessage();
-      }, 400); // Wait for the slideUpOut animation to finish
+      }, 400); // Wait for the fadeOut animation to finish
     }, 3000);
 
     return () => {
@@ -41,12 +46,32 @@ const ToastMessage: React.FC<ToastProps> = ({
     };
   }, [message, clearToastMessage]);
 
-  if (!message) return null; // Hide component if no message
+  if (!message) return null;
+
+  const getIcon = () => {
+    switch (type) {
+      case "success":
+        return <FaCheckCircle />;
+      case "error":
+        return <FaExclamationCircle />;
+      case "info":
+        return <FaInfoCircle />;
+      case "warning":
+        return <FaExclamationCircle />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <S.ToastContainer type={type} exiting={exiting ? true : undefined}>
-      <S.Message>{message}</S.Message>
-      <S.Button onClick={clearToastMessage}>close</S.Button>
+      <S.Content>
+        <S.IconContainer>{getIcon()}</S.IconContainer>
+        <S.Message>{message}</S.Message>
+      </S.Content>
+      <S.Button onClick={clearToastMessage}>
+        <FaTimes />
+      </S.Button>
       <S.ProgressBar progress={progress} />
     </S.ToastContainer>
   );

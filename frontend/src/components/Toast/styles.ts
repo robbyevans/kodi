@@ -1,16 +1,15 @@
 import styled, { keyframes } from "styled-components";
 import { ToastType } from "./ToastMessage";
+import { fontSizes } from "../../styles/foundation";
 
-// Animation to slide in from the top
-const slideDownIn = keyframes`
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
 `;
 
-// Animation to slide out to the top
-const slideUpOut = keyframes`
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-100%); opacity: 0; }
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
 `;
 
 interface ToastContainerProps {
@@ -20,13 +19,20 @@ interface ToastContainerProps {
 
 export const ToastContainer = styled.div<ToastContainerProps>`
   position: fixed;
-  top: 64px;
+  top: 60px;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translateX(-50%);
+
   background: ${({ type }) =>
-    type === "success" ? "#4caf50" : type === "error" ? "#f44336" : "#2196f3"};
+    type === "success"
+      ? "#4caf50"
+      : type === "error"
+      ? "#f44336"
+      : type === "warning"
+      ? "#ff9800"
+      : "#2196f3"};
   color: #fff;
-  padding: 16px 20px;
+  padding: 20px 30px;
   border-radius: 4px;
   min-width: 280px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -35,36 +41,49 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   align-items: center;
   justify-content: space-between;
   font-family: sans-serif;
-  animation: ${({ exiting }) => (exiting ? slideUpOut : slideDownIn)} 0.4s
-    ease-out;
+  animation: ${({ exiting }) => (exiting ? fadeOut : fadeIn)} 0.4s ease-out;
   overflow: hidden;
-  flex-direction: column;
 `;
 
-// A container for the message text (so that the clear button can be placed at the top-right)
-export const Message = styled.div`
+export const Content = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
   width: 100%;
-  margin-bottom: 8px;
 `;
 
-// Clear button styled as an "X"
+export const IconContainer = styled.div`
+  display: flex;
+  margin-right: 12px;
+  font-size: 25px;
+`;
+
+export const Message = styled.div`
+  flex: 1;
+  margin-right: 12px;
+  font-size: ${fontSizes.lg};
+`;
+
 export const Button = styled.button`
-  position: absolute;
-  top: 4px;
-  right: 8px;
   background: transparent;
   border: none;
   color: #fff;
   font-size: 18px;
   cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
 `;
 
-// Progress bar that reflects the remaining time
 export const ProgressBar = styled.div<{ progress: number }>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
   height: 4px;
   background: rgba(255, 255, 255, 0.7);
   width: ${({ progress }) => progress}%;
   transition: width 0.1s linear;
   border-radius: 0 0 4px 4px;
-  align-self: flex-start;
 `;
