@@ -46,9 +46,9 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
   return {
     totalUnits, // Total number of houses
     totalTenants, // Total occupied houses
-    occupancyRate, // Overall occupancy rate
-    currentPayableRevenue, // Total revenue from occupied houses
-    totalPayableRevenue, // Total possible revenue from all houses
-    currentRevenueRate, // Percentage of revenue collected from occupied houses
+    occupancyRate: parseFloat(occupancyRate.toFixed(2)), // Overall occupancy rate
+    currentPayableRevenue: parseFloat(currentPayableRevenue.toFixed(2)),
+    totalPayableRevenue: parseFloat(totalPayableRevenue.toFixed(2)), // Total possible revenue from all houses
+    currentRevenueRate: parseFloat(currentRevenueRate.toFixed(2)), // Percentage of revenue collected from occupied houses
   };
 };
