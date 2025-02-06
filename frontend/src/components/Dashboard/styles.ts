@@ -14,7 +14,6 @@ export const DashboardContainer = styled.div`
   flex-direction: column;
   background: ${colors.neutral[100]};
   overflow: scroll;
-  border: 1px solid red;
 `;
 
 export const DashboardHeader = styled.header`
