@@ -18,8 +18,6 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
   occupancyRate,
   totalRevenuePercentage,
 }) => {
-  console.log("occupancy-rate", occupancyRate);
-  console.log("total-revenue %", totalRevenuePercentage);
   const data = [
     { name: "Current Payable Revenue", value: totalRevenuePercentage },
     { name: "Vacant Units Revenue", value: 100 - totalRevenuePercentage },
