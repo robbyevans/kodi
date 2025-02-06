@@ -24,7 +24,7 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
   ];
 
   return (
-    <S.QuickStats>
+    <S.QuickStats data-testid="quick-start-container">
       {/* Pie Chart */}
       <S.ChartContainer>
         <ResponsiveContainer width="100%" height={100}>

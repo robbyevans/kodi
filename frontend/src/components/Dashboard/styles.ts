@@ -44,6 +44,7 @@ export const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${spacing.xl};
+  padding: ${spacing.md};
 
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 300px;
@@ -164,6 +165,10 @@ export const SidePanel = styled.aside`
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.md};
   height: fit-content;
+
+  @media (max-width: 1020px) {
+    display: none;
+  }
 `;
 
 export const EmptyState = styled.div`
