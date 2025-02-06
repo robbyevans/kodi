@@ -14,6 +14,7 @@ export const DashboardContainer = styled.div`
   flex-direction: column;
   background: ${colors.neutral[100]};
   overflow: scroll;
+  padding: ${spacing.md};
 `;
 
 export const DashboardHeader = styled.header`
@@ -44,7 +45,6 @@ export const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${spacing.xl};
-  padding: ${spacing.md};
 
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 300px;

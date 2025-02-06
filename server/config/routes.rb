@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  
+   # New route for fetching all tenants for the current admin
+  get '/tenants', to: 'tenants#all'
+  # New route for fetching all houses for the current admin
+  get '/houses', to: 'houses#all'
+
   # Nest houses under properties so URLs look like /properties/:property_id/houses
   resources :properties, except: [:new, :edit] do
     resources :houses, except: [:new, :edit]

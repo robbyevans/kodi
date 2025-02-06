@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../hooks"; // Update import
 import {
-  fetchTenants,
+  fetchAllTenants,
   fetchPropertyTenants,
   fetchTenantById,
   fetchTenantsByHouse,
@@ -12,17 +12,17 @@ import {
 import {
   selectTenantsLoading,
   selectTenantsError,
-  selectTenants,
+  selectAllTenants,
 } from "../selectors/tenantSelectors";
 
 export const useTenants = () => {
   const dispatch = useAppDispatch(); // Use useAppDispatch
   const loading = useAppSelector(selectTenantsLoading); // Use useAppSelector
-  const tenants = useAppSelector(selectTenants);
+  const tenants = useAppSelector(selectAllTenants);
   const error = useAppSelector(selectTenantsError);
 
   const getAllTenants = () => {
-    dispatch(fetchTenants());
+    dispatch(fetchAllTenants());
   };
 
   const getPropertyTenants = (propertyId: number) => {

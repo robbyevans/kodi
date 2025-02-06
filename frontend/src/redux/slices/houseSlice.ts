@@ -117,6 +117,17 @@ const housesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchAllHouses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllHouses.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchAllHouses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch houses";
+      })
       .addCase(fetchHouseById.pending, (state) => {
         state.loading = true;
       })

@@ -3,6 +3,16 @@ class HousesController < ApplicationController
   before_action :set_house, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
+   # GET /houses (new endpoint)
+   def all
+    # Get houses for all properties owned by the current admin.
+    @houses = House
+                .joins(:property)
+                .where(properties: { admin_id: current_admin.id })
+                .includes(:tenant)
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
+  end
+
   # GET /properties/:property_id/houses
   def index
     # Ensure that the property belongs to the current admin:

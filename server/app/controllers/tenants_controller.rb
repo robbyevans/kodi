@@ -3,6 +3,16 @@ class TenantsController < ApplicationController
   before_action :set_tenant, only: [:update, :destroy]
   before_action :authorize_house_owner, only: [:create, :update, :destroy]
 
+  # Add this new action to fetch all tenants for the current admin
+  def all
+    @tenants = Tenant
+                .joins(houses: :property)
+                .where(properties: { admin_id: current_admin.id })
+                .distinct
+    render json: @tenants
+  end
+
+
   # GET /houses/:house_id/tenants
   def index
     @tenants = @house.tenant ? [@house.tenant] : []

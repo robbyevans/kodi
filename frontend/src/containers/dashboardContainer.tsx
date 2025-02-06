@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "../redux/hooks/useProperties";
+import { useHouses } from "../redux/hooks/useHouses";
 import { useTenants } from "../redux/hooks/useTenants";
 import Dashboard from "../components/Dashboard/Dashboard";
 import AddPropertyModal from "../components/Modals/AddPropertyModal/AddPropertyModal";
@@ -12,6 +13,9 @@ const DashboardContainer = () => {
   const { data: propertyData, loading, error } = useProperties();
   const { tenants } = useTenants();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { houses, getAllHouses } = useHouses();
+
+  console.log("houses", houses);
 
   const handleAddPropertyClick = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -30,8 +34,8 @@ const DashboardContainer = () => {
 
   // (Optional) Any additional logic when tenants update
   useEffect(() => {
-    // ... your logic if needed
-  }, [tenants]);
+    getAllHouses();
+  }, []);
 
   if (loading)
     return <S.LoadingMessage>Loading properties...</S.LoadingMessage>;

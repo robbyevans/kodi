@@ -23,10 +23,13 @@ const initialState: TenantsState = {
 };
 
 // Thunks
-export const fetchTenants = createAsyncThunk("tenants/fetchAll", async () => {
-  const response = await axiosInstance.get("/tenants");
-  return response.data;
-});
+export const fetchAllTenants = createAsyncThunk(
+  "tenants/fetchAll",
+  async () => {
+    const response = await axiosInstance.get("/tenants");
+    return response.data;
+  }
+);
 
 export const fetchPropertyTenants = createAsyncThunk(
   "tenants/getPropertyTenants",
@@ -71,7 +74,7 @@ export const addTenant = createAsyncThunk(
       dispatch(fetchProperties());
       dispatch(
         showToast({ message: "Tenant added successfully!", type: "success" })
-      ); // Show success toast
+      );
       return response.data;
     } catch (error: any) {
       dispatch(showToast({ message: "Failed to add Tenant", type: "error" }));
@@ -116,12 +119,12 @@ export const deleteTenant = createAsyncThunk(
       dispatch(fetchProperties());
       dispatch(
         showToast({ message: "Tenant deleted successfully!", type: "success" })
-      ); // Show success toast
+      );
       return tenantId;
     } catch (error: any) {
       dispatch(
         showToast({ message: "Failed to delete Tenant", type: "error" })
-      ); // Show error toast
+      );
       return rejectWithValue(error.response?.data);
     }
   }
@@ -134,6 +137,20 @@ const tenantsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // fetchAllTenants cases
+      .addCase(fetchAllTenants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllTenants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchAllTenants.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch tenants";
+      })
+
+      // Other cases
       .addCase(fetchTenantById.fulfilled, (state, action) => {
         state.data = state.data.map((tenant) =>
           tenant.id === action.payload.id ? action.payload : tenant
