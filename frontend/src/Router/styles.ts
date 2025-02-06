@@ -2,25 +2,13 @@ import styled from "styled-components";
 
 export const AppWrapper = styled.div`
   display: flex;
+  flex-direction: row;
   flex: 1;
   overflow: hidden;
+  max-width: 100vw;
 `;
 
-export const BodyWrapper = styled.div<{ isAuthenticated: boolean }>`
+export const BodyWrapper = styled.div`
   flex: 1;
-  overflow-y: auto;
-
-  ${({ isAuthenticated }) =>
-    isAuthenticated &&
-    `
-    margin-left: 250px;
-    margin-top: 60px;
-    margin-bottom: 60px;
-    height: calc(100vh - 120px);
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      height: calc(100vh - 120px);
-    }
-  `}
+  overflow: scroll;
 `;

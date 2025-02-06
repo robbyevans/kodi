@@ -22,7 +22,7 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   position: fixed;
   top: 64px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%,-50%);
   background: ${({ type }) =>
     type === "success" ? "#4caf50" : type === "error" ? "#f44336" : "#2196f3"};
   color: #fff;

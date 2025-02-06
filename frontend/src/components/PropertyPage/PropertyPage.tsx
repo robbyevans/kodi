@@ -38,7 +38,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
     return <S.ErrorMessage>Error loading property data.</S.ErrorMessage>;
 
   return (
-    <S.PropertyPageContainer>
+    <S.PropertyPageContainer data-test="property-page-container">
       <S.DownloadWRapper>
         <MdSimCardDownload
           size="30px"

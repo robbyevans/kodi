@@ -1,7 +1,6 @@
-// File: /frontend/src/components/HOCWrapper.tsx
 import React, { useState, useEffect } from "react";
 import LoadingPage from "./LoadingPage/LoadingPage";
-import { useAppDispatch } from "../redux/hooks"; // Import the custom hook
+import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import { useToast } from "../redux/hooks/useToast";
 import { fetchProperties } from "../redux/slices/propertiesSlice";
@@ -11,11 +10,11 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
-  const dispatch = useAppDispatch(); // Use the custom hook
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(fetchProperties()); // This will now work without type errors
+      dispatch(fetchProperties());
     }
   }, [dispatch, isAuthenticated]);
 
