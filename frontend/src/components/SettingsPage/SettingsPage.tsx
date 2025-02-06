@@ -4,6 +4,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import { IUser } from "../../redux/slices/adminSlice";
+import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
 
 interface SettingsPageProps {
   user: IUser;
@@ -37,7 +38,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
           <S.ProfileContainer>
             {/* If you have a profile image, otherwise leave empty or provide a placeholder */}
-            <S.ProfileImage src={user?.profileImage || ""} alt="Profile" />
+            <S.ProfileImage
+              src={user?.profileImage || profilePlaceholder}
+              alt="Profile"
+            />
             <S.EditableFields>
               <S.EditableField>
                 <div>
