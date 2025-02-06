@@ -21,7 +21,10 @@ const AppRouter = () => {
       {isAuthenticated && <Navbar />}
       <S.AppWrapper data-testid="app-wrapper">
         {isAuthenticated && <Sidebar />}
-        <S.BodyWrapper data-testid="body-wrapper">
+        <S.BodyWrapper
+          data-testid="body-wrapper"
+          $isAuthPage={!isAuthenticated}
+        >
           <Routes>
             <Route
               path="/auth"
