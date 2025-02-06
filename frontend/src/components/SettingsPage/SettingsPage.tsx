@@ -8,25 +8,25 @@ import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
 
 interface SettingsPageProps {
   user: IUser;
-  properties: IProperty[];
-  onEditUser: (field: string, value: string | undefined) => void;
-  onEditProperty: (id: number) => void;
-  onDeleteProperty: (id: number) => void;
+  propertiesData: IProperty[];
+  handleEditUser: (field: string, value: string | undefined) => void;
+  handleEditProperty: (id: number) => void;
+  handleDeleteProperty: (id: number) => void;
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
   user,
-  properties = [],
-  onEditUser,
-  onEditProperty,
-  onDeleteProperty,
+  propertiesData = [],
+  handleEditUser,
+  handleEditProperty,
+  handleDeleteProperty,
 }) => {
   return (
     <S.SettingsContainer data-testid="settings-container">
       <S.SettingsHeader>
         <div>
           <h1>Account Settings</h1>
-          <p>Manage your account details and properties</p>
+          <p>Manage your account details and Data</p>
         </div>
       </S.SettingsHeader>
 
@@ -39,7 +39,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           <S.ProfileContainer>
             {/* If you have a profile image, otherwise leave empty or provide a placeholder */}
             <S.ProfileImage
-              src={user?.profileImage || profilePlaceholder}
+              src={user?.profile_image || profilePlaceholder}
               alt="Profile"
             />
             <S.EditableFields>
@@ -48,7 +48,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <S.FieldLabel>Full Name</S.FieldLabel>
                   <S.FieldValue>{user?.name || "N/A"}</S.FieldValue>
                 </div>
-                <S.EditButton onClick={() => onEditUser("name", user?.name)}>
+                <S.EditButton
+                  onClick={() => handleEditUser("name", user?.name)}
+                >
                   <FiEdit />
                 </S.EditButton>
               </S.EditableField>
@@ -58,7 +60,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <S.FieldLabel>Email Address</S.FieldLabel>
                   <S.FieldValue>{user?.email}</S.FieldValue>
                 </div>
-                <S.EditButton onClick={() => onEditUser("email", user?.email)}>
+                <S.EditButton
+                  onClick={() => handleEditUser("email", user?.email)}
+                >
                   <FiEdit />
                 </S.EditButton>
               </S.EditableField>
@@ -67,10 +71,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               <S.EditableField>
                 <div>
                   <S.FieldLabel>Phone Number</S.FieldLabel>
-                  <S.FieldValue>{(user as any)?.phone || "N/A"}</S.FieldValue>
+                  <S.FieldValue>{user.phone_number || "N/A"}</S.FieldValue>
                 </div>
                 <S.EditButton
-                  onClick={() => onEditUser("phone", (user as any)?.phone)}
+                  onClick={() =>
+                    handleEditUser("phone_number", user?.phone_number)
+                  }
                 >
                   <FiEdit />
                 </S.EditButton>
@@ -85,7 +91,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           </S.SectionHeader>
 
           <S.PropertiesList>
-            {properties.map((property) => (
+            {propertiesData.map((property) => (
               <S.PropertyItem key={property?.id}>
                 <div>
                   <S.PropertyName>{property?.name}</S.PropertyName>
@@ -95,12 +101,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 </div>
                 <S.PropertyActions>
                   <S.EditPropertyButton
-                    onClick={() => onEditProperty(property.id!)}
+                    onClick={() => handleEditProperty(property.id!)}
                   >
                     <FiEdit />
                   </S.EditPropertyButton>
                   <S.DeletePropertyButton
-                    onClick={() => onDeleteProperty(property.id!)}
+                    onClick={() => handleDeleteProperty(property.id!)}
                   >
                     <FiTrash2 />
                   </S.DeletePropertyButton>

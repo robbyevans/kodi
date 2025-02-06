@@ -7,6 +7,7 @@ export interface IProperty {
   id?: number; // Make id optional
   admin_id: number;
   name: string;
+  property_image: string;
   houses?: IHouse[] | null;
 }
 
@@ -43,16 +44,16 @@ export const fetchPropertyById = createAsyncThunk(
   "properties/fetchById",
   async (id: number) => {
     const response = await axiosInstance.get(`/properties/${id}`);
-    // dispatch(
-    //   showToast({ message: "Property fetched successfully!", type: "success" })
-    // ); // Show success toast
     return response.data;
   }
 );
 
 export const addProperty = createAsyncThunk(
   "properties/add",
-  async (property: Omit<IProperty, "id">, { dispatch, rejectWithValue }) => {
+  async (
+    property: Omit<IProperty, "id" | "property_image">,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.post("/properties", {
         property: {
@@ -75,7 +76,10 @@ export const addProperty = createAsyncThunk(
 
 export const editProperty = createAsyncThunk(
   "properties/edit",
-  async ({ id, ...property }: IProperty, { dispatch, rejectWithValue }) => {
+  async (
+    { id, ...property }: Omit<IProperty, "property_image">,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.put(`/properties/${id}`, property);
       dispatch(

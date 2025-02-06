@@ -6,12 +6,14 @@ import SettingsPage from "../components/SettingsPage/SettingsPage";
 import { IProperty } from "../redux/slices/propertiesSlice";
 
 const SettingsContainer: React.FC = () => {
-  const { user, handleEditAdmin } = useAdmins();
+  const { user, handleEditUser } = useAdmins();
   const {
-    data: properties,
+    data: propertiesData,
     handleEditProperty,
     handleDeleteProperty,
   } = useProperties();
+
+  console.log("propertiesData", propertiesData);
 
   // Handler for editing the user (profile)
   const onEditUser = (field: string, currentValue: string | undefined) => {
@@ -19,7 +21,7 @@ const SettingsContainer: React.FC = () => {
     if (newValue && newValue !== currentValue) {
       // For now we assume that only email or name can be updated.
       // You can extend this logic as needed.
-      handleEditAdmin({ [field]: newValue });
+      handleEditUser({ [field]: newValue });
     }
   };
 
@@ -27,7 +29,7 @@ const SettingsContainer: React.FC = () => {
   // In this simple example, we only allow updating the property name.
   const onEditProperty = (propertyId: number) => {
     // Find the property from the list.
-    const propertyToEdit: IProperty | undefined = properties.find(
+    const propertyToEdit: IProperty | undefined = propertiesData.find(
       (prop) => prop.id === propertyId
     );
     if (!propertyToEdit) return;
@@ -59,7 +61,7 @@ const SettingsContainer: React.FC = () => {
   return (
     <SettingsPage
       user={user}
-      properties={properties}
+      propertiesData={propertiesData}
       onEditUser={onEditUser}
       onEditProperty={onEditProperty}
       onDeleteProperty={onDeleteProperty}

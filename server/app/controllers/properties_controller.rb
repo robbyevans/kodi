@@ -2,6 +2,16 @@ class PropertiesController < ApplicationController
   before_action :authorize_admin, only: [:create, :update, :destroy]
   before_action :set_property, only: [:show, :update, :destroy]
 
+
+  def create
+    @property = current_admin.properties.new(property_params)
+    if @property.save
+      render json: @property, status: :created
+    else
+      render json: @property.errors, status: :unprocessable_entity
+    end
+  end
+
   def index
     # Eager load houses and their tenant
     @properties = current_admin.properties.includes(houses: :tenant)
@@ -32,15 +42,6 @@ class PropertiesController < ApplicationController
     )
   end
 
-  def create
-    @property = current_admin.properties.new(property_params)
-    if @property.save
-      render json: @property, status: :created
-    else
-      render json: @property.errors, status: :unprocessable_entity
-    end
-  end
-
   def update
     if @property.update(property_params)
       render json: @property, status: :ok
@@ -61,7 +62,7 @@ class PropertiesController < ApplicationController
   end
 
   def property_params
-    params.require(:property).permit(:name)
+  params.require(:property).permit(:name, :property_image)
   end
 
   def authorize_admin

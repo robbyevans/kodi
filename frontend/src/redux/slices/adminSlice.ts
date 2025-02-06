@@ -4,10 +4,11 @@ import axiosInstance from "../utils";
 import { showToast } from "./toastSlice"; // Import showToast action
 
 export interface IUser {
+  name: string;
   email: string;
-  password: string;
-  // Optionally, include name if needed
-  name?: string;
+  password?: string;
+  profile_image: string;
+  phone_number: string;
 }
 
 interface AdminState {
@@ -15,7 +16,9 @@ interface AdminState {
     email: string;
     role: string;
     admin_id: number | null;
-    name?: string;
+    name: string;
+    profile_image: string;
+    phone_number: string;
   };
   token: string | null;
   loading: boolean;
@@ -24,25 +27,41 @@ interface AdminState {
 
 const storeAuthData = (
   token: string,
-  admin: { email: string; role: string; admin_id: number }
+  admin: {
+    name: string;
+    email: string;
+    phone_number: string;
+    profile_image: string;
+    role: string;
+    admin_id: number;
+  }
 ) => {
   localStorage.setItem("auth_token", token);
+  localStorage.setItem("name", admin.name);
   localStorage.setItem("admin_email", admin.email);
   localStorage.setItem("admin_id", admin.admin_id.toString());
   localStorage.setItem("admin_role", admin.role);
+  localStorage.setItem("profile_image", admin.profile_image);
+  localStorage.setItem("phone_number", admin.phone_number);
 };
 
 const getStoredAuthData = () => {
   const token = localStorage.getItem("auth_token");
+  const name = localStorage.getItem("name");
   const role = localStorage.getItem("admin_role");
   const email = localStorage.getItem("admin_email");
   const admin_id = localStorage.getItem("admin_id");
+  const phone_number = localStorage.getItem("phone_number");
+  const profile_image = localStorage.getItem("profile_image");
 
   return {
     token: token || null,
     admin: {
+      name: name || "",
       email: email || "",
       role: role || "",
+      phone_number: phone_number || "",
+      profile_image: profile_image || "",
       admin_id: admin_id ? parseInt(admin_id) : null,
     },
   };
@@ -57,7 +76,10 @@ const initialState: AdminState = {
 // Async thunk for login
 export const loginAdmin = createAsyncThunk(
   "admin/loginAdmin",
-  async (credentials: IUser, { dispatch, rejectWithValue }) => {
+  async (
+    credentials: Omit<IUser, "name" | "phone_number" | "profile_image">,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.post("/login", credentials);
       dispatch(
@@ -76,7 +98,10 @@ export const loginAdmin = createAsyncThunk(
 // Async thunk for signup
 export const signupAdmin = createAsyncThunk(
   "admin/signup",
-  async (credentials: IUser, { dispatch, rejectWithValue }) => {
+  async (
+    credentials: Omit<IUser, "phone_number" | "profile_image">,
+    { dispatch, rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.post("/signup", {
         admin: credentials,
@@ -123,14 +148,24 @@ const adminSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.admin = { email: "", role: "", admin_id: null };
+      state.admin = {
+        name: "",
+        phone_number: "",
+        email: "",
+        role: "",
+        admin_id: null,
+        profile_image: "",
+      };
       state.token = null;
       state.loading = false;
       state.error = null;
       localStorage.removeItem("auth_token");
       localStorage.removeItem("admin_email");
+      localStorage.removeItem("name");
       localStorage.removeItem("admin_id");
       localStorage.removeItem("admin_role");
+      localStorage.removeItem("phone_number");
+      localStorage.removeItem("profile_image");
     },
   },
   extraReducers: (builder) => {

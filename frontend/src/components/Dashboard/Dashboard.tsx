@@ -51,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           {data?.length > 0 ? (
             <S.PropertyGrid>
               {data.map((property) => (
-                <PropertyCard propertyData={property} />
+                <PropertyCard key={property.id} propertyData={property} />
               ))}
             </S.PropertyGrid>
           ) : (

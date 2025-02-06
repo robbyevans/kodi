@@ -13,13 +13,13 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   onClose,
 }) => {
   const [propertyName, setPropertyName] = useState("");
-  const { addProperty } = useProperties();
+  const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      await addProperty({
+      await handleAddProperty({
         name: propertyName,
         houses: [],
         admin_id: user.admin_id,

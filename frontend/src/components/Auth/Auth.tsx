@@ -7,6 +7,7 @@ import * as S from "./styles";
 const Auth = () => {
   const { loading, error, role, isAuthenticated, handleLogin, handleSignup } =
     useAdmins();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
@@ -25,7 +26,7 @@ const Auth = () => {
     }
 
     if (!isLogin) {
-      handleSignup(email, password);
+      handleSignup(name, email, password);
     } else {
       handleLogin(email, password);
     }
@@ -58,6 +59,14 @@ const Auth = () => {
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <S.Container>
         <S.Title>{isLogin ? "Login" : "Signup"}</S.Title>
+        {!isLogin && (
+          <S.Input
+            type="name"
+            placeholder="User Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        )}
         <S.Input
           type="email"
           placeholder="Email"

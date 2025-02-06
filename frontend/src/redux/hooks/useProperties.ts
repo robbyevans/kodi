@@ -22,7 +22,7 @@ export const useProperties = () => {
     dispatch(fetchPropertyById(id));
   };
 
-  const addNewProperty = (property: Omit<IProperty, "id">) => {
+  const handleAddProperty = (property: Omit<IProperty, "id">) => {
     dispatch(addProperty(property));
   };
   const handleEditProperty = (property: IProperty) => {
@@ -40,6 +40,6 @@ export const useProperties = () => {
     editProperty,
     handleEditProperty,
     handleDeleteProperty,
-    addNewProperty,
+    handleAddProperty,
   };
 };
