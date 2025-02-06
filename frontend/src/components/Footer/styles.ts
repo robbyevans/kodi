@@ -3,9 +3,9 @@ import { colors, fontSizes, spacing } from "../../styles/foundation";
 
 export const FooterContainer = styled.footer`
   background-color: ${colors.primary};
-  padding: ${spacing.md} ${spacing.xl};
+  padding: 10px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-position: relative;
+  position: relative;
 `;
 
 export const FooterContent = styled.div`

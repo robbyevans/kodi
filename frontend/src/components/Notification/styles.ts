@@ -27,12 +27,12 @@ export const NotificationBadge = styled.span`
 export const NotificationDropdown = styled.div`
   position: absolute;
   right: 0;
-  top: 40px;
+  top: 35px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  width: 250px;
   z-index: 1000;
 `;
 
