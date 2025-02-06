@@ -7,7 +7,7 @@ export interface IProperty {
   id?: number; // Make id optional
   admin_id: number;
   name: string;
-  houses: IHouse[] | null;
+  houses?: IHouse[] | null;
 }
 
 interface PropertiesState {

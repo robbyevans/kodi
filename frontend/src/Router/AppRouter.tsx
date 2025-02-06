@@ -7,7 +7,7 @@ import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "../components/Utils/AccessRouter";
 import DashboardContainer from "../containers/dashboardContainer";
 
-import SettingsPage from "../components/SettingsPage/SettingsPage";
+import SettingsPageContainer from "../containers/settingsContainer";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
@@ -71,7 +71,7 @@ const AppRouter = () => {
               path="/settings"
               element={
                 <AccessRouter>
-                  <SettingsPage />
+                  <SettingsPageContainer />
                 </AccessRouter>
               }
             />

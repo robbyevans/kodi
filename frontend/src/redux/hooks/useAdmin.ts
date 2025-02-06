@@ -1,5 +1,11 @@
+// File: /frontend/src/redux/hooks/useAdmin.ts
 import { useAppDispatch, useAppSelector } from "../utils";
-import { signupAdmin, loginAdmin, logout } from "../slices/adminSlice";
+import {
+  signupAdmin,
+  loginAdmin,
+  logout,
+  editAdmin,
+} from "../slices/adminSlice";
 import {
   selectCurrentAdmin,
   selectAdminsLoading,
@@ -10,7 +16,7 @@ import {
 
 export const useAdmins = () => {
   const dispatch = useAppDispatch();
-  const currentAdmin = useAppSelector(selectCurrentAdmin);
+  const user = useAppSelector(selectCurrentAdmin);
   const role = useAppSelector(selectAdminRole);
   const loading = useAppSelector(selectAdminsLoading);
   const error = useAppSelector(selectAdminsError);
@@ -28,8 +34,17 @@ export const useAdmins = () => {
     dispatch(logout());
   };
 
+  // New handler to update admin details
+  const handleEditAdmin = (data: { email?: string }) => {
+    if (!user.admin_id) {
+      console.error("Admin ID is missing!");
+      return;
+    }
+    dispatch(editAdmin({ adminId: user.admin_id, data }));
+  };
+
   return {
-    currentAdmin,
+    user,
     isAuthenticated,
     loading,
     role,
@@ -37,5 +52,6 @@ export const useAdmins = () => {
     handleLogin,
     handleLogout,
     handleSignup,
+    handleEditAdmin,
   };
 };

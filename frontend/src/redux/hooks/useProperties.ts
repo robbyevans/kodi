@@ -1,5 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { fetchPropertyById, addProperty } from "../slices/propertiesSlice";
+import {
+  fetchPropertyById,
+  addProperty,
+  editProperty,
+  deleteProperty,
+} from "../slices/propertiesSlice";
 import {
   selectProperties,
   selectPropertiesLoading,
@@ -20,6 +25,21 @@ export const useProperties = () => {
   const addNewProperty = (property: Omit<IProperty, "id">) => {
     dispatch(addProperty(property));
   };
+  const handleEditProperty = (property: IProperty) => {
+    dispatch(editProperty(property));
+  };
+  const handleDeleteProperty = (propertyId: number) => {
+    dispatch(deleteProperty(propertyId));
+  };
 
-  return { data, loading, error, getPropertyById, addProperty: addNewProperty };
+  return {
+    data,
+    loading,
+    error,
+    getPropertyById,
+    editProperty,
+    handleEditProperty,
+    handleDeleteProperty,
+    addNewProperty,
+  };
 };
