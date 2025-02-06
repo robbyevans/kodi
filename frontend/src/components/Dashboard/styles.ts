@@ -11,17 +11,10 @@ import {
 
 export const DashboardContainer = styled.div`
   display: flex;
-  background: ${colors.neutral[100]};
-  overflow: scroll;
-`;
-
-export const DashboardWrapper = styled.div`
-  display: flex;
   flex-direction: column;
-  padding: ${spacing.xl};
   background: ${colors.neutral[100]};
   overflow: scroll;
-  max-height: 100%;
+  border: 1px solid red;
 `;
 
 export const DashboardHeader = styled.header`
@@ -50,14 +43,11 @@ export const DashboardHeader = styled.header`
 
 export const ContentWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr;
   gap: ${spacing.xl};
-  max-width: 1440px;
-  margin: 0 auto;
-  width: 100%;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 300px;
   }
 `;
 

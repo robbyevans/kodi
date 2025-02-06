@@ -17,7 +17,6 @@ export const SidebarContainer = styled.nav`
   justify-content: space-between;
   box-shadow: ${shadows.md};
   padding: ${spacing.lg} ${spacing.md};
-
   @media (max-width: 768px) {
     padding: ${spacing.md} ${spacing.sm};
   }

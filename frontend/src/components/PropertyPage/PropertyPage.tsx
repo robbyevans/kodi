@@ -4,7 +4,6 @@ import { IHouse } from "../../redux/slices/houseSlice";
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 import { MdSimCardDownload } from "react-icons/md";
-import { FiMoreVertical } from "react-icons/fi";
 import { colors } from "../../styles/foundation";
 import { TbSquareChevronRightFilled } from "react-icons/tb";
 

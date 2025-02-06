@@ -5,7 +5,7 @@ export const FooterContainer = styled.footer`
   background-color: ${colors.primary};
   padding: ${spacing.md} ${spacing.xl};
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  position: relative;
+position: relative;
 `;
 
 export const FooterContent = styled.div`

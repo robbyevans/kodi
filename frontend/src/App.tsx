@@ -1,9 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import AppRouter from "./components/AppRouter";
+import AppRouter from "./Router/AppRouter";
 import HOCWrapper from "./components/HOCWrapper";
-import Footer from "../src/components/Footer/Footer";
 
 const App: React.FC = () => {
   return (
@@ -13,7 +12,6 @@ const App: React.FC = () => {
           <AppRouter />
         </HOCWrapper>
       </Router>
-      <Footer />
     </>
   );
 };
