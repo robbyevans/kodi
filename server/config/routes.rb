@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   
-   # New route for fetching all tenants for the current admin
+  # Custom routes for fetching all tenants and houses for the current admin
   get '/tenants', to: 'tenants#all'
-  # New route for fetching all houses for the current admin
   get '/houses', to: 'houses#all'
 
   # Nest houses under properties so URLs look like /properties/:property_id/houses
@@ -15,9 +14,9 @@ Rails.application.routes.draw do
     resources :tenants, except: [:new, :edit]
   end
 
+  # Admin-related routes (for management and authentication)
   resources :admins, only: [:index, :create, :update, :destroy]
-
-  # Admin routes for signup and login
+  
   post "/signup", to: "admins#create"
   post "/login", to: "admins#login"
 
@@ -26,5 +25,6 @@ Rails.application.routes.draw do
   post 'payments/create_payment', to: 'payments#create_payment'
   get 'payments/payment_status', to: 'payments#payment_status'
 
+  # Root path – returns all properties for the current admin
   root 'properties#index'
 end

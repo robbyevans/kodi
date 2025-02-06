@@ -3,7 +3,9 @@ import LoadingPage from "./LoadingPage/LoadingPage";
 import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import { useToast } from "../redux/hooks/useToast";
-import { fetchProperties } from "../redux/slices/propertiesSlice";
+import { fetchAllProperties } from "../redux/slices/propertiesSlice";
+import { fetchAllHouses } from "../redux/slices/houseSlice";
+import { fetchAllTenants } from "../redux/slices/tenantsSlice";
 import ToastMessage from "./Toast/ToastMessage";
 
 const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -14,7 +16,9 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(fetchProperties());
+      dispatch(fetchAllProperties());
+      dispatch(fetchAllHouses());
+      dispatch(fetchAllTenants());
     }
   }, [dispatch, isAuthenticated]);
 

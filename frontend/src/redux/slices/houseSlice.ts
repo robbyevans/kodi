@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { ITenant } from "./tenantsSlice";
 import { showToast } from "./toastSlice"; // Import showToast action
+import { fetchAllProperties } from "./propertiesSlice";
 
 export interface IHouse {
   id: number;
@@ -65,6 +66,7 @@ export const addHouse = createAsyncThunk(
         `/properties/${propertyId}/houses`,
         { house: houseData }
       );
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "House added successfully!", type: "success" })
       );
@@ -83,6 +85,7 @@ export const editHouse = createAsyncThunk(
   async ({ id, ...house }: IHouse, { dispatch, rejectWithValue }) => {
     try {
       const response = await axiosInstance.put(`/houses/${id}`, { house });
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "House updated successfully!", type: "success" })
       );
@@ -99,6 +102,7 @@ export const deleteHouse = createAsyncThunk(
   async (id: number, { dispatch, rejectWithValue }) => {
     try {
       await axiosInstance.delete(`/houses/${id}`);
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "House deleted successfully!", type: "success" })
       );

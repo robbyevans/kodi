@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
-import { fetchProperties } from "./propertiesSlice";
+import { fetchAllProperties } from "./propertiesSlice";
 import { showToast } from "./toastSlice";
 
 export interface ITenant {
@@ -71,7 +71,7 @@ export const addTenant = createAsyncThunk(
         tenant: tenantData,
       });
 
-      dispatch(fetchProperties());
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "Tenant added successfully!", type: "success" })
       );
@@ -94,7 +94,7 @@ export const editTenant = createAsyncThunk(
         `/houses/${houseId}/tenants/${tenantData.id}`,
         { tenant: tenantData }
       );
-      dispatch(fetchProperties());
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "Tenant updated successfully!", type: "success" })
       );
@@ -116,7 +116,7 @@ export const deleteTenant = createAsyncThunk(
   ) => {
     try {
       await axiosInstance.delete(`/houses/${houseId}/tenants/${tenantId}`);
-      dispatch(fetchProperties());
+      dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "Tenant deleted successfully!", type: "success" })
       );

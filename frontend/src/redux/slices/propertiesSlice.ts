@@ -23,17 +23,12 @@ const initialState: PropertiesState = {
 };
 
 // Thunks
-export const fetchProperties = createAsyncThunk(
+export const fetchAllProperties = createAsyncThunk(
   "properties/fetchAll",
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/properties");
-      // dispatch(
-      //   showToast({
-      //     message: "Properties fetched successfully!",
-      //     type: "success",
-      //   })
-      // ); // Show success toast
+      // Optionally, you can dispatch a success toast here.
       return response.data;
     } catch (error: any) {
       dispatch(
@@ -127,14 +122,14 @@ const propertiesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProperties.pending, (state) => {
+      .addCase(fetchAllProperties.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchProperties.fulfilled, (state, action) => {
+      .addCase(fetchAllProperties.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchProperties.rejected, (state, action) => {
+      .addCase(fetchAllProperties.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch properties";
       })

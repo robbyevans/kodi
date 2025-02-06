@@ -11,9 +11,9 @@ import { getPropertyStats } from "../helpers/utils/getPropertyStats";
 const DashboardContainer = () => {
   const navigate = useNavigate();
   const { data: propertyData, loading, error } = useProperties();
-  const { tenants } = useTenants();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { houses, getAllHouses } = useHouses();
+  const { tenants } = useTenants();
 
   console.log("houses", houses);
 
@@ -42,9 +42,7 @@ const DashboardContainer = () => {
   if (error) return <S.ErrorMessage>{error}</S.ErrorMessage>;
 
   const {
-    totalUnits,
     occupancyRate,
-    totalProperties,
     totalRevenuePercentage,
     totalRevenueIfFullyOccupied,
     totalCurrentRevenue,
@@ -59,11 +57,11 @@ const DashboardContainer = () => {
         data={propertyData}
         navigate={navigate}
         handleAddPropertyClick={handleAddPropertyClick}
-        totalProperties={totalProperties}
+        totalProperties={propertyData?.length}
         formattedDate={"0"}
         formattedTime={"0"}
         totalRevenuePercentage={totalRevenuePercentage}
-        totalUnits={totalUnits}
+        totalUnits={houses?.length}
         occupancyRate={occupancyRate}
       />
       <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
