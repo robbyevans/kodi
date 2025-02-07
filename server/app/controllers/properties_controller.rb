@@ -61,7 +61,7 @@ class PropertiesController < ApplicationController
   def property_params
     params.require(:property).permit(:name, :property_image)
   end
-
+  
   def authorize_admin
     # Skip this check on creation as current_admin is used directly
     return if action_name == 'create'

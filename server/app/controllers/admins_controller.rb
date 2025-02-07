@@ -47,20 +47,17 @@ class AdminsController < ApplicationController
   # Admin login action
   def login
     admin = Admin.find_by(email: params[:email])
-
-    if admin && admin.authenticate(params[:password]) # Authenticate the admin
-      # If login is successful, generate the JWT token
+    if admin && admin.authenticate(params[:password])
       token = encode_jwt(admin.id)
-      
-      # Respond with the token and admin details
       render json: { 
         token: token, 
-        admin: { email: admin.email, role: admin.role, admin_id: admin.id, name: admin.name, phone_number: admin.phone_number, profile_image: admin.profile_image }
+        admin: admin.as_json  # This uses your overridden as_json method.
       }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
   end
+  
 
   private
   

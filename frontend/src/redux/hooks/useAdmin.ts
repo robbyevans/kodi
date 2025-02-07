@@ -31,7 +31,6 @@ export const useAdmins = () => {
     dispatch(logout());
   };
 
-  // New handler to update admin details
   const handleEditUser = (data: { email?: string }) => {
     if (!user.admin_id) {
       console.error("Admin ID is missing!");

@@ -3,12 +3,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice"; // Import showToast action
 
+// In adminSlice.ts:
 export interface IUser {
   name: string;
   email: string;
   password?: string;
-  profile_image: string;
+  // When sending an update, profile_image may be a File.
+  // When reading the admin data from the server, it is a URL (string) or null.
+  profile_image?: File | string;
   phone_number: string;
+  admin_id: number;
 }
 
 interface AdminState {
@@ -77,7 +81,7 @@ const initialState: AdminState = {
 export const loginAdmin = createAsyncThunk(
   "admin/loginAdmin",
   async (
-    credentials: Omit<IUser, "name" | "phone_number" | "profile_image">,
+    credentials: { email: string; password: string },
     { dispatch, rejectWithValue }
   ) => {
     try {
@@ -89,7 +93,7 @@ export const loginAdmin = createAsyncThunk(
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error || "Something went wrong";
-      dispatch(showToast({ message: errorMessage, type: "error" })); // Show error toast
+      dispatch(showToast({ message: errorMessage, type: "error" }));
       return rejectWithValue(errorMessage);
     }
   }
@@ -99,7 +103,7 @@ export const loginAdmin = createAsyncThunk(
 export const signupAdmin = createAsyncThunk(
   "admin/signup",
   async (
-    credentials: Omit<IUser, "phone_number" | "profile_image">,
+    credentials: { name: string; email: string; password: string },
     { dispatch, rejectWithValue }
   ) => {
     try {
@@ -119,16 +123,38 @@ export const signupAdmin = createAsyncThunk(
   }
 );
 
-// Async thunk for editing admin details
 export const editAdmin = createAsyncThunk(
   "admin/editAdmin",
   async (
-    { adminId, data }: { adminId: number; data: { email?: string } },
+    { adminId, data }: { adminId: number; data: Partial<IUser> | FormData },
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.put(`/admins/${adminId}`, {
-        admin: data,
+      let payload: FormData | object;
+      const headers: Record<string, string> = {}; // Explicit type
+
+      // If data is already a FormData, use it.
+      if (data instanceof FormData) {
+        payload = data;
+        headers["Content-Type"] = "multipart/form-data";
+      } else {
+        // If profile_image is a File, use FormData.
+        if (data.profile_image && data.profile_image instanceof File) {
+          const formData = new FormData();
+          // Append all keys; adjust if your backend expects nested keys.
+          Object.entries(data).forEach(([key, value]) => {
+            formData.append(`admin[${key}]`, value as any);
+          });
+          payload = formData;
+          headers["Content-Type"] = "multipart/form-data";
+        } else {
+          // Otherwise, send as JSON.
+          payload = { admin: data };
+        }
+      }
+
+      const response = await axiosInstance.put(`/admins/${adminId}`, payload, {
+        headers,
       });
       dispatch(
         showToast({ message: "Admin updated successfully!", type: "success" })

@@ -19,30 +19,44 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     null
   );
   const [propertyName, setPropertyName] = useState<string>("");
+  const [editingPropertyImage, setEditingPropertyImage] = useState<File | null>(
+    null
+  );
   const [showModal, setShowModal] = useState<boolean>(false);
   const [propertyToDelete, setPropertyToDelete] = useState<number | null>(null);
 
   const startEditingProperty = (property: IProperty) => {
     setEditingPropertyId(property.id!);
     setPropertyName(property.name);
+    // Reset the image file in edit mode.
+    setEditingPropertyImage(null);
   };
 
   const cancelEditingProperty = () => {
     setEditingPropertyId(null);
     setPropertyName("");
+    setEditingPropertyImage(null);
   };
 
   const saveEditingProperty = (property: IProperty) => {
-    if (propertyName && propertyName !== property.name) {
-      onEditProperty({ ...property, name: propertyName });
-    }
+    // Create the updated property object including a new image (if selected)
+    const updatedProperty: IProperty = {
+      ...property,
+      name: propertyName,
+      // Use the new image if provided; otherwise keep the original image.
+      property_image: editingPropertyImage
+        ? editingPropertyImage
+        : property.property_image,
+    };
+    onEditProperty(updatedProperty);
     setEditingPropertyId(null);
     setPropertyName("");
+    setEditingPropertyImage(null);
   };
 
   const confirmDeletion = (id: number, name: string) => {
     setPropertyToDelete(id);
-    setPropertyName(name); // Store the property name for the modal message
+    setPropertyName(name); // For displaying the property name in the confirmation modal.
     setShowModal(true);
   };
 
@@ -52,13 +66,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       setPropertyToDelete(null);
     }
     setShowModal(false);
-    setPropertyName(""); // Clear property name after deletion
+    setPropertyName("");
   };
 
   const handleCancelDelete = () => {
     setPropertyToDelete(null);
     setShowModal(false);
-    setPropertyName(""); // Clear property name if deletion is canceled
+    setPropertyName("");
   };
 
   return (
@@ -76,6 +90,14 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                     type="text"
                     value={propertyName}
                     onChange={(e) => setPropertyName(e.target.value)}
+                  />
+                  {/* File input for updating property image */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      setEditingPropertyImage(e.target.files?.[0] || null)
+                    }
                   />
                   <S.IconButton onClick={() => saveEditingProperty(property)}>
                     <FiCheck />

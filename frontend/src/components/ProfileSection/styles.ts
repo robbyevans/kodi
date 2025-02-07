@@ -100,3 +100,15 @@ export const IconButton = styled.button`
     color: ${colors.secondary};
   }
 `;
+
+export const ChangeImageButton = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.primary};
+  cursor: pointer;
+  font-size: ${fontSizes.lg};
+  padding: ${spacing.xs};
+  &:hover {
+    color: ${colors.secondary};
+  }
+`;

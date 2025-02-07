@@ -13,20 +13,29 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   onClose,
 }) => {
   const [propertyName, setPropertyName] = useState("");
+  const [propertyImage, setPropertyImage] = useState<File | null>(null);
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      await handleAddProperty({
+      // Build an object of type IProperty.
+      // Note: If no image is selected, property_image is undefined.
+      const newProperty = {
+        admin_id: user.admin_id!,
         name: propertyName,
-        houses: [],
-        admin_id: user.admin_id,
-      });
+        property_image: propertyImage || undefined,
+      };
+      await handleAddProperty(newProperty);
       onClose();
-    } else {
-      alert("You must be logged in as an admin to add a property.");
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPropertyImage(file);
     }
   };
 
@@ -45,6 +54,15 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               value={propertyName}
               onChange={(e) => setPropertyName(e.target.value)}
               required
+            />
+          </S.FormGroup>
+          <S.FormGroup>
+            <label htmlFor="propertyImage">Property Image (optional)</label>
+            <input
+              type="file"
+              id="propertyImage"
+              accept="image/*"
+              onChange={handleImageUpload}
             />
           </S.FormGroup>
           <S.ButtonContainer>

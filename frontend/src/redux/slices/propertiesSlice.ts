@@ -3,11 +3,13 @@ import axiosInstance from "../utils";
 import { IHouse } from "./houseSlice";
 import { showToast } from "./toastSlice";
 
+// In propertiesSlice.ts:
 export interface IProperty {
-  id?: number; // Make id optional
+  id?: number;
   admin_id: number;
   name: string;
-  property_image: string;
+  // Similarly, property_image can be a File (for new uploads) or a string URL.
+  property_image?: File | string;
   houses?: IHouse[] | null;
 }
 
@@ -50,16 +52,26 @@ export const fetchPropertyById = createAsyncThunk(
 
 export const addProperty = createAsyncThunk(
   "properties/add",
-  async (
-    property: Omit<IProperty, "id" | "property_image">,
-    { dispatch, rejectWithValue }
-  ) => {
+  async (property: IProperty, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/properties", {
-        property: {
-          name: property.name,
-          admin_id: property.admin_id,
-        },
+      let payload: FormData | object;
+      const headers: Record<string, string> = {}; // Explicitly typed headers
+
+      if (property.property_image && property.property_image instanceof File) {
+        const formData = new FormData();
+        formData.append("property[name]", property.name);
+        formData.append("property[admin_id]", property.admin_id.toString());
+        formData.append("property[property_image]", property.property_image);
+        payload = formData;
+        headers["Content-Type"] = "multipart/form-data";
+      } else {
+        payload = {
+          property: { name: property.name, admin_id: property.admin_id },
+        };
+      }
+
+      const response = await axiosInstance.post("/properties", payload, {
+        headers,
       });
       dispatch(
         showToast({ message: "Property added successfully!", type: "success" })
@@ -76,12 +88,31 @@ export const addProperty = createAsyncThunk(
 
 export const editProperty = createAsyncThunk(
   "properties/edit",
-  async (
-    { id, ...property }: Omit<IProperty, "property_image">,
-    { dispatch, rejectWithValue }
-  ) => {
+  async (property: IProperty, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(`/properties/${id}`, property);
+      let payload: FormData | object;
+      const headers: Record<string, string> = {}; // Explicitly typed headers
+
+      if (property.property_image && property.property_image instanceof File) {
+        const formData = new FormData();
+        formData.append("property[name]", property.name);
+        formData.append("property[admin_id]", property.admin_id.toString());
+        formData.append("property[property_image]", property.property_image);
+        // Optionally include property id if needed by your controller.
+        if (property.id) {
+          formData.append("property[id]", property.id.toString());
+        }
+        payload = formData;
+        headers["Content-Type"] = "multipart/form-data";
+      } else {
+        payload = { property: property };
+      }
+
+      const response = await axiosInstance.put(
+        `/properties/${property.id}`,
+        payload,
+        { headers }
+      );
       dispatch(
         showToast({
           message: "Property updated successfully!",

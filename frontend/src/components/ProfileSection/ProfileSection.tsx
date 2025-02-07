@@ -6,7 +6,8 @@ import { IUser } from "../../redux/slices/adminSlice";
 
 interface ProfileSectionProps {
   user: IUser;
-  onEditUser: (data: { [key: string]: string }) => void;
+  // Allow onEditUser to accept either an object or a FormData.
+  onEditUser: (data: { [key: string]: string | File } | FormData) => void;
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({
@@ -15,6 +16,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
 }) => {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [fieldValue, setFieldValue] = useState<string>("");
+  // We don’t need separate state for file upload here since we use the hidden file input.
+  // const [imageFile, setImageFile] = useState<File | null>(null);
 
   const startEditingField = (
     field: string,
@@ -37,6 +40,14 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
     }
   };
 
+  const handleImageUpload = (files: FileList | null) => {
+    if (!files || files.length === 0 || !user.admin_id) return;
+    // Build a FormData payload
+    const formData = new FormData();
+    formData.append("admin[profile_image]", files[0]);
+    onEditUser(formData);
+  };
+
   return (
     <S.ProfileContainer>
       <S.ProfileHeader>
@@ -44,8 +55,27 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       </S.ProfileHeader>
       <S.ProfileContent>
         <S.ProfileImage
-          src={user.profile_image || profilePlaceholder}
+          src={
+            user.profile_image instanceof File
+              ? URL.createObjectURL(user.profile_image)
+              : user.profile_image || profilePlaceholder
+          }
           alt="Profile"
+        />
+
+        {/* Change Photo button triggers the hidden file input */}
+        <S.ChangeImageButton
+          onClick={() => document.getElementById("profileImageInput")?.click()}
+        >
+          Change Photo
+        </S.ChangeImageButton>
+        {/* Hidden file input for profile image upload */}
+        <input
+          type="file"
+          id="profileImageInput"
+          hidden
+          accept="image/*"
+          onChange={(e) => handleImageUpload(e.target.files)}
         />
         <S.ProfileDetails>
           <S.DetailItem>
