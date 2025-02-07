@@ -5,7 +5,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import * as S from "./styles";
 
 const Auth = () => {
-  const { loading, error, role, isAuthenticated, handleLogin, handleSignup } =
+  const { loading, error, user, isAuthenticated, handleLogin, handleSignup } =
     useAdmins();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,10 +33,10 @@ const Auth = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated && role === "admin") {
+    if (isAuthenticated && user.role === "admin") {
       navigate("/dashboard");
     }
-  }, [isAuthenticated, role, navigate]);
+  }, [isAuthenticated, user.role, navigate]);
 
   const handleGoogleSuccess = (credentialResponse: any) => {
     console.log("Google login success:", credentialResponse);

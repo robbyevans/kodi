@@ -8,6 +8,7 @@ import AccessRouter from "../components/Utils/AccessRouter";
 import DashboardContainer from "../containers/dashboardContainer";
 
 import SettingsPageContainer from "../containers/settingsContainer";
+import ProfileContainer from "../containers/profileContainer";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
@@ -72,6 +73,14 @@ const AppRouter = () => {
               element={
                 <AccessRouter>
                   <SettingsPageContainer />
+                </AccessRouter>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <AccessRouter>
+                  <ProfileContainer />
                 </AccessRouter>
               }
             />
