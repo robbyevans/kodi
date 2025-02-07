@@ -12,16 +12,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ propertyData }) => {
   const navigate = useNavigate();
   const { totalUnits, occupancyRate } = getPropertyStats(propertyData);
 
-  console.log("propertyData.property_image", propertyData.property_image);
-
-  const imageURL =
-    propertyData.property_image instanceof File
-      ? URL.createObjectURL(propertyData.property_image)
-      : propertyData.property_image || "src/assets/apartment-placeholder.png";
-
   return (
     <S.PropertyCard onClick={() => navigate(`/property/${propertyData.id}`)}>
-      <S.PropertyImage $image={imageURL} />
+      <S.PropertyImage
+        $image={propertyData.property_image || "/apartment-placeholder.png"}
+      />
       <S.PropertyInfo>
         <h3>{propertyData.name}</h3>
         <S.PropertyStats>

@@ -31,12 +31,11 @@ class AdminsController < ApplicationController
   def update
     @admin = Admin.find(params[:id])
     if @admin.update(admin_params)
-      render json: @admin
+      render json: @admin.as_json   # explicitly call as_json here as well
     else
       render json: @admin.errors, status: :unprocessable_entity
     end
   end
-  
 
   def destroy
     @admin = Admin.find(params[:id])
@@ -51,7 +50,7 @@ class AdminsController < ApplicationController
       token = encode_jwt(admin.id)
       render json: { 
         token: token, 
-        admin: admin.as_json  # This uses your overridden as_json method.
+        admin: admin.as_json   # explicitly call as_json here
       }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized

@@ -29,16 +29,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   totalUnits,
   occupancyRate,
 }) => {
-  const imageURL =
-    userData?.profile_image instanceof File
-      ? URL.createObjectURL(userData.profile_image)
-      : profilePlaceholder;
-
-  console.log(
-    "URL.createObjectURL(userData.profile_image)",
-    userData?.profile_image
-  );
-
   return (
     <S.DashboardContainer>
       <S.DashboardHeader>
@@ -46,7 +36,10 @@ const Dashboard: React.FC<DashboardProps> = ({
           <h1>Dashboard</h1>
           <p>Find your property listing and stats below</p>
         </div>
-        <S.ProfileImage alt="profile-picture" src={imageURL} />
+        <S.ProfileImage
+          alt="profile-image"
+          src={userData?.profile_image || profilePlaceholder}
+        />
       </S.DashboardHeader>
 
       <S.ContentWrapper>

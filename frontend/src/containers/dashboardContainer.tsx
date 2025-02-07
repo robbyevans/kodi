@@ -10,7 +10,7 @@ import { getPropertyStats } from "../helpers/utils/getPropertyStats";
 const DashboardContainer = () => {
   const navigate = useNavigate();
   const { data: propertyData, loading, error } = useProperties();
-  const { data: userData } = useAdmins();
+  const { user: userData } = useAdmins();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddPropertyClick = () => setIsModalOpen(true);
