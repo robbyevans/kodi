@@ -107,7 +107,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       </S.PropertiesList>
       {showModal && (
         <ConfirmationModal
-          message="Deleting a property will also delete all related data. Are you sure you want to proceed?"
+          message="Deleting this property will also delete all of its related data. Are you sure you want to proceed?"
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
         />

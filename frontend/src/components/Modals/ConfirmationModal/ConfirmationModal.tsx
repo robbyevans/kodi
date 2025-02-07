@@ -1,4 +1,5 @@
 import React from "react";
+import { RiErrorWarningLine } from "react-icons/ri";
 import * as S from "./styles";
 
 interface ConfirmationModalProps {
@@ -15,6 +16,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   return (
     <S.ModalOverlay>
       <S.ModalContainer>
+        <S.ModalHeader>
+          <RiErrorWarningLine size="65px" />
+          <S.ModalTitle>Are you sure ?</S.ModalTitle>
+        </S.ModalHeader>
         <S.ModalMessage>{message}</S.ModalMessage>
         <S.ModalActions>
           <S.ConfirmButton onClick={onConfirm}>Delete</S.ConfirmButton>

@@ -29,6 +29,27 @@ export const ModalContainer = styled.div`
   max-width: 400px;
   width: 90%;
   text-align: center;
+  position: relative;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: ${spacing.md};
+  color: ${colors.error};
+
+  svg {
+    font-size: ${fontSizes["3xl"]};
+    margin-bottom: ${spacing.xs};
+  }
+`;
+
+export const ModalTitle = styled.h3`
+  font-family: ${fonts.secondary};
+  font-size: ${fontSizes["2xl"]};
+  color: ${colors.text.primary};
+  margin: 0;
 `;
 
 export const ModalMessage = styled.p`
@@ -51,6 +72,7 @@ export const ConfirmButton = styled.button`
   border-radius: ${borderRadius.sm};
   cursor: pointer;
   font-size: ${fontSizes.base};
+  transition: background 0.2s ease;
   &:hover {
     opacity: 0.9;
   }
@@ -64,6 +86,7 @@ export const CancelButton = styled.button`
   border-radius: ${borderRadius.sm};
   cursor: pointer;
   font-size: ${fontSizes.base};
+  transition: background 0.2s ease;
   &:hover {
     background: ${colors.neutral[200]};
   }
