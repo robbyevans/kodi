@@ -11,9 +11,7 @@ const Sidebar: React.FC = () => {
   return (
     <S.SidebarContainer>
       <div>
-        <S.SidebarHeader>
-          <S.WelcomeText>Welcome Admin</S.WelcomeText>
-        </S.SidebarHeader>
+        <S.SidebarHeader></S.SidebarHeader>
         <S.Menu>
           <S.MenuItem onClick={() => navigate("/dashboard")}>
             <FiHome />

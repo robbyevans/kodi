@@ -33,12 +33,6 @@ export const Title = styled.h1`
   letter-spacing: -0.5px;
 `;
 
-export const WelcomeText = styled.span`
-  display: block;
-  font-size: ${fontSizes.base};
-  margin-top: ${spacing.xs};
-`;
-
 export const Menu = styled.div`
   display: flex;
   flex-direction: column;

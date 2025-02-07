@@ -8,7 +8,7 @@ const LoadingPage = () => {
         <S.AnimatedIcon>
           <FiHome size={64} />
         </S.AnimatedIcon>
-        <S.FadeInText>PropertySuite</S.FadeInText>
+        <S.FadeInText>KODI</S.FadeInText>
       </S.LogoContainer>
       <S.ProgressBar>
         <S.ProgressFill />
