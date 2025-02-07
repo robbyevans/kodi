@@ -1,7 +1,7 @@
 class PropertiesController < ApplicationController
-  before_action :authorize_admin, only: [:create, :update, :destroy]
+  # Ensure the property is loaded first
   before_action :set_property, only: [:show, :update, :destroy]
-
+  before_action :authorize_admin, only: [:create, :update, :destroy]
 
   def create
     @property = current_admin.properties.new(property_params)
@@ -13,7 +13,6 @@ class PropertiesController < ApplicationController
   end
 
   def index
-    # Eager load houses and their tenant
     @properties = current_admin.properties.includes(houses: :tenant)
     render json: @properties.as_json(
       include: {
@@ -28,8 +27,6 @@ class PropertiesController < ApplicationController
   end
 
   def show
-    # Ensure the property has the houses and tenants loaded
-    @property = Property.includes(houses: :tenant).find(params[:id])
     render json: @property.as_json(
       include: {
         houses: {
@@ -62,11 +59,12 @@ class PropertiesController < ApplicationController
   end
 
   def property_params
-  params.require(:property).permit(:name, :property_image)
+    params.require(:property).permit(:name, :property_image)
   end
 
   def authorize_admin
-    return if action_name == 'create' # Already authorized via current_admin
+    # Skip this check on creation as current_admin is used directly
+    return if action_name == 'create'
 
     unless current_admin && current_admin.id == @property.admin_id
       render json: { error: 'Unauthorized' }, status: :unauthorized
