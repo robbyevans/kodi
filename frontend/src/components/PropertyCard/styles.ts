@@ -26,10 +26,10 @@ export const PropertyCard = styled.div`
   }
 `;
 
-export const PropertyImage = styled.div`
+export const PropertyImage = styled.div<{ $image?: string }>`
   height: 180px;
   background: ${colors.neutral[200]};
-  /* background-image: url("src/assets/apartment-placeholder.png"); */
+  background-image: url(${({ $image }) => $image});
 
   background-size: cover;
   background-position: center;

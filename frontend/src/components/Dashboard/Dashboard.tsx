@@ -4,9 +4,12 @@ import QuickStatCard from "../StatCard/QuickStatCard"; // Import the new compone
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import PropertyCard from "../PropertyCard/PropertyCard";
+import { IUser } from "../../redux/slices/adminSlice";
+import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
 
 interface DashboardProps {
-  data: IProperty[];
+  propertyData: IProperty[];
+  userData: IUser;
   navigate: (path: string) => void;
   handleAddPropertyClick: () => void;
   totalRevenuePercentage: number;
@@ -18,15 +21,24 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
-  data,
+  propertyData,
+  userData,
   handleAddPropertyClick,
   totalRevenuePercentage,
   totalProperties,
-  formattedDate,
-  formattedTime,
   totalUnits,
   occupancyRate,
 }) => {
+  const imageURL =
+    userData?.profile_image instanceof File
+      ? URL.createObjectURL(userData.profile_image)
+      : profilePlaceholder;
+
+  console.log(
+    "URL.createObjectURL(userData.profile_image)",
+    userData?.profile_image
+  );
+
   return (
     <S.DashboardContainer>
       <S.DashboardHeader>
@@ -34,8 +46,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           <h1>Dashboard</h1>
           <p>Find your property listing and stats below</p>
         </div>
-        <p>Date: {formattedDate}</p>
-        <p>Time: {formattedTime}</p>
+        <S.ProfileImage alt="profile-picture" src={imageURL} />
       </S.DashboardHeader>
 
       <S.ContentWrapper>
@@ -48,9 +59,9 @@ const Dashboard: React.FC<DashboardProps> = ({
             </S.AddPropertyButton>
           </S.PropertyListHeader>
 
-          {data?.length > 0 ? (
+          {propertyData?.length > 0 ? (
             <S.PropertyGrid>
-              {data.map((property) => (
+              {propertyData.map((property) => (
                 <PropertyCard key={property.id} propertyData={property} />
               ))}
             </S.PropertyGrid>

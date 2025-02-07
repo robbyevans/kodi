@@ -141,3 +141,10 @@ export const DateDisplay = styled.span`
   font-weight: ${fontWeights.medium};
   color: ${colors.text.secondary};
 `;
+
+export const ProfileImage = styled.img`
+  border: 1.5px solid ${colors.primary};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+`;
