@@ -13,14 +13,21 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  // Split the message to identify the property name for bold styling
+  const [preText, propertyName, postText] = message.split(/(Deleting .*? will)/);
+
   return (
     <S.ModalOverlay>
       <S.ModalContainer>
         <S.ModalHeader>
           <RiErrorWarningLine size="65px" />
-          <S.ModalTitle>Are you sure ?</S.ModalTitle>
+          <S.ModalTitle>Are you sure?</S.ModalTitle>
         </S.ModalHeader>
-        <S.ModalMessage>{message}</S.ModalMessage>
+        <S.ModalMessage>
+          {preText}
+          <S.BoldText>{propertyName}</S.BoldText>
+          {postText}
+        </S.ModalMessage>
         <S.ModalActions>
           <S.ConfirmButton onClick={onConfirm}>Delete</S.ConfirmButton>
           <S.CancelButton onClick={onCancel}>Cancel</S.CancelButton>

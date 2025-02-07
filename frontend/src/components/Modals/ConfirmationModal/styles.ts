@@ -52,13 +52,6 @@ export const ModalTitle = styled.h3`
   margin: 0;
 `;
 
-export const ModalMessage = styled.p`
-  font-family: ${fonts.primary};
-  font-size: ${fontSizes.lg};
-  color: ${colors.text.primary};
-  margin-bottom: ${spacing.lg};
-`;
-
 export const ModalActions = styled.div`
   display: flex;
   justify-content: space-around;
@@ -90,4 +83,16 @@ export const CancelButton = styled.button`
   &:hover {
     background: ${colors.neutral[200]};
   }
+`;
+
+export const ModalMessage = styled.p`
+  font-family: ${fonts.primary};
+  font-size: ${fontSizes.lg};
+  color: ${colors.text.primary};
+  margin-bottom: ${spacing.lg};
+`;
+
+export const BoldText = styled.span`
+  font-weight: bold;
+  color: ${colors.text.primary};
 `;

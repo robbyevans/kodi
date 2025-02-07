@@ -40,8 +40,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     setPropertyName("");
   };
 
-  const confirmDeletion = (id: number) => {
+  const confirmDeletion = (id: number, name: string) => {
     setPropertyToDelete(id);
+    setPropertyName(name); // Store the property name for the modal message
     setShowModal(true);
   };
 
@@ -51,11 +52,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       setPropertyToDelete(null);
     }
     setShowModal(false);
+    setPropertyName(""); // Clear property name after deletion
   };
 
   const handleCancelDelete = () => {
     setPropertyToDelete(null);
     setShowModal(false);
+    setPropertyName(""); // Clear property name if deletion is canceled
   };
 
   return (
@@ -96,7 +99,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                   <S.EditButton onClick={() => startEditingProperty(property)}>
                     <FiEdit />
                   </S.EditButton>
-                  <S.DeleteButton onClick={() => confirmDeletion(property.id!)}>
+                  <S.DeleteButton
+                    onClick={() => confirmDeletion(property.id!, property.name)}
+                  >
                     <FiTrash2 />
                   </S.DeleteButton>
                 </>
@@ -107,7 +112,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       </S.PropertiesList>
       {showModal && (
         <ConfirmationModal
-          message="Deleting this property will also delete all of its related data. Are you sure you want to proceed?"
+          message={`Deleting ${
+            propertyName || "this property"
+          } will also delete all of its related data. Are you sure you want to proceed?`}
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
         />
