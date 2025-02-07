@@ -38,6 +38,21 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
               fill="#8884d8"
               paddingAngle={3}
               dataKey="value"
+              // Add this label prop to center the percentage
+              labelLine={false}
+              label={({ cx, cy }) => (
+                <text
+                  x={cx}
+                  y={cy}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill={colors.primary}
+                  fontSize={16}
+                  fontWeight="bold"
+                >
+                  {`${totalRevenuePercentage}%`}
+                </text>
+              )}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index]} />

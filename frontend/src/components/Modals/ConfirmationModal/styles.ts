@@ -64,7 +64,7 @@ export const ConfirmButton = styled.button`
   border: none;
   border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.xl};
   transition: background 0.2s ease;
   &:hover {
     opacity: 0.9;
@@ -78,7 +78,7 @@ export const CancelButton = styled.button`
   border: none;
   border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.xl};
   transition: background 0.2s ease;
   &:hover {
     background: ${colors.neutral[200]};

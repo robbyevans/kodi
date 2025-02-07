@@ -38,3 +38,6 @@ export const StatItem = styled.div`
     font-weight: ${fontWeights.semibold};
   }
 `;
+
+export const Label = styled.span`
+`
