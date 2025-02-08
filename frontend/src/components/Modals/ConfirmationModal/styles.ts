@@ -21,6 +21,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
   backdrop-filter: blur(4px);
   overflow: hidden;
+  margin: 0 16px;
 
   &::after {
     content: "";
