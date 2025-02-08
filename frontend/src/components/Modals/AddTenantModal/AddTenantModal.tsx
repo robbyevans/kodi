@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ITenant } from "../../../redux/slices/tenantsSlice";
 import { useTenants } from "../../../redux/hooks/useTenants";
 import { IHouse } from "../../../redux/slices/houseSlice";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { IoClose } from "react-icons/io5";
 import * as S from "./styles";
 
 interface AddTenantModalProps {
@@ -68,74 +70,93 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
 
   if (!visible) return null;
 
+  // Determine whether a tenant already exists.
+  const hasTenant = tenants && tenants.length > 0;
+
   return (
     <S.ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>
+          <S.CloseButton onClick={onClose}>
+            <IoClose size={20} color="red" />
+          </S.CloseButton>
           {editingTenant
             ? `Edit Tenant - ${editingTenant.name}`
+            : hasTenant
+            ? `Tenant for ${house.house_number}`
             : `Add Tenant to ${house.house_number}`}
         </S.ModalHeader>
-        <S.FormContainer>
-          <input
-            placeholder="Name"
-            value={tenantName}
-            onChange={(e) => setTenantName(e.target.value)}
-          />
-          <input
-            placeholder="Email"
-            value={tenantEmail}
-            onChange={(e) => setTenantEmail(e.target.value)}
-          />
-          <input
-            placeholder="Phone"
-            value={tenantPhone}
-            onChange={(e) => setTenantPhone(e.target.value)}
-          />
-          <S.ButtonContainer>
-            <S.CancelButton onClick={onClose}>Cancel</S.CancelButton>
-            <S.SubmitButton onClick={handleSubmit}>
-              {editingTenant ? "Save Changes" : "Add Tenant"}
-            </S.SubmitButton>
-          </S.ButtonContainer>
-        </S.FormContainer>
-        <S.SectionHeader>Existing Tenants</S.SectionHeader>
-        {loading ? (
-          <S.StatusMessage>Loading...</S.StatusMessage>
+
+        {!hasTenant || editingTenant ? (
+          // Display the input form when adding a new tenant or editing an existing tenant.
+          <S.FormContainer>
+            <S.InputField
+              placeholder="Name"
+              value={tenantName}
+              onChange={(e) => setTenantName(e.target.value)}
+            />
+            <S.InputField
+              placeholder="Email"
+              value={tenantEmail}
+              onChange={(e) => setTenantEmail(e.target.value)}
+            />
+            <S.InputField
+              placeholder="Phone"
+              value={tenantPhone}
+              onChange={(e) => setTenantPhone(e.target.value)}
+            />
+            <S.ButtonContainer>
+              <S.CancelButton onClick={onClose}>Cancel</S.CancelButton>
+              <S.SubmitButton onClick={handleSubmit}>
+                {editingTenant ? "Save Changes" : "Add Tenant"}
+              </S.SubmitButton>
+            </S.ButtonContainer>
+          </S.FormContainer>
         ) : (
-          <S.TenantList>
-            {tenants.map((tenant: ITenant) => (
-              <S.TenantItem key={tenant.id}>
-                {tenant.name} - {tenant.email} - {tenant.phone_number}
-                <S.TenantActions>
-                  <button
-                    onClick={() => {
-                      setEditingTenant(tenant);
-                      setTenantName(tenant.name);
-                      setTenantEmail(tenant.email);
-                      setTenantPhone(tenant.phone_number);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="danger"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this tenant?"
-                        )
-                      ) {
-                        handleDeleteTenant(house.id, tenant.id);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </S.TenantActions>
-              </S.TenantItem>
-            ))}
-          </S.TenantList>
+          // Display the existing tenant details when a tenant exists and we're not editing.
+          <>
+            {loading ? (
+              <S.StatusMessage>Loading...</S.StatusMessage>
+            ) : (
+              <S.TenantList>
+                {tenants.map((tenant: ITenant) => (
+                  <S.TenantItem key={tenant.id}>
+                    <div>
+                      <S.TenantName>{tenant.name}</S.TenantName>
+                      <S.TenantDetails>
+                        {tenant.email} | {tenant.phone_number}
+                      </S.TenantDetails>
+                    </div>
+                    <S.TenantActions>
+                      <S.EditButton
+                        onClick={() => {
+                          setEditingTenant(tenant);
+                          setTenantName(tenant.name);
+                          setTenantEmail(tenant.email);
+                          setTenantPhone(tenant.phone_number);
+                        }}
+                      >
+                        <FiEdit />
+                      </S.EditButton>
+                      <S.DeleteButton
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this tenant?"
+                            )
+                          ) {
+                            handleDeleteTenant(house.id, tenant.id);
+                          }
+                        }}
+                      >
+                        <FiTrash2 />
+                      </S.DeleteButton>
+                    </S.TenantActions>
+                  </S.TenantItem>
+                ))}
+              </S.TenantList>
+            )}
+          </>
         )}
       </S.ModalContent>
     </S.ModalOverlay>

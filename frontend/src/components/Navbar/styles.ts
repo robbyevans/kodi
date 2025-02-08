@@ -18,7 +18,7 @@ export const Navbar = styled.nav<NavbarProps>`
   background-color: ${({ isDarkMode }) =>
     isDarkMode ? colors.neutral[900] : colors.primary};
   color: ${colors.text.inverted};
-  padding: ${spacing.md};
+  padding: ${spacing.sm};
   box-shadow: ${shadows.md};
   position: relative;
   border-bottom: 1px solid ${colors.secondary};
