@@ -38,7 +38,7 @@ export const ProfileImage = styled.img`
   height: 120px;
   border-radius: ${borderRadius.full};
   object-fit: cover;
-  border: 4px solid ${colors.primary};
+  border: 4px solid ${colors.background};
   box-shadow: ${shadows.lg};
 `;
 
@@ -56,8 +56,8 @@ export const DetailItem = styled.div`
 
 export const DetailLabel = styled.span`
   font-size: ${fontSizes.sm};
-  font-weight: ${fontWeights.medium};
-  color: ${colors.text.secondary};
+  font-weight: ${fontWeights.semibold};
+  color: ${colors.primary};
   margin-bottom: ${spacing.xs};
 `;
 

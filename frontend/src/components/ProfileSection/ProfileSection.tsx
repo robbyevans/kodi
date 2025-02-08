@@ -67,7 +67,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         <S.ChangeImageButton
           onClick={() => document.getElementById("profileImageInput")?.click()}
         >
-          Change Photo
+          <FiEdit />
         </S.ChangeImageButton>
         {/* Hidden file input for profile image upload */}
         <input
@@ -79,7 +79,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         />
         <S.ProfileDetails>
           <S.DetailItem>
-            <S.DetailLabel>Full Name</S.DetailLabel>
+            <S.DetailLabel>**Full Name**</S.DetailLabel>
             {editingField === "name" ? (
               <S.InputGroup>
                 <S.InputField
@@ -106,7 +106,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             )}
           </S.DetailItem>
           <S.DetailItem>
-            <S.DetailLabel>Email Address</S.DetailLabel>
+            <S.DetailLabel>**Email Address**</S.DetailLabel>
             {editingField === "email" ? (
               <S.InputGroup>
                 <S.InputField
@@ -133,7 +133,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             )}
           </S.DetailItem>
           <S.DetailItem>
-            <S.DetailLabel>Phone Number</S.DetailLabel>
+            <S.DetailLabel> **Phone Number**</S.DetailLabel>
             {editingField === "phone_number" ? (
               <S.InputGroup>
                 <S.InputField

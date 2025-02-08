@@ -143,7 +143,7 @@ export const DateDisplay = styled.span`
 `;
 
 export const ProfileImage = styled.img`
-  border: 1.5px solid ${colors.primary};
+  border: 2px solid ${colors.background};
   border-radius: 50%;
   width: 50px;
   height: 50px;
