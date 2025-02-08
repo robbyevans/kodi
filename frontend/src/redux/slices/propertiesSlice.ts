@@ -91,21 +91,29 @@ export const editProperty = createAsyncThunk(
   async (property: IProperty, { dispatch, rejectWithValue }) => {
     try {
       let payload: FormData | object;
-      const headers: Record<string, string> = {}; // Explicitly typed headers
+      const headers: Record<string, string> = {};
 
       if (property.property_image && property.property_image instanceof File) {
+        // When updating with a new file, use FormData.
         const formData = new FormData();
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
         formData.append("property[property_image]", property.property_image);
-        // Optionally include property id if needed by your controller.
         if (property.id) {
           formData.append("property[id]", property.id.toString());
         }
         payload = formData;
         headers["Content-Type"] = "multipart/form-data";
       } else {
-        payload = { property: property };
+        // When editing only non-file fields, omit the property_image field.
+        const payloadData: Partial<IProperty> = {
+          name: property.name,
+          admin_id: property.admin_id,
+        };
+        if (property.id) {
+          payloadData.id = property.id;
+        }
+        payload = { property: payloadData };
       }
 
       const response = await axiosInstance.put(
