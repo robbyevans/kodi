@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiEdit, FiTrash2, FiCheck, FiX } from "react-icons/fi";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import ConfirmationModal from "../Modals/ConfirmationModal/ConfirmationModal";
@@ -118,13 +118,16 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
               {editingPropertyId === property.id && (
                 <S.InputGroup>
                   <S.InputWrapper>
+                    <S.InputLabel>**Update Property Name**</S.InputLabel>
                     <S.InputField
                       type="text"
                       value={propertyName}
                       onChange={(e) => setPropertyName(e.target.value)}
                       placeholder="Name"
                     />
-                    {/* You can style the file input further if needed */}
+                  </S.InputWrapper>
+                  <S.InputWrapper>
+                    <S.InputLabel>**Update Property Image**</S.InputLabel>
                     <S.FileInput
                       type="file"
                       accept="image/*"
@@ -132,6 +135,12 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                         setEditingPropertyImage(e.target.files?.[0] || null)
                       }
                     />
+                    {editingPropertyImage && (
+                      <S.ImagePreview
+                        src={URL.createObjectURL(editingPropertyImage)}
+                        alt="Image Preview"
+                      />
+                    )}
                   </S.InputWrapper>
                   <S.ButtonWrapper>
                     <S.StyledButton

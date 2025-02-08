@@ -128,9 +128,8 @@ export const DeleteButton = styled.button`
   }
 `;
 
-/* The container that smoothly expands/retracts when editing */
 export const EditFormContainer = styled.div<{ expanded: boolean }>`
-  max-height: ${({ expanded }) => (expanded ? "150px" : "0")};
+  max-height: ${({ expanded }) => (expanded ? "fit-content" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
   opacity: ${({ expanded }) => (expanded ? 1 : 0)};
@@ -146,6 +145,21 @@ export const InputGroup = styled.div`
   padding: 10px;
   gap: ${spacing.md};
   border: 1px solid ${colors.background};
+`;
+
+/* Wrapper for each input field and its label */
+export const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+`;
+
+/* Label above the input field */
+export const InputLabel = styled.label`
+  font-size: ${fontSizes.xs};
+  color: ${colors.primary};
+  font-weight: ${fontWeights.medium};
 `;
 
 /* Input for editing the property name */
@@ -164,7 +178,24 @@ export const FileInput = styled.input`
   color: ${colors.text.primary};
 `;
 
-/* Reuse IconButton styling */
+/* Image preview styling */
+export const ImagePreview = styled.img`
+  margin-top: ${spacing.xs};
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: ${borderRadius.sm};
+  object-fit: cover;
+  border: 1px solid ${colors.neutral[300]};
+`;
+
+/* Button wrapper for Done/Cancel buttons */
+export const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+/* Reuse StyledButton styling for action buttons */
 export const StyledButton = styled.button<{ $isVariantAccept?: boolean }>`
   background: ${({ $isVariantAccept }) =>
     $isVariantAccept ? colors.primary : colors.neutral};
@@ -177,26 +208,11 @@ export const StyledButton = styled.button<{ $isVariantAccept?: boolean }>`
   justify-content: center;
   border-radius: 5px;
   font-size: ${fontSizes.sm};
-  padding: 5px;
+  padding: 5px 10px;
   -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   &:hover {
     color: ${colors.secondary};
   }
-`;
-
-export const InputWrapper = styled.div`
-  display: flex;
-
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-`;
-
-export const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `;
