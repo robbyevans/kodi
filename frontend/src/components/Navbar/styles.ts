@@ -7,18 +7,13 @@ import {
   shadows,
 } from "../../styles/foundation";
 
-interface NavbarProps {
-  isDarkMode: boolean;
-}
-
-export const Navbar = styled.nav<NavbarProps>`
+export const Navbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ isDarkMode }) =>
-    isDarkMode ? colors.neutral[900] : colors.primary};
+  background-color: ${colors.primary};
   color: ${colors.text.inverted};
-  padding: ${spacing.sm};
+  padding: 0 16px;
   box-shadow: ${shadows.md};
   position: relative;
   border-bottom: 1px solid ${colors.secondary};

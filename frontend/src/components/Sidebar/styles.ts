@@ -44,7 +44,7 @@ export const Menu = styled.div`
 export const MenuItem = styled.button`
   background: none;
   border: none;
-  color: inherit;
+  color: ${colors.text.inverted};
   width: 100%;
   padding: ${spacing.sm};
   display: flex;
@@ -92,7 +92,7 @@ export const MobileMenuIcon = styled.button`
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: ${spacing.md};
+    top: 6px;
     left: ${spacing.md};
     z-index: 1100;
     background: ${colors.primary};

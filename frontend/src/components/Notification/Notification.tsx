@@ -1,26 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import * as S from "./styles";
 
-const notifications = [
-  {
-    id: 1,
-    title: "New Message",
-    content: "You have a new message from John Doe.",
-  },
-  {
-    id: 2,
-    title: "System Update",
-    content: "Your system has been updated to the latest version.",
-  },
-  {
-    id: 3,
-    title: "Reminder",
-    content: "Don't forget to complete your profile setup.",
-  },
-];
+export interface NotificationItem {
+  id: number;
+  title: string;
+  content: string;
+}
 
-const Notification = () => {
+interface NotificationProps {
+  notifications: NotificationItem[];
+}
+
+const Notification: React.FC<NotificationProps> = ({ notifications }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedNotificationId, setExpandedNotificationId] = useState<
     number | null
