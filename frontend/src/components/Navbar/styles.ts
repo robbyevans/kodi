@@ -1,4 +1,3 @@
-// styles.ts
 import styled from "styled-components";
 import {
   colors,
@@ -21,13 +20,14 @@ export const Navbar = styled.nav<NavbarProps>`
   color: ${colors.text.inverted};
   padding: ${spacing.md};
   box-shadow: ${shadows.md};
-  max-height: 17px;
+  position: relative;
   border-bottom: 1px solid ${colors.secondary};
 `;
 
 export const AppName = styled.h1`
   font-size: ${fontSizes.lg};
   font-weight: bold;
+  cursor: pointer;
 `;
 
 export const NavActions = styled.div`
@@ -54,7 +54,7 @@ export const IconButton = styled.button`
   }
 `;
 
-export const Calendar = styled.div`
+export const Dropdown = styled.div`
   position: absolute;
   top: 60px;
   right: 20px;
@@ -63,4 +63,19 @@ export const Calendar = styled.div`
   padding: ${spacing.md};
   box-shadow: ${shadows.md};
   border-radius: ${borderRadius.md};
+  z-index: 1000;
+`;
+
+export const MenuItem = styled.div`
+  padding: ${spacing.sm};
+  cursor: pointer;
+  border-bottom: 1px solid ${colors.neutral[300]};
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: ${colors.neutral[200]};
+  }
 `;

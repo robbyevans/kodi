@@ -39,11 +39,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   };
 
   const saveEditingProperty = (property: IProperty) => {
-    // Create the updated property object including a new image (if selected)
     const updatedProperty: IProperty = {
       ...property,
       name: propertyName,
-      // Use the new image if provided; otherwise keep the original image.
       property_image: editingPropertyImage
         ? editingPropertyImage
         : property.property_image,
@@ -81,54 +79,74 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
         <h2>Managed Properties</h2>
       </S.ListingHeader>
       <S.PropertiesList>
-        {propertiesData.map((property) => (
+        {propertiesData.map((property, index) => (
           <S.PropertyItem key={property.id}>
-            <S.PropertyInfo>
-              {editingPropertyId === property.id ? (
-                <S.InputGroup>
-                  <S.InputField
-                    type="text"
-                    value={propertyName}
-                    onChange={(e) => setPropertyName(e.target.value)}
-                  />
-                  {/* File input for updating property image */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setEditingPropertyImage(e.target.files?.[0] || null)
-                    }
-                  />
-                  <S.IconButton onClick={() => saveEditingProperty(property)}>
-                    <FiCheck />
-                  </S.IconButton>
-                  <S.IconButton onClick={cancelEditingProperty}>
-                    <FiX />
-                  </S.IconButton>
-                </S.InputGroup>
-              ) : (
-                <>
+            <S.PropertyMain>
+              <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
+              <S.PropertyWrapper>
+                <S.PropertyIcon
+                  src={property.property_image}
+                  alt="property-image"
+                />
+                <div>
                   <S.PropertyName>{property.name}</S.PropertyName>
                   <S.PropertyUnits>
                     {property.houses?.length || 0} Units
                   </S.PropertyUnits>
-                </>
+                </div>
+              </S.PropertyWrapper>
+              <S.PropertyActions>
+                {editingPropertyId !== property.id && (
+                  <>
+                    <S.EditButton
+                      onClick={() => startEditingProperty(property)}
+                    >
+                      <FiEdit />
+                    </S.EditButton>
+                    <S.DeleteButton
+                      onClick={() =>
+                        confirmDeletion(property.id!, property.name)
+                      }
+                    >
+                      <FiTrash2 />
+                    </S.DeleteButton>
+                  </>
+                )}
+              </S.PropertyActions>
+            </S.PropertyMain>
+            <S.EditFormContainer expanded={editingPropertyId === property.id}>
+              {editingPropertyId === property.id && (
+                <S.InputGroup>
+                  <S.InputWrapper>
+                    <S.InputField
+                      type="text"
+                      value={propertyName}
+                      onChange={(e) => setPropertyName(e.target.value)}
+                      placeholder="Name"
+                    />
+                    {/* You can style the file input further if needed */}
+                    <S.FileInput
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setEditingPropertyImage(e.target.files?.[0] || null)
+                      }
+                    />
+                  </S.InputWrapper>
+                  <S.ButtonWrapper>
+                    <S.StyledButton
+                      $isVariantAccept
+                      onClick={() => saveEditingProperty(property)}
+                    >
+                      Done
+                    </S.StyledButton>
+                    <S.StyledButton onClick={cancelEditingProperty}>
+                      Cancel
+                    </S.StyledButton>
+                  </S.ButtonWrapper>
+                </S.InputGroup>
               )}
-            </S.PropertyInfo>
-            <S.PropertyActions>
-              {editingPropertyId !== property.id && (
-                <>
-                  <S.EditButton onClick={() => startEditingProperty(property)}>
-                    <FiEdit />
-                  </S.EditButton>
-                  <S.DeleteButton
-                    onClick={() => confirmDeletion(property.id!, property.name)}
-                  >
-                    <FiTrash2 />
-                  </S.DeleteButton>
-                </>
-              )}
-            </S.PropertyActions>
+            </S.EditFormContainer>
           </S.PropertyItem>
         ))}
       </S.PropertiesList>

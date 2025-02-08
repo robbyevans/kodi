@@ -20,8 +20,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      // Build an object of type IProperty.
-      // Note: If no image is selected, property_image is undefined.
       const newProperty = {
         admin_id: user.admin_id!,
         name: propertyName,
