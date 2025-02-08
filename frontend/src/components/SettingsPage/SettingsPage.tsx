@@ -1,6 +1,5 @@
 import React from "react";
 import * as S from "./styles";
-
 import PropertyListing from "../PropertyListing/PropertyListing";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 
@@ -21,7 +20,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <h1>Account Settings</h1>
         <p>Manage your account details and properties</p>
       </S.SettingsHeader>
-
       <PropertyListing
         propertiesData={propertiesData}
         onEditProperty={onEditProperty}

@@ -7,6 +7,10 @@ export const SettingsContainer = styled.div`
   padding: ${spacing["2xl"]} ${spacing.xl};
   font-family: ${fonts.primary};
   color: ${colors.text.primary};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.lg} ${spacing.md};
+  }
 `;
 
 export const SettingsHeader = styled.header`
@@ -18,10 +22,18 @@ export const SettingsHeader = styled.header`
     font-size: ${fontSizes["3xl"]};
     color: ${colors.primary};
     margin-bottom: ${spacing.sm};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes["2xl"]};
+    }
   }
 
   p {
     font-size: ${fontSizes.lg};
     color: ${colors.text.secondary};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.base};
+    }
   }
 `;

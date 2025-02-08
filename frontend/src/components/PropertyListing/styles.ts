@@ -15,15 +15,25 @@ export const PropertyListingContainer = styled.section`
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.md};
   margin-bottom: ${spacing["2xl"]};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.lg};
+    margin-bottom: ${spacing.xl};
+  }
 `;
 
 export const ListingHeader = styled.div`
   margin-bottom: ${spacing.lg};
+
   h2 {
     font-family: ${fonts.secondary};
     font-size: ${fontSizes["2xl"]};
     color: ${colors.primary};
     font-weight: ${fontWeights.semibold};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.xl};
+    }
   }
 `;
 
@@ -33,7 +43,6 @@ export const PropertiesList = styled.div`
   gap: ${spacing.md};
 `;
 
-/* Container for each property item with a smooth transition */
 export const PropertyItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,26 +53,30 @@ export const PropertyItem = styled.div`
   border-radius: ${borderRadius.md};
   box-shadow: ${shadows.sm};
   transition: box-shadow 0.2s ease;
+
   &:hover {
     box-shadow: ${shadows.md};
   }
 `;
 
-/* The top row with main property details */
 export const PropertyMain = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${spacing.sm};
+  }
 `;
 
-/* Numbering style */
 export const PropertyNumber = styled.p`
   font-size: ${fontSizes.sm};
   color: ${colors.text};
   margin-right: ${spacing.sm};
 `;
 
-/* Container for property image and info */
 export const PropertyWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -71,15 +84,18 @@ export const PropertyWrapper = styled.div`
   flex: 1;
 `;
 
-/* Styling the property image */
 export const PropertyIcon = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+
+  @media (max-width: 768px) {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
-/* Property name style */
 export const PropertyName = styled.h3`
   font-size: ${fontSizes.lg};
   font-weight: ${fontWeights.semibold};
@@ -87,19 +103,20 @@ export const PropertyName = styled.h3`
   margin: 0;
 `;
 
-/* Property units style */
 export const PropertyUnits = styled.span`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.xs};
+  }
 `;
 
-/* Actions container */
 export const PropertyActions = styled.div`
   display: flex;
   gap: ${spacing.sm};
 `;
 
-/* Edit and Delete button styles */
 export const EditButton = styled.button`
   background: ${colors.primary};
   color: ${colors.text.inverted};
@@ -109,6 +126,7 @@ export const EditButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.sm};
   transition: background 0.2s ease;
+
   &:hover {
     background: ${colors.secondary};
   }
@@ -123,6 +141,7 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.sm};
   transition: opacity 0.2s ease;
+
   &:hover {
     opacity: 0.9;
   }
@@ -138,16 +157,19 @@ export const EditFormContainer = styled.div<{ expanded: boolean }>`
     expanded ? `1px solid ${colors.neutral[300]}` : "none"};
 `;
 
-/* Group for inputs and action buttons in the edit form */
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
   gap: ${spacing.md};
   border: 1px solid ${colors.background};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.sm};
+    gap: ${spacing.sm};
+  }
 `;
 
-/* Wrapper for each input field and its label */
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -155,14 +177,12 @@ export const InputWrapper = styled.div`
   width: 100%;
 `;
 
-/* Label above the input field */
 export const InputLabel = styled.label`
   font-size: ${fontSizes.xs};
   color: ${colors.primary};
   font-weight: ${fontWeights.medium};
 `;
 
-/* Input for editing the property name */
 export const InputField = styled.input`
   padding: ${spacing.sm};
   border: 1px solid ${colors.neutral[300]};
@@ -172,13 +192,11 @@ export const InputField = styled.input`
   flex: 1;
 `;
 
-/* Styled file input (you may further customize or wrap it with a label for custom styling) */
 export const FileInput = styled.input`
   font-size: ${fontSizes.sm};
   color: ${colors.text.primary};
 `;
 
-/* Image preview styling */
 export const ImagePreview = styled.img`
   margin-top: ${spacing.xs};
   max-width: 100px;
@@ -188,14 +206,12 @@ export const ImagePreview = styled.img`
   border: 1px solid ${colors.neutral[300]};
 `;
 
-/* Button wrapper for Done/Cancel buttons */
 export const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-/* Reuse StyledButton styling for action buttons */
 export const StyledButton = styled.button<{ $isVariantAccept?: boolean }>`
   background: ${({ $isVariantAccept }) =>
     $isVariantAccept ? colors.primary : colors.neutral};
@@ -212,6 +228,7 @@ export const StyledButton = styled.button<{ $isVariantAccept?: boolean }>`
   -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+
   &:hover {
     color: ${colors.secondary};
   }

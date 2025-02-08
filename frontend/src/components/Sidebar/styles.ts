@@ -8,6 +8,7 @@ import {
   borderRadius,
 } from "../../styles/foundation";
 
+// Full Sidebar for large screens
 export const SidebarContainer = styled.nav`
   max-width: 250px;
   background: ${colors.primary};
@@ -17,8 +18,9 @@ export const SidebarContainer = styled.nav`
   justify-content: space-between;
   box-shadow: ${shadows.md};
   padding: ${spacing.lg} ${spacing.md};
+
   @media (max-width: 768px) {
-    padding: ${spacing.md} ${spacing.sm};
+    display: none;
   }
 `;
 
@@ -79,5 +81,45 @@ export const LogoutItem = styled(MenuItem)`
   &:hover {
     background: ${colors.error};
     transform: translateX(-5px);
+  }
+`;
+
+// Mobile hamburger icon (visible on small screens only)
+export const MobileMenuIcon = styled.button`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: ${spacing.md};
+    left: ${spacing.md};
+    z-index: 1100;
+    background: ${colors.primary};
+    border: none;
+    color: ${colors.text.inverted};
+    font-size: ${fontSizes["2xl"]};
+    padding: ${spacing.sm};
+    border-radius: ${borderRadius.sm};
+    box-shadow: ${shadows.md};
+    cursor: pointer;
+  }
+`;
+
+// Mobile dropdown menu (visible on small screens only)
+export const MobileDropdown = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 60px;
+    left: ${spacing.md};
+    right: ${spacing.md};
+    background: ${colors.primary};
+    padding: ${spacing.md};
+    box-shadow: ${shadows.md};
+    border-radius: ${borderRadius.md};
+    z-index: 1050;
   }
 `;

@@ -15,15 +15,25 @@ export const ProfileContainer = styled.section`
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.md};
   margin-bottom: ${spacing["2xl"]};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.lg};
+    margin-bottom: ${spacing.xl};
+  }
 `;
 
 export const ProfileHeader = styled.div`
   margin-bottom: ${spacing.lg};
+
   h2 {
     font-family: ${fonts.secondary};
     font-size: ${fontSizes["2xl"]};
     color: ${colors.primary};
     font-weight: ${fontWeights.semibold};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.xl};
+    }
   }
 `;
 
@@ -31,6 +41,11 @@ export const ProfileContent = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing.lg};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: ${spacing.md};
+  }
 `;
 
 export const ProfileImage = styled.img`
@@ -40,6 +55,11 @@ export const ProfileImage = styled.img`
   object-fit: cover;
   border: 4px solid ${colors.background};
   box-shadow: ${shadows.lg};
+
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 export const ProfileDetails = styled.div`
@@ -72,12 +92,22 @@ export const DetailValue = styled.div`
   padding: ${spacing.sm} ${spacing.md};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.md};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.sm};
+    padding: ${spacing.sm} ${spacing.sm};
+  }
 `;
 
 export const InputGroup = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing.xs};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 export const InputField = styled.input`
@@ -96,6 +126,7 @@ export const IconButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.lg};
   padding: ${spacing.xs};
+
   &:hover {
     color: ${colors.secondary};
   }
@@ -108,6 +139,7 @@ export const ChangeImageButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.lg};
   padding: ${spacing.xs};
+
   &:hover {
     color: ${colors.secondary};
   }

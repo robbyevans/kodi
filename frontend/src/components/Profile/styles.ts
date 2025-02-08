@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors, spacing, fonts, fontSizes } from "../../styles/foundation";
+import { colors, fonts, fontSizes, spacing } from "../../styles/foundation";
 
 export const ProfilePageContainer = styled.div`
   background: ${colors.background};
@@ -7,6 +7,10 @@ export const ProfilePageContainer = styled.div`
   padding: ${spacing["2xl"]} ${spacing.xl};
   font-family: ${fonts.primary};
   color: ${colors.text.primary};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.lg} ${spacing.md};
+  }
 `;
 
 export const ProfileHeader = styled.header`
@@ -18,10 +22,18 @@ export const ProfileHeader = styled.header`
     font-size: ${fontSizes["3xl"]};
     color: ${colors.primary};
     margin-bottom: ${spacing.sm};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes["2xl"]};
+    }
   }
 
   p {
     font-size: ${fontSizes.lg};
     color: ${colors.text.secondary};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.base};
+    }
   }
 `;

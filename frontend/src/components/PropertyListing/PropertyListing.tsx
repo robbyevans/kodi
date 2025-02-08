@@ -118,7 +118,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
               {editingPropertyId === property.id && (
                 <S.InputGroup>
                   <S.InputWrapper>
-                    <S.InputLabel>**Update Property Name**</S.InputLabel>
+                    <S.InputLabel>Update Property Name</S.InputLabel>
                     <S.InputField
                       type="text"
                       value={propertyName}
@@ -127,7 +127,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                     />
                   </S.InputWrapper>
                   <S.InputWrapper>
-                    <S.InputLabel>**Update Property Image**</S.InputLabel>
+                    <S.InputLabel>Update Property Image</S.InputLabel>
                     <S.FileInput
                       type="file"
                       accept="image/*"
