@@ -67,6 +67,7 @@ export const ProfileDetails = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${spacing.md};
+  width: 100%;
 `;
 
 export const DetailItem = styled.div`
