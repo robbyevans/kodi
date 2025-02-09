@@ -16,7 +16,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [propertyImage, setPropertyImage] = useState<File | null>(null);
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
-  console.log("propertyImage", propertyImage);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
