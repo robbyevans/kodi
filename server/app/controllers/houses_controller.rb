@@ -10,7 +10,7 @@ class HousesController < ApplicationController
                 .joins(:property)
                 .where(properties: { admin_id: current_admin.id })
                 .includes(:tenant)
-    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] } })
   end
 
   # GET /properties/:property_id/houses
@@ -18,7 +18,7 @@ class HousesController < ApplicationController
     # Ensure that the property belongs to the current admin:
     property = current_admin.properties.find(params[:property_id])
     @houses = property.houses.includes(:tenant)
-    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number] } })
+    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number,:national_id, :house_deposit_paid] } })
   end
 
   # POST /properties/:property_id/houses

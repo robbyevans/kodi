@@ -19,7 +19,7 @@ class PropertiesController < ApplicationController
         houses: {
           only: [:id, :house_number, :payable_rent, :payable_deposit],
           include: {
-            tenant: { only: [:id, :name, :email, :phone_number] }
+            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
           }
         }
       }
@@ -32,7 +32,7 @@ class PropertiesController < ApplicationController
         houses: {
           only: [:id, :house_number, :payable_rent, :payable_deposit],
           include: {
-            tenant: { only: [:id, :name, :email, :phone_number] }
+            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
           }
         }
       }
