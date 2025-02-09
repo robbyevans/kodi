@@ -65,7 +65,6 @@ export const PropertyMain = styled.div`
   justify-content: space-between;
 
   @media (max-width: 768px) {
-    flex-direction: column;
     align-items: flex-start;
     gap: ${spacing.sm};
   }
@@ -114,6 +113,9 @@ export const PropertyUnits = styled.span`
 
 export const PropertyActions = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
   gap: ${spacing.sm};
 `;
 

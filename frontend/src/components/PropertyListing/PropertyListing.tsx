@@ -143,14 +143,14 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                     )}
                   </S.InputWrapper>
                   <S.ButtonWrapper>
+                    <S.StyledButton onClick={cancelEditingProperty}>
+                      Cancel
+                    </S.StyledButton>
                     <S.StyledButton
                       $isVariantAccept
                       onClick={() => saveEditingProperty(property)}
                     >
                       Done
-                    </S.StyledButton>
-                    <S.StyledButton onClick={cancelEditingProperty}>
-                      Cancel
                     </S.StyledButton>
                   </S.ButtonWrapper>
                 </S.InputGroup>

@@ -12,7 +12,7 @@ import {
 export const PropertyPageContainer = styled.div`
   padding: ${spacing.xl};
   background: ${colors.neutral[100]};
-  flex: 1;
+  min-height: 100vh;
 `;
 
 export const Header = styled.h1`
