@@ -19,7 +19,6 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  margin: 0 16px;
 `;
 
 export const ModalContent = styled.div`
@@ -32,6 +31,7 @@ export const ModalContent = styled.div`
   flex-direction: column;
   gap: ${spacing.md};
   position: relative;
+  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.h2`

@@ -18,7 +18,7 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 999;
-  margin: 0 16px;
+  border: 1px solid red;
 `;
 
 export const ModalContent = styled.div`
@@ -28,6 +28,7 @@ export const ModalContent = styled.div`
   max-width: 500px;
   padding: ${spacing.xl};
   box-shadow: ${shadows.md};
+  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.h2`

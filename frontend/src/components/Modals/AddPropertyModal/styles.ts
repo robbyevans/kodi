@@ -17,7 +17,6 @@ export const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 16px;
 `;
 
 export const ModalContent = styled.div`
@@ -27,6 +26,7 @@ export const ModalContent = styled.div`
   width: 100%;
   max-width: 500px;
   box-shadow: ${shadows.md};
+  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.h2`
