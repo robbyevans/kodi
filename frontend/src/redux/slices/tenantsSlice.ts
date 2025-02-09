@@ -3,11 +3,15 @@ import axiosInstance from "../utils";
 import { fetchAllProperties } from "./propertiesSlice";
 import { showToast } from "./toastSlice";
 
+// Updated ITenant interface with new attributes.
+// Note that house_deposit_paid is optional.
 export interface ITenant {
   id: number;
   name: string;
   email: string;
   phone_number: string;
+  national_id: string;
+  house_deposit_paid?: number;
 }
 
 interface TenantsState {
@@ -150,7 +154,7 @@ const tenantsSlice = createSlice({
         state.error = action.error.message || "Failed to fetch tenants";
       })
 
-      // Other cases
+      // Update state with fetched tenant by ID
       .addCase(fetchTenantById.fulfilled, (state, action) => {
         state.data = state.data.map((tenant) =>
           tenant.id === action.payload.id ? action.payload : tenant

@@ -38,6 +38,7 @@ export const Table = styled.table`
 
 export const TableHeader = styled.th`
   padding: ${spacing.md};
+  min-width: 100px;
   background: #dcdcdc;
   color: #717171;
   font-weight: ${fontWeights.semibold};

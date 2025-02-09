@@ -14,14 +14,16 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({
   propertyId,
 }) => {
   const [houseNumber, setHouseNumber] = useState("");
-  const [payableRent, setPayableRent] = useState<number | undefined>();
+  const [payableRent, setPayableRent] = useState<number | null>(null);
+  const [payableDeposit, setPayableDeposit] = useState<number | null>(null);
   const { addHouseToProperty } = useHouses();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await addHouseToProperty(propertyId, {
       house_number: houseNumber,
-      payable_rent: payableRent || 0,
+      payable_rent: payableRent, // if left blank, will be null
+      payable_deposit: payableDeposit, // if left blank, will be null
       tenant: null,
     });
     onClose();
@@ -44,12 +46,28 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({
             />
           </S.FormGroup>
           <S.FormGroup>
+            <label>House Deposit</label>
+            <S.InputField
+              type="number"
+              value={payableDeposit !== null ? payableDeposit : ""}
+              onChange={(e) =>
+                setPayableDeposit(
+                  e.target.value === "" ? null : Number(e.target.value)
+                )
+              }
+              placeholder="KSH"
+            />
+          </S.FormGroup>
+          <S.FormGroup>
             <label>Monthly Rent</label>
             <S.InputField
               type="number"
-              value={payableRent || ""}
-              onChange={(e) => setPayableRent(Number(e.target.value))}
-              required
+              value={payableRent !== null ? payableRent : ""}
+              onChange={(e) =>
+                setPayableRent(
+                  e.target.value === "" ? null : Number(e.target.value)
+                )
+              }
               placeholder="KSH"
             />
           </S.FormGroup>

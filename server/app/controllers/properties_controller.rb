@@ -17,7 +17,7 @@ class PropertiesController < ApplicationController
     render json: @properties.as_json(
       include: {
         houses: {
-          only: [:id, :house_number, :payable_rent],
+          only: [:id, :house_number, :payable_rent, :payable_deposit],
           include: {
             tenant: { only: [:id, :name, :email, :phone_number] }
           }
@@ -30,7 +30,7 @@ class PropertiesController < ApplicationController
     render json: @property.as_json(
       include: {
         houses: {
-          only: [:id, :house_number, :payable_rent],
+          only: [:id, :house_number, :payable_rent, :payable_deposit],
           include: {
             tenant: { only: [:id, :name, :email, :phone_number] }
           }

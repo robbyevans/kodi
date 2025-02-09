@@ -39,7 +39,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         <S.ProfileImage
           alt="profile-image"
           src={
-            typeof userData?.profile_image === "string"
+            typeof userData.profile_image === "string"
               ? userData.profile_image
               : profilePlaceholder
           }

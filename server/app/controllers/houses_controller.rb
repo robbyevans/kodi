@@ -3,8 +3,8 @@ class HousesController < ApplicationController
   before_action :set_house, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 
-   # GET /houses (new endpoint)
-   def all
+  # GET /houses (new endpoint)
+  def all
     # Get houses for all properties owned by the current admin.
     @houses = House
                 .joins(:property)
@@ -70,7 +70,7 @@ class HousesController < ApplicationController
   end
 
   def house_params
-    # With the property_id coming from the URL, you may remove it from the permitted params if desired.
-    params.require(:house).permit(:house_number, :payable_rent, :tenant_id)
+    # Permit the new payable_deposit parameter along with existing ones.
+    params.require(:house).permit(:house_number, :payable_rent, :payable_deposit, :tenant_id)
   end
 end

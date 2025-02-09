@@ -3,7 +3,7 @@ class TenantsController < ApplicationController
   before_action :set_tenant, only: [:update, :destroy]
   before_action :authorize_house_owner, only: [:create, :update, :destroy]
 
-  # Add this new action to fetch all tenants for the current admin
+  # GET /tenants (fetch all tenants for the current admin)
   def all
     @tenants = Tenant
                 .joins(houses: :property)
@@ -11,7 +11,6 @@ class TenantsController < ApplicationController
                 .distinct
     render json: @tenants
   end
-
 
   # GET /houses/:house_id/tenants
   def index
@@ -33,6 +32,11 @@ class TenantsController < ApplicationController
 
   # PUT/PATCH /houses/:house_id/tenants/:id
   def update
+    # (Optional) Verify that the tenant belongs to the house
+    # unless @house.tenant == @tenant
+    #   render json: { error: 'Tenant does not belong to this house' }, status: :unauthorized and return
+    # end
+
     if @tenant.update(tenant_params)
       render json: @tenant, status: :ok
     else
@@ -42,6 +46,11 @@ class TenantsController < ApplicationController
 
   # DELETE /houses/:house_id/tenants/:id
   def destroy
+    # (Optional) Verify that the tenant belongs to the house
+    # unless @house.tenant == @tenant
+    #   render json: { error: 'Tenant does not belong to this house' }, status: :unauthorized and return
+    # end
+
     @tenant.destroy
     head :no_content
   end
@@ -49,7 +58,9 @@ class TenantsController < ApplicationController
   private
 
   def set_house
-    @house = House.joins(:property).where(properties: { admin_id: current_admin.id }).find(params[:house_id])
+    @house = House.joins(:property)
+                  .where(properties: { admin_id: current_admin.id })
+                  .find(params[:house_id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'House not found or unauthorized' }, status: :unauthorized
   end
@@ -59,13 +70,12 @@ class TenantsController < ApplicationController
   end
 
   def authorize_house_owner
-    # Now that @house is set for update/destroy, this will work as expected.
     unless @house.property.admin_id == current_admin.id
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 
   def tenant_params
-    params.require(:tenant).permit(:name, :phone_number, :email)
+    params.require(:tenant).permit(:name, :phone_number, :email, :national_id, :house_deposit_paid)
   end
 end

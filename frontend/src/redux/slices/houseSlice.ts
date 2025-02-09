@@ -1,16 +1,16 @@
-// File: /frontend/src/redux/slices/houseSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { ITenant } from "./tenantsSlice";
-import { showToast } from "./toastSlice"; // Import showToast action
+import { showToast } from "./toastSlice";
 import { fetchAllProperties } from "./propertiesSlice";
 
 export interface IHouse {
   id: number;
   house_number: string;
-  payable_rent: number;
+  payable_rent?: number | null;
   tenant: ITenant | null;
   property_id: number;
+  payable_deposit?: number | null;
 }
 
 interface HousesState {
@@ -74,7 +74,7 @@ export const addHouse = createAsyncThunk(
     } catch (error: any) {
       dispatch(
         showToast({ message: "Failed to add new House", type: "error" })
-      ); // Show error toast
+      );
       return rejectWithValue(error.response?.data);
     }
   }
@@ -91,7 +91,7 @@ export const editHouse = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      dispatch(showToast({ message: "Failed to update House", type: "error" })); // Show error toast
+      dispatch(showToast({ message: "Failed to update House", type: "error" }));
       return rejectWithValue(error.response?.data);
     }
   }
@@ -108,7 +108,7 @@ export const deleteHouse = createAsyncThunk(
       );
       return id;
     } catch (error: any) {
-      dispatch(showToast({ message: "Failed to delete House", type: "error" })); // Show error toast
+      dispatch(showToast({ message: "Failed to delete House", type: "error" }));
       return rejectWithValue(error.response?.data);
     }
   }

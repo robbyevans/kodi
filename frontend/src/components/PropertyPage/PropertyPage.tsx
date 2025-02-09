@@ -55,6 +55,9 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
               <S.TableHeader>House Number</S.TableHeader>
               <S.TableHeader>Tenant Name</S.TableHeader>
               <S.TableHeader>Tenant Contact</S.TableHeader>
+              <S.TableHeader>Payable Deposit</S.TableHeader>
+              <S.TableHeader>Deposit Paid</S.TableHeader>
+              <S.TableHeader>Deposit Balance</S.TableHeader>
               <S.TableHeader>Payable Rent</S.TableHeader>
               <S.TableHeader>Rent Paid</S.TableHeader>
               <S.TableHeader>Balance</S.TableHeader>
@@ -64,26 +67,43 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
             </tr>
           </thead>
           <tbody>
-            {houses.map((house) => (
-              <S.TableRow key={house.id} onClick={() => openTenantModal(house)}>
-                <S.TableData>
-                  <S.IconTableData>
-                    <TbSquareChevronRightFilled color={colors.primary} />
-                    {house.house_number}
-                  </S.IconTableData>
-                </S.TableData>
-                <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
-                <S.TableData>
-                  {house.tenant?.phone_number || "Vacant"}
-                </S.TableData>
-                <S.TableData>{house.payable_rent}</S.TableData>
-                <S.TableData>{null}</S.TableData>
-                <S.TableData>{null}</S.TableData>
-                <S.TableData>{null}</S.TableData>
-                <S.TableData>{null}</S.TableData>
-                <S.TableData>{house.tenant ? "✅" : "❌"}</S.TableData>
-              </S.TableRow>
-            ))}
+            {houses.map((house) => {
+              return (
+                <S.TableRow
+                  key={house.id}
+                  onClick={() => openTenantModal(house)}
+                >
+                  <S.TableData>
+                    <S.IconTableData>
+                      <TbSquareChevronRightFilled color={colors.primary} />
+                      {house.house_number}
+                    </S.IconTableData>
+                  </S.TableData>
+                  <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
+                  <S.TableData>
+                    {house.tenant?.phone_number || "Vacant"}
+                  </S.TableData>
+                  <S.TableData>{house.payable_deposit || "N/A"}</S.TableData>
+                  <S.TableData>
+                    {house.tenant?.house_deposit_paid != null
+                      ? house.tenant.house_deposit_paid
+                      : "N/A"}
+                  </S.TableData>
+                  <S.TableData>
+                    {house.payable_deposit != null
+                      ? house.payable_deposit -
+                        (house.tenant?.house_deposit_paid ?? 0)
+                      : "N/A"}
+                  </S.TableData>
+                  <S.TableData>{house.payable_rent}</S.TableData>
+                  <S.TableData>{null}</S.TableData>
+                  <S.TableData>{null}</S.TableData>
+                  <S.TableData>{null}</S.TableData>
+                  <S.TableData>{null}</S.TableData>
+                  <S.TableData>{house.tenant ? "✅" : "❌"}</S.TableData>
+                </S.TableRow>
+              );
+            })}
           </tbody>
         </S.Table>
       </S.TableContainer>

@@ -29,6 +29,9 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
   const [tenantName, setTenantName] = useState("");
   const [tenantEmail, setTenantEmail] = useState("");
   const [tenantPhone, setTenantPhone] = useState("");
+  const [tenantNationalId, setTenantNationalId] = useState("");
+  // houseDepositPaid is optional so we allow null values.
+  const [houseDepositPaid, setHouseDepositPaid] = useState<number | null>(null);
   const [editingTenant, setEditingTenant] = useState<ITenant | null>(null);
 
   useEffect(() => {
@@ -42,12 +45,15 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
     setTenantName("");
     setTenantEmail("");
     setTenantPhone("");
+    setTenantNationalId("");
+    setHouseDepositPaid(null);
     setEditingTenant(null);
   };
 
   const handleSubmit = () => {
-    if (!tenantName || !tenantEmail || !tenantPhone) {
-      alert("All fields are required.");
+    // Note: houseDepositPaid is optional, so it's not required in the validation.
+    if (!tenantName || !tenantEmail || !tenantPhone || !tenantNationalId) {
+      alert("All fields except deposit are required.");
       return;
     }
 
@@ -57,12 +63,16 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
         name: tenantName,
         email: tenantEmail,
         phone_number: tenantPhone,
+        national_id: tenantNationalId,
+        house_deposit_paid: houseDepositPaid,
       });
     } else {
       addNewTenant(house.id, {
         name: tenantName,
         email: tenantEmail,
         phone_number: tenantPhone,
+        national_id: tenantNationalId,
+        house_deposit_paid: houseDepositPaid,
       });
     }
     resetForm();
@@ -91,19 +101,35 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
           // Display the input form when adding a new tenant or editing an existing tenant.
           <S.FormContainer>
             <S.InputField
-              placeholder="Name"
+              placeholder="Full Names"
               value={tenantName}
               onChange={(e) => setTenantName(e.target.value)}
             />
             <S.InputField
-              placeholder="Email"
+              placeholder="Email Address"
               value={tenantEmail}
               onChange={(e) => setTenantEmail(e.target.value)}
             />
             <S.InputField
-              placeholder="Phone"
+              placeholder="Phone Number"
               value={tenantPhone}
               onChange={(e) => setTenantPhone(e.target.value)}
+            />
+            <S.InputField
+              placeholder="National ID"
+              value={tenantNationalId}
+              onChange={(e) => setTenantNationalId(e.target.value)}
+            />
+            <S.InputField
+              type="number"
+              placeholder="House Deposit Paid"
+              // Convert null to empty string for input display
+              value={houseDepositPaid !== null ? houseDepositPaid : ""}
+              onChange={(e) =>
+                setHouseDepositPaid(
+                  e.target.value === "" ? null : Number(e.target.value)
+                )
+              }
             />
             <S.ButtonContainer>
               <S.CancelButton onClick={onClose}>Cancel</S.CancelButton>
@@ -124,7 +150,12 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
                     <div>
                       <S.TenantName>{tenant.name}</S.TenantName>
                       <S.TenantDetails>
-                        {tenant.email} | {tenant.phone_number}
+                        {tenant.email} | {tenant.phone_number} |{" "}
+                        {tenant.national_id} |{" "}
+                        {tenant.house_deposit_paid !== undefined &&
+                        tenant.house_deposit_paid !== null
+                          ? tenant.house_deposit_paid
+                          : "Not provided"}
                       </S.TenantDetails>
                     </div>
                     <S.TenantActions>
@@ -134,6 +165,10 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
                           setTenantName(tenant.name);
                           setTenantEmail(tenant.email);
                           setTenantPhone(tenant.phone_number);
+                          setTenantNationalId(tenant.national_id);
+                          setHouseDepositPaid(
+                            tenant.house_deposit_paid ?? null
+                          );
                         }}
                       >
                         <FiEdit />
