@@ -38,7 +38,11 @@ const Dashboard: React.FC<DashboardProps> = ({
         </div>
         <S.ProfileImage
           alt="profile-image"
-          src={userData?.profile_image || profilePlaceholder}
+          src={
+            userData.profile_image instanceof File
+              ? URL.createObjectURL(userData.profile_image)
+              : profilePlaceholder
+          }
         />
       </S.DashboardHeader>
 

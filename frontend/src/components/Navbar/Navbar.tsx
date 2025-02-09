@@ -7,7 +7,6 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
-// Dummy notifications (in a real app, pass these via props or from Redux)
 const dummyNotifications = [
   {
     id: 1,
@@ -35,7 +34,7 @@ const Navbar: React.FC = () => {
 
   return (
     <S.Navbar>
-      <S.AppName onClick={() => navigate("/dashboard")}>Kodi</S.AppName>
+      <S.AppName onClick={() => navigate("/dashboard")}>KODI</S.AppName>
       <S.NavActions>
         <S.IconButton aria-label="Search">
           <FaSearch />

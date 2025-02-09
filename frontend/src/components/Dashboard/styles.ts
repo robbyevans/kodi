@@ -15,6 +15,7 @@ export const DashboardContainer = styled.div`
   background: ${colors.neutral[100]};
   overflow: scroll;
   padding: ${spacing.md};
+  min-height: 100vh;
 `;
 
 export const DashboardHeader = styled.header`
@@ -143,7 +144,7 @@ export const DateDisplay = styled.span`
 `;
 
 export const ProfileImage = styled.img`
-  border: 2px solid ${colors.background};
+  border: 2px solid ${colors.text.inverted};
   border-radius: 50%;
   width: 50px;
   height: 50px;

@@ -92,9 +92,9 @@ const AppRouter = () => {
               }
             />
           </Routes>
+          {isAuthenticated && <Footer />}
         </S.BodyWrapper>
       </S.AppWrapper>
-      <Footer />
     </>
   );
 };

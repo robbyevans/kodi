@@ -10,7 +10,7 @@ interface QuickStatCardProps {
   totalRevenuePercentage: number;
 }
 
-const COLORS = ["#0088FE", colors.primary]; // Blue for collected revenue, Green for remaining
+const COLORS = ["#F17F1E", colors.primary];
 
 const QuickStatCard: React.FC<QuickStatCardProps> = ({
   totalProperties,
@@ -38,7 +38,6 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
               fill="#8884d8"
               paddingAngle={3}
               dataKey="value"
-              // Add this label prop to center the percentage
               labelLine={false}
               label={({ cx, cy }) => (
                 <text
@@ -46,7 +45,7 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
                   y={cy}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill={colors.primary}
+                  fill="#F17F1E"
                   fontSize={16}
                   fontWeight="bold"
                 >

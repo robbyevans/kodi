@@ -56,7 +56,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           src={
             user.profile_image instanceof File
               ? URL.createObjectURL(user.profile_image)
-              : user.profile_image || profilePlaceholder
+              : profilePlaceholder
           }
           alt="Profile"
         />
@@ -67,7 +67,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         >
           <FiEdit />
         </S.ChangeImageButton>
-        {/* Hidden file input for profile image upload */}
         <input
           type="file"
           id="profileImageInput"
