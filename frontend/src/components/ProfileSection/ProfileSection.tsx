@@ -54,8 +54,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       <S.ProfileContent>
         <S.ProfileImage
           src={
-            user.profile_image instanceof File
-              ? URL.createObjectURL(user.profile_image)
+            typeof user?.profile_image === "string"
+              ? user.profile_image
               : profilePlaceholder
           }
           alt="Profile"
