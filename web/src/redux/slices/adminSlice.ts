@@ -1,4 +1,4 @@
-// File: /frontend/src/redux/slices/adminSlice.ts
+// File: /web/src/redux/slices/adminSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice"; // Import showToast action

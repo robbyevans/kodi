@@ -103,6 +103,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  #to be changes when we the frontend production-link
+  #to be changes when we the web production-link
 Rails.application.routes.default_url_options = { host: 'your-production-domain.com' }
 end

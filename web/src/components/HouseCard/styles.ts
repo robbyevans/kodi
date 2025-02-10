@@ -1,4 +1,4 @@
-// File: /frontend/src/components/HouseCard/styles.ts
+// File: /web/src/components/HouseCard/styles.ts
 import styled from "styled-components";
 
 export const CardContainer = styled.div`

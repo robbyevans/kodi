@@ -1,6 +1,6 @@
 # Frontend
-/frontend/node_modules
-/frontend/dist
+/web/node_modules
+/web/dist
 
 # Backend
 /server/log

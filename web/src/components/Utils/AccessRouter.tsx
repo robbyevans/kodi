@@ -1,4 +1,4 @@
-// File 2: /frontend/src/components/Utils/AccessRouter.tsx
+// File 2: /web/src/components/Utils/AccessRouter.tsx
 
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
