@@ -43,7 +43,7 @@ const PropertyContainer = () => {
     "Status",
   ];
 
-  // Helper function to generate table row data (without the total column)
+  // Helper function to generate table row data
   const generateTableData = (housesData: typeof houses) =>
     housesData.map((house) => {
       const payableDeposit = house.payable_deposit ?? "";
@@ -121,9 +121,25 @@ const PropertyContainer = () => {
       0
     );
 
-    // Add title and subtitle in pixels
+    // =========================
+    // Add Company Logo and Name
+    // =========================
+    // Example: Place the company logo (if available) and the name "KODI" in small green print at the top right.
+    // If you have a logo image as a base64 string, you can use doc.addImage().
+    // Here, we simply add "KODI" in green.
+    const companyName = "KODI";
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 128, 0); // Green color
+    doc.setFontSize(12);
+    // Position at top right (adjust the x-coordinate as needed)
+    doc.text(companyName, pageWidth - marginRight - 50, 30);
+
+    // =========================
+    // Add Title and Subtitle
+    // =========================
     const title = selectedProperty?.name || "Property Details";
     const subtitle = "Houses and Tenants Information";
+    doc.setTextColor(0, 0, 0); // Reset color to black
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
     doc.text(title, marginLeft, 50);
@@ -142,10 +158,9 @@ const PropertyContainer = () => {
       head: [tableHeaders],
       body: tableData,
       // The "foot" property defines a footer row.
-      // In this example:
-      // - The first cell spans 7 columns and displays the label.
-      // - The next cell displays the total rent paid.
-      // - The remaining 4 cells are left blank.
+      // In this example, the first cell spans 7 columns with the label,
+      // the next cell shows the total rent paid,
+      // and the remaining 4 cells are left empty.
       foot: [
         [
           {
@@ -203,7 +218,10 @@ const PropertyContainer = () => {
       },
     });
 
-    // Add a footer with the generation date
+    // =========================
+    // Add Footer Texts
+    // =========================
+    // Format the date with full day, month, year and time
     const formattedDate = new Date().toLocaleString("default", {
       day: "numeric",
       month: "long",
@@ -215,7 +233,11 @@ const PropertyContainer = () => {
 
     const finalY = doc.lastAutoTable.finalY || 90;
     doc.setFontSize(10);
+    // Add the generated date
     doc.text(`Generated on: ${formattedDate}`, marginLeft, finalY + 30);
+    // Add the approval signature line and date below the generation date.
+    doc.text("Approved By: __________", marginLeft, finalY + 45);
+    doc.text("Date: __________", marginLeft, finalY + 60);
 
     doc.save(`${formattedDate}-Property-Details.pdf`);
   }, [houses, selectedProperty, totalRentPaid]);
