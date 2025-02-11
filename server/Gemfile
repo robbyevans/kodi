@@ -28,6 +28,8 @@ gem 'faker'
 
 gem 'httparty'
 
+gem 'faraday'
+
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'rest-client'

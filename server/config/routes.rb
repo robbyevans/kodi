@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   
   # Custom routes for fetching all tenants and houses for the current admin
   get '/tenants', to: 'tenants#all'
@@ -22,8 +23,10 @@ Rails.application.routes.draw do
 
   # Payment routes remain unchanged
   post 'payments/authenticate', to: 'payments#authenticate'
-  post 'payments/create_payment', to: 'payments#create_payment'
-  get 'payments/payment_status', to: 'payments#payment_status'
+  post 'payments/add_paybill', to: 'payments#add_paybill'
+  put 'payments/update_paybill', to: 'payments#update_paybill'
+  delete 'payments/delete_paybill', to: 'payments#delete_paybill'
+  post 'payments/ipn', to: 'payments#ipn'  # IPN listener route
 
   # Root path – returns all properties for the current admin
   root 'properties#index'

@@ -112,6 +112,12 @@ GEM
     erubi (1.13.1)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
+    faraday (2.12.2)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     http-accept (1.7.0)
@@ -159,6 +165,8 @@ GEM
     msgpack (1.7.5)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
+    net-http (0.6.0)
+      uri
     net-imap (0.5.5)
       date
       net-protocol
@@ -310,6 +318,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
+    uri (1.0.2)
     useragent (0.16.11)
     web-console (4.2.1)
       actionview (>= 6.0.0)
@@ -345,6 +354,7 @@ DEPENDENCIES
   dotenv-rails
   error_highlight (>= 0.4.0)
   faker
+  faraday
   httparty
   importmap-rails
   jbuilder

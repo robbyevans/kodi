@@ -1,58 +1,72 @@
-# app/controllers/payments_controller.rb
 class PaymentsController < ApplicationController
-  before_action :initialize_pesapal_service
+  skip_before_action :authenticate_admin, only: [:authenticate, :add_paybill, :update_paybill, :delete_paybill, :ipn]
+  skip_before_action :verify_authenticity_token, only: [:authenticate, :add_paybill, :update_paybill, :delete_paybill, :ipn]
 
-  # Endpoint to request a token from PesaPal
+  require 'faraday'
+  require 'json'
+
+  # Authenticate with Pesapal
   def authenticate
-    token_response = @pesapal_service.request_token
+    response = Faraday.post("#{ENV['PESAPAL_API_URL']}/Auth/RequestToken") do |req|
+      req.headers['Content-Type'] = 'application/json'
+      req.body = {
+        consumer_key: ENV['PESAPAL_CONSUMER_KEY'],
+        consumer_secret: ENV['PESAPAL_CONSUMER_SECRET']
+      }.to_json
+    end
 
-    if token_response.present?
-      # Handle the token response, e.g., save it to your database or use it in further API calls
-      render json: { token: token_response}
+    if response.success?
+      token_data = JSON.parse(response.body)
+      session[:pesapal_token] = token_data['token']
+      render json: token_data
     else
-      render json: { error: 'Failed to authenticate with PesaPal' }, status: :unprocessable_entity
+      render json: { error: 'Invalid or expired token', details: JSON.parse(response.body) }, status: :unauthorized
     end
   end
 
-  # Endpoint to create a payment request
-  def create_payment
-    payment_details = {
-      amount: params[:amount],
-      currency: params[:currency] || 'KES', # Default to Kenyan Shilling
-      description: params[:description] || 'Test Payment',
-      callback_url: params[:callback_url] || 'https://yourwebsite.com/callback',
-      redirect_url: params[:redirect_url] || 'https://yourwebsite.com/redirect',
-      first_name: params[:first_name],
-      last_name: params[:last_name],
-      email: params[:email]
-    }
+  # Register IPN URL for Paybill
+  def add_paybill
+    token = session[:pesapal_token]
+    return render json: { error: 'Token is missing' }, status: :unauthorized if token.nil?
 
-    payment_response = @pesapal_service.create_payment(payment_details)
+    response = Faraday.post("#{ENV['PESAPAL_API_URL']}/URLSetup/RegisterIPN") do |req|
+      req.headers['Authorization'] = "Bearer #{token}"
+      req.headers['Content-Type'] = 'application/json'
+      req.body = {
+        url: params[:ipn_url],
+        ipn_notification_type: 'POST'
+      }.to_json
+    end
 
-    if payment_response
-      # Redirect the user to the PesaPal payment page
-      redirect_to payment_response['redirect_url']
+    if response.success?
+      ipn_data = JSON.parse(response.body)
+      render json: { message: 'Paybill added successfully', data: ipn_data }, status: :created
     else
-      render json: { error: 'Failed to create payment' }, status: :unprocessable_entity
+      render json: { error: 'Failed to add Paybill', details: JSON.parse(response.body) }, status: :unprocessable_entity
     end
   end
 
-  # Endpoint to check the status of a payment
-  def payment_status
-    order_id = params[:order_id]
-    status_response = @pesapal_service.check_payment_status(order_id)
+  # Handle IPN notifications from Pesapal
+  def ipn
+    paybill_number = params[:merchant_reference]
+    amount = params[:amount]
+    payment_status = params[:status]
+    transaction_id = params[:transaction_id]
+    timestamp = params[:timestamp] || Time.now
 
-    if status_response
-      render json: { status: status_response['status'] }
+    landlord = Landlord.find_by(paybill: paybill_number)
+
+    if landlord
+      Payment.create!(
+        landlord_id: landlord.id,
+        amount: amount,
+        payment_status: payment_status,
+        transaction_id: transaction_id,
+        payment_date: timestamp
+      )
+      render json: { status: 'Payment recorded successfully' }, status: :ok
     else
-      render json: { error: 'Failed to check payment status' }, status: :unprocessable_entity
+      render json: { error: 'Landlord not found' }, status: :not_found
     end
-  end
-
-  private
-
-  # Initialize the PesaPalService based on the environment
-  def initialize_pesapal_service
-    @pesapal_service = PesapalService.new(ENV['APP_ENVIRONMENT'] || 'sandbox')
   end
 end
