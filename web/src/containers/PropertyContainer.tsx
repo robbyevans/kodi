@@ -139,9 +139,9 @@ const PropertyContainer = () => {
     // =========================
     // Add Title and Subtitle
     // =========================
-    const title = `RENT PAYMENT FOR ${
+    const title = `Rent payment for ${
       selectedProperty?.name || "Property Details"
-    } ${month}, ${year}`;
+    }, ${month}, ${year}`;
     doc.setTextColor(0, 0, 0); // Reset color to black
     doc.setFont("helvetica", "bold");
     doc.setFontSize(15);
