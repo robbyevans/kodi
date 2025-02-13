@@ -80,7 +80,10 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       </S.ListingHeader>
       <S.PropertiesList>
         {propertiesData.map((property, index) => (
-          <S.PropertyItem key={property.id}>
+          <S.PropertyItem
+            key={property.id}
+            onClick={() => startEditingProperty(property)}
+          >
             <S.PropertyMain>
               <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
               <S.PropertyWrapper>
@@ -149,7 +152,12 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                     >
                       Done
                     </S.StyledButton>
-                    <S.StyledButton onClick={cancelEditingProperty}>
+                    <S.StyledButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        cancelEditingProperty();
+                      }}
+                    >
                       Cancel
                     </S.StyledButton>
                   </S.ButtonWrapper>
