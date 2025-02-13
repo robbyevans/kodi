@@ -96,6 +96,8 @@ const PropertyContainer = () => {
     const marginLeft = 30;
     const marginRight = 30;
     const pageWidth = doc.internal.pageSize.getWidth(); // in pixels
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const bottomMargin = 30; // Adjust as needed
 
     const month = new Date().toLocaleString("default", { month: "long" });
     const year = new Date().getFullYear();
@@ -129,12 +131,18 @@ const PropertyContainer = () => {
     // Example: Place the company logo (if available) and the name "KODI" in small green print at the top right.
     // If you have a logo image as a base64 string, you can use doc.addImage().
     // Here, we simply add "KODI" in green.
-    const companyName = "KODI";
+    const companyName = `@ KODI PMS`;
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 128, 0); // Green color
-    doc.setFontSize(12);
+    doc.setTextColor(45, 106, 79); // Green color
+    doc.setFontSize(8);
     // Position at top right (adjust the x-coordinate as needed)
-    doc.text(companyName, pageWidth - marginRight - 50, 30);
+
+    // Position the company name at the bottom right
+    doc.text(
+      companyName,
+      pageWidth - marginRight - 100,
+      pageHeight - bottomMargin
+    );
 
     // =========================
     // Add Title and Subtitle
