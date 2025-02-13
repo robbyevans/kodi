@@ -97,6 +97,9 @@ const PropertyContainer = () => {
     const marginRight = 30;
     const pageWidth = doc.internal.pageSize.getWidth(); // in pixels
 
+    const month = new Date().toLocaleString("default", { month: "long" });
+    const year = new Date().getFullYear();
+
     // Define fixed pixel column widths for 12 columns.
     // Adjust these values so that the total does not exceed availableWidth.
     const columnWidths = {
@@ -136,23 +139,25 @@ const PropertyContainer = () => {
     // =========================
     // Add Title and Subtitle
     // =========================
-    const title = selectedProperty?.name || "Property Details";
-    const subtitle = "Houses and Tenants Information";
+    const title = `RENT PAYMENT FOR ${
+      selectedProperty?.name || "Property Details"
+    } ${month}, ${year}`;
     doc.setTextColor(0, 0, 0); // Reset color to black
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text(title, marginLeft, 50);
+    doc.setFontSize(15);
+    const titleWidth = doc.getTextWidth(title);
+    const centerX = (pageWidth - titleWidth) / 2;
+    doc.text(title, centerX, 50);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text(subtitle, marginLeft, 70);
 
     const tableData = generateTableData(houses);
 
     // Create the table with autoTable and add a footer row for the total Rent Paid
     doc.autoTable({
       startY: 90,
-      margin: { left: marginLeft, right: marginRight },
+
       tableWidth: totalTableWidth, // using fixed total width in pixels
       head: [tableHeaders],
       body: tableData,
