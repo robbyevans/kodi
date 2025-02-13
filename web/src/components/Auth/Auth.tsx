@@ -59,41 +59,43 @@ const Auth = () => {
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <S.Container>
         <S.Title>{isLogin ? "Login" : "Signup"}</S.Title>
-        {!isLogin && (
+        <S.Form onSubmit={handleSubmit}>
+          {" "}
+          {/* Wrap inputs inside a form */}
+          {!isLogin && (
+            <S.Input
+              type="text"
+              placeholder="User Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
           <S.Input
-            type="name"
-            placeholder="User Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-        )}
-        <S.Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <S.Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {!isLogin && (
           <S.Input
             type="password"
-            placeholder="Confirm Password"
-            value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-        )}
-
-        {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
-        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-
-        <S.Button onClick={handleSubmit} disabled={loading}>
-          {loading ? "Processing..." : isLogin ? "Login" : "Signup"}
-        </S.Button>
+          {!isLogin && (
+            <S.Input
+              type="password"
+              placeholder="Confirm Password"
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+            />
+          )}
+          {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
+          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+          <S.Button type="submit" disabled={loading}>
+            {loading ? "Processing..." : isLogin ? "Login" : "Signup"}
+          </S.Button>
+        </S.Form>
 
         <S.ToggleText>
           {isLogin ? "Don't have an account? " : "Already have an account? "}

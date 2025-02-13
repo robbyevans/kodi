@@ -124,3 +124,12 @@ export const Divider = styled.div`
     margin-left: ${spacing.md};
   }
 `;
+
+export const Form = styled.form`
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${spacing.sm};
+`;

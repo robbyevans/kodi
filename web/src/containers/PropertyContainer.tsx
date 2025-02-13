@@ -96,7 +96,6 @@ const PropertyContainer = () => {
     const marginLeft = 30;
     const marginRight = 30;
     const pageWidth = doc.internal.pageSize.getWidth(); // in pixels
-    const availableWidth = pageWidth - marginLeft - marginRight;
 
     // Define fixed pixel column widths for 12 columns.
     // Adjust these values so that the total does not exceed availableWidth.
@@ -157,10 +156,7 @@ const PropertyContainer = () => {
       tableWidth: totalTableWidth, // using fixed total width in pixels
       head: [tableHeaders],
       body: tableData,
-      // The "foot" property defines a footer row.
-      // In this example, the first cell spans 7 columns with the label,
-      // the next cell shows the total rent paid,
-      // and the remaining 4 cells are left empty.
+
       foot: [
         [
           {
@@ -190,14 +186,19 @@ const PropertyContainer = () => {
         cellPadding: 5,
         fillColor: [230, 230, 230],
         textColor: [0, 0, 0],
-        fontStyle: "bold",
+        fontStyle: "semibold",
         fontSize: 9,
+      },
+      footStyles: {
+        fillColor: [45, 106, 79], // Green background
+        textColor: [255, 255, 255], // White text
+        fontStyle: "bold",
       },
       // Apply the fixed pixel column widths
       columnStyles: {
         0: { cellWidth: columnWidths[0] },
-        1: { cellWidth: columnWidths[1] },
-        2: { cellWidth: columnWidths[2] },
+        1: { cellWidth: columnWidths[1], halign: "left" },
+        2: { cellWidth: columnWidths[2], halign: "left" },
         3: { cellWidth: columnWidths[3] },
         4: { cellWidth: columnWidths[4] },
         5: { cellWidth: columnWidths[5] },
@@ -205,7 +206,7 @@ const PropertyContainer = () => {
         7: { cellWidth: columnWidths[7] },
         8: { cellWidth: columnWidths[8] },
         9: { cellWidth: columnWidths[9] },
-        10: { cellWidth: columnWidths[10] },
+        10: { cellWidth: columnWidths[10], halign: "left" },
         11: { cellWidth: columnWidths[11] },
       },
       // Set a minimum cell height in pixels for readability
