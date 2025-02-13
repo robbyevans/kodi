@@ -20,7 +20,7 @@ const PropertyContainer = () => {
     if (propertyId) {
       getPropertyById(Number(propertyId));
     }
-  }, [propertyId, getPropertyById]);
+  }, [propertyId]);
 
   const selectedProperty = propertyData.find(
     (property) => property.id === Number(propertyId)
