@@ -1,5 +1,5 @@
 class HousesController < ApplicationController
-  before_action :set_property, only: [:index, :create]
+  before_action :set_property, only: [:index, :create, :update, :destroy]
   before_action :set_house, only: [:update, :destroy]
   before_action :authorize_property_owner, only: [:create, :update, :destroy]
 

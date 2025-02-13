@@ -250,8 +250,9 @@ const PropertyContainer = () => {
     // Add the generated date
     doc.text(`Generated on: ${formattedDate}`, marginLeft, finalY + 30);
     // Add the approval signature line and date below the generation date.
-    doc.text("Approved By: __________", marginLeft, finalY + 45);
-    doc.text("Date: __________", marginLeft, finalY + 60);
+    doc.text("Approved By: _______________", marginLeft, finalY + 55);
+    doc.text("Date: _______________", marginLeft, finalY + 75);
+    doc.text("Signature: _______________", marginLeft, finalY + 95);
 
     doc.save(`${formattedDate}-Property-Details.pdf`);
   }, [houses, selectedProperty, totalRentPaid]);

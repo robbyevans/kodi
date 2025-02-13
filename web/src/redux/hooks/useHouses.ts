@@ -5,6 +5,8 @@ import {
   fetchHousesByProperty,
   fetchHouseById,
   addHouse,
+  editHouse,
+  deleteHouse,
 } from "../slices/houseSlice";
 import {
   selectHousesLoading,
@@ -42,11 +44,21 @@ export const useHouses = () => {
     );
   };
 
+  const editHouseInProperty = (house: IHouse) => {
+    dispatch(editHouse({ property_id: house.property_id, house }));
+  };
+
+  const deleteHouseFromProperty = (id: number, property_id: number) => {
+    dispatch(deleteHouse({ id, property_id }));
+  };
+
   return {
     getAllHouses,
     getHouseById,
     getHousesByProperty,
     addHouseToProperty,
+    editHouseInProperty,
+    deleteHouseFromProperty,
     houses,
     loading,
     error,

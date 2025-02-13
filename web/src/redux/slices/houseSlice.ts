@@ -82,9 +82,15 @@ export const addHouse = createAsyncThunk(
 
 export const editHouse = createAsyncThunk(
   "houses/edit",
-  async ({ id, ...house }: IHouse, { dispatch, rejectWithValue }) => {
+  async (
+    { property_id, house }: { property_id: number; house: IHouse },
+    { dispatch, rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.put(`/houses/${id}`, { house });
+      const response = await axiosInstance.put(
+        `/properties/${property_id}/houses/${house.id}`,
+        { house }
+      );
       dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "House updated successfully!", type: "success" })
@@ -99,9 +105,13 @@ export const editHouse = createAsyncThunk(
 
 export const deleteHouse = createAsyncThunk(
   "houses/delete",
-  async (id: number, { dispatch, rejectWithValue }) => {
+  async (
+    { id, property_id }: { id: number; property_id: number },
+    { dispatch, rejectWithValue }
+  ) => {
+    console.log("property_id", property_id);
     try {
-      await axiosInstance.delete(`/houses/${id}`);
+      await axiosInstance.delete(`/properties/${property_id}/houses/${id}`);
       dispatch(fetchAllProperties());
       dispatch(
         showToast({ message: "House deleted successfully!", type: "success" })

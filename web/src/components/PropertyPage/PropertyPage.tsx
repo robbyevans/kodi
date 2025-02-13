@@ -3,9 +3,11 @@ import * as S from "./styles";
 import { IHouse } from "../../redux/slices/houseSlice";
 import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import { MdSimCardDownload } from "react-icons/md";
 import { colors } from "../../styles/foundation";
 import { TbSquareChevronRightFilled } from "react-icons/tb";
+import EditHouseModal from "../Modals/EditHouseModal/EditHouseModal";
 
 interface PropertyPageProps {
   houses: IHouse[];
@@ -24,13 +26,20 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
   propertyName,
   downloadPDF,
 }) => {
-  const [isHouseModalOpen, setIsHouseModalOpen] = useState(false);
+  const [isAddHouseModalOpen, setIsAddHouseModalOpen] = useState(false);
+  const [isEditHouseModalOpen, setIsEditHouseModalOpen] = useState(false);
   const [selectedHouse, setSelectedHouse] = useState<IHouse | null>(null);
   const [isTenantModalOpen, setIsTenantModalOpen] = useState(false);
 
   const openTenantModal = (house: IHouse) => {
     setSelectedHouse(house);
     setIsTenantModalOpen(true);
+  };
+
+  const handleClickEdit = (e: React.MouseEvent<SVGElement>, house: IHouse) => {
+    e.stopPropagation();
+    setSelectedHouse(house);
+    setIsEditHouseModalOpen(true);
   };
 
   if (loading) return <S.LoadingMessage>Loading...</S.LoadingMessage>;
@@ -67,14 +76,21 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
             </tr>
           </thead>
           <tbody>
-            {houses.map((house) => {
-              return (
+            {houses
+              .slice()
+              .sort((a, b) => a.id - b.id)
+              .map((house) => (
                 <S.TableRow
                   key={house.id}
                   onClick={() => openTenantModal(house)}
                 >
                   <S.TableData>
                     <S.IconTableData>
+                      <HiOutlineDotsVertical
+                        width="25px"
+                        height="25px"
+                        onClick={(e) => handleClickEdit(e, house)}
+                      />
                       <TbSquareChevronRightFilled color={colors.primary} />
                       {house.house_number}
                     </S.IconTableData>
@@ -102,21 +118,20 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
                   <S.TableData>{null}</S.TableData>
                   <S.TableData>{house.tenant ? "✅" : "❌"}</S.TableData>
                 </S.TableRow>
-              );
-            })}
+              ))}
           </tbody>
         </S.Table>
       </S.TableContainer>
       <S.ButtonContainer>
-        <S.AddPropertyButton onClick={() => setIsHouseModalOpen(true)}>
+        <S.AddPropertyButton onClick={() => setIsAddHouseModalOpen(true)}>
           + Add New House
         </S.AddPropertyButton>
       </S.ButtonContainer>
 
-      {isHouseModalOpen && (
+      {isAddHouseModalOpen && (
         <AddHouseModal
-          isOpen={isHouseModalOpen}
-          onClose={() => setIsHouseModalOpen(false)}
+          isOpen={isAddHouseModalOpen}
+          onClose={() => setIsAddHouseModalOpen(false)}
           propertyId={propertyId}
         />
       )}
@@ -126,6 +141,19 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           house={selectedHouse}
           visible={isTenantModalOpen}
           onClose={() => setIsTenantModalOpen(false)}
+        />
+      )}
+
+      {/* Render EditHouseModal only once */}
+      {isEditHouseModalOpen && selectedHouse && (
+        <EditHouseModal
+          house={selectedHouse}
+          propertyId={propertyId}
+          onClose={() => {
+            setIsEditHouseModalOpen(false);
+            setSelectedHouse(null);
+          }}
+          isOpen={isEditHouseModalOpen}
         />
       )}
     </S.PropertyPageContainer>
