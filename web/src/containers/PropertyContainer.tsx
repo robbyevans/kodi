@@ -180,7 +180,7 @@ const PropertyContainer = () => {
         halign: "center",
         valign: "middle",
         lineWidth: 0.5,
-        lineColor: [0, 0, 0],
+        lineColor: [120, 120, 120],
       },
       headStyles: {
         cellPadding: 5,
