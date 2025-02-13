@@ -116,7 +116,8 @@ export const AddPropertyButton = styled.button`
   transition: background 0.3s;
 
   &:hover {
-    background: ${colors.success};
+    background: ${colors.primary};
+    color: ${colors.text.inverted};
   }
 `;
 

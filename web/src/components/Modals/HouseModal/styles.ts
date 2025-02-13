@@ -13,7 +13,7 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.5); /* Consistent overlay */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +76,7 @@ export const CancelButton = styled.button`
   border: none;
   border-radius: ${borderRadius.md};
   color: ${colors.text.primary};
-  font-weight: ${fontSizes.base};
+  font-size: ${fontSizes.base};
   cursor: pointer;
   transition: background 0.3s ease;
 
@@ -85,10 +85,9 @@ export const CancelButton = styled.button`
   }
 `;
 
-// Delete button styled with an error/red color theme
 export const DeleteButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
-  background: #e74c3c; /* Red color */
+  background: #e74c3c;
   border: none;
   border-radius: ${borderRadius.md};
   color: ${colors.text.inverted};
@@ -97,7 +96,7 @@ export const DeleteButton = styled.button`
   transition: background 0.3s ease;
 
   &:hover {
-    background: #c0392b; /* Darker red */
+    background: #c0392b;
   }
 `;
 

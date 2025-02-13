@@ -3,56 +3,76 @@ import { IHouse } from "../../../redux/slices/houseSlice";
 import { useHouses } from "../../../redux/hooks/useHouses";
 import * as S from "./styles";
 
-interface EditHouseModalProps {
+interface HouseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  house: IHouse;
   propertyId: number;
+  /** Set to true to use the edit variant */
+  isVariantEditHouse?: boolean;
+  /** Required in edit mode */
+  house?: IHouse;
 }
 
-const EditHouseModal: React.FC<EditHouseModalProps> = ({
+const HouseModal: React.FC<HouseModalProps> = ({
   isOpen,
   onClose,
-  house,
   propertyId,
+  isVariantEditHouse = false,
+  house,
 }) => {
-  // Initialize local state from the current house details
-  const [houseNumber, setHouseNumber] = useState(house.house_number);
+  const { addHouseToProperty, editHouseInProperty, deleteHouseFromProperty } =
+    useHouses();
+
+  // Initialize local state – if in edit mode, pre-populate with the house details
+  const [houseNumber, setHouseNumber] = useState<string>(
+    isVariantEditHouse && house ? house.house_number : ""
+  );
   const [payableRent, setPayableRent] = useState<number | null>(
-    house.payable_rent ?? null
+    isVariantEditHouse && house ? house.payable_rent ?? null : null
   );
   const [payableDeposit, setPayableDeposit] = useState<number | null>(
-    house.payable_deposit ?? null
+    isVariantEditHouse && house ? house.payable_deposit ?? null : null
   );
 
-  // When the passed house changes, update local state accordingly
+  // Update form fields when the passed house changes (in edit mode)
   useEffect(() => {
-    setHouseNumber(house.house_number);
-    setPayableRent(house.payable_rent ?? null);
-    setPayableDeposit(house.payable_deposit ?? null);
-  }, [house]);
-
-  // From the useHouses hook, we extract our edit and delete functions
-  const { editHouseInProperty, deleteHouseFromProperty } = useHouses();
+    if (isVariantEditHouse && house) {
+      setHouseNumber(house.house_number);
+      setPayableRent(house.payable_rent ?? null);
+      setPayableDeposit(house.payable_deposit ?? null);
+    }
+  }, [house, isVariantEditHouse]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedHouse: IHouse = {
-      ...house,
-      house_number: houseNumber,
-      payable_rent: payableRent,
-      payable_deposit: payableDeposit,
-      property_id: propertyId, // Force property_id to use the prop value
-    };
 
-    // Dispatch the edit action
-    await editHouseInProperty(updatedHouse);
+    if (isVariantEditHouse && house) {
+      // Edit mode: dispatch the update action
+      const updatedHouse: IHouse = {
+        ...house,
+        house_number: houseNumber,
+        payable_rent: payableRent,
+        payable_deposit: payableDeposit,
+        property_id: propertyId,
+      };
+      await editHouseInProperty(updatedHouse);
+    } else {
+      // Add mode: dispatch the add action
+      await addHouseToProperty(propertyId, {
+        house_number: houseNumber,
+        payable_rent: payableRent,
+        payable_deposit: payableDeposit,
+        tenant: null,
+      });
+    }
     onClose();
   };
 
   const handleDelete = async () => {
-    // Confirm deletion with the user
-    if (window.confirm("Are you sure you want to delete this house?")) {
+    if (
+      house &&
+      window.confirm("Are you sure you want to delete this house?")
+    ) {
       await deleteHouseFromProperty(house.id, propertyId);
       onClose();
     }
@@ -63,7 +83,9 @@ const EditHouseModal: React.FC<EditHouseModalProps> = ({
   return (
     <S.ModalOverlay>
       <S.ModalContent>
-        <S.ModalHeader>Edit House</S.ModalHeader>
+        <S.ModalHeader>
+          {isVariantEditHouse ? "Edit House" : "Add New House"}
+        </S.ModalHeader>
         <form onSubmit={handleSubmit}>
           <S.FormGroup>
             <label>House Number</label>
@@ -104,10 +126,14 @@ const EditHouseModal: React.FC<EditHouseModalProps> = ({
             <S.CancelButton type="button" onClick={onClose}>
               Cancel
             </S.CancelButton>
-            <S.DeleteButton type="button" onClick={handleDelete}>
-              Delete
-            </S.DeleteButton>
-            <S.SubmitButton type="submit">Save Changes</S.SubmitButton>
+            {isVariantEditHouse && (
+              <S.DeleteButton type="button" onClick={handleDelete}>
+                Delete
+              </S.DeleteButton>
+            )}
+            <S.SubmitButton type="submit">
+              {isVariantEditHouse ? "Save Changes" : "Add House"}
+            </S.SubmitButton>
           </S.ButtonContainer>
         </form>
       </S.ModalContent>
@@ -115,4 +141,4 @@ const EditHouseModal: React.FC<EditHouseModalProps> = ({
   );
 };
 
-export default EditHouseModal;
+export default HouseModal;

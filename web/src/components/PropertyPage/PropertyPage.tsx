@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import * as S from "./styles";
 import { IHouse } from "../../redux/slices/houseSlice";
-import AddHouseModal from "../Modals/AddHouseModal/AddHouseModal";
+import HouseModal from "../Modals/HouseModal/HouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { MdSimCardDownload } from "react-icons/md";
 import { colors } from "../../styles/foundation";
 import { TbSquareChevronRightFilled } from "react-icons/tb";
-import EditHouseModal from "../Modals/EditHouseModal/EditHouseModal";
 
 interface PropertyPageProps {
   houses: IHouse[];
@@ -128,14 +127,16 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
         </S.AddPropertyButton>
       </S.ButtonContainer>
 
+      {/* HouseModal for adding a new house */}
       {isAddHouseModalOpen && (
-        <AddHouseModal
+        <HouseModal
           isOpen={isAddHouseModalOpen}
           onClose={() => setIsAddHouseModalOpen(false)}
           propertyId={propertyId}
         />
       )}
 
+      {/* AddTenantModal remains unchanged */}
       {selectedHouse && (
         <AddTenantModal
           house={selectedHouse}
@@ -144,16 +145,17 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
         />
       )}
 
-      {/* Render EditHouseModal only once */}
+      {/* HouseModal for editing an existing house */}
       {isEditHouseModalOpen && selectedHouse && (
-        <EditHouseModal
-          house={selectedHouse}
-          propertyId={propertyId}
+        <HouseModal
+          isOpen={isEditHouseModalOpen}
           onClose={() => {
             setIsEditHouseModalOpen(false);
             setSelectedHouse(null);
           }}
-          isOpen={isEditHouseModalOpen}
+          propertyId={propertyId}
+          isVariantEditHouse
+          house={selectedHouse}
         />
       )}
     </S.PropertyPageContainer>
