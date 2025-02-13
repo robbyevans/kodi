@@ -1,3 +1,4 @@
+// /web/src/components/Navbar/Navbar.tsx
 import React, { useState } from "react";
 import { FaCalendarAlt, FaSearch } from "react-icons/fa";
 import * as S from "./styles";
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
+import Search from "../Search/Search";
 
 const dummyNotifications = [
   {
@@ -28,15 +30,17 @@ const dummyNotifications = [
 const Navbar: React.FC = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
 
   const toggleCalendar = () => setShowCalendar((prev) => !prev);
+  const toggleSearch = () => setShowSearch((prev) => !prev);
 
   return (
     <S.Navbar>
       <S.AppName onClick={() => navigate("/dashboard")}>KODI</S.AppName>
       <S.NavActions>
-        <S.IconButton aria-label="Search">
+        <S.IconButton onClick={toggleSearch} aria-label="Search">
           <FaSearch />
         </S.IconButton>
         <S.IconButton onClick={toggleCalendar} aria-label="Calendar">
@@ -45,7 +49,20 @@ const Navbar: React.FC = () => {
         <ThemeToggle />
         <Notification notifications={dummyNotifications} />
       </S.NavActions>
-
+      {showSearch && (
+        // Position the search bar appropriately. You can adjust the style as needed.
+        <div
+          style={{
+            position: "absolute",
+            top: "60px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+          }}
+        >
+          <Search />
+        </div>
+      )}
       {showCalendar && (
         <S.Dropdown>
           <Calendar onChange={setDate} value={date} />
