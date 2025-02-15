@@ -5,7 +5,6 @@ export const SearchContainer = styled.div<{ isVisible: boolean }>`
   width: ${(props) => (props.isVisible ? "50%" : "0px")};
   transition: width 0.3s ease-in-out;
   overflow: hidden;
-  z-index: 9999;
 `;
 
 export const SearchInput = styled.input`

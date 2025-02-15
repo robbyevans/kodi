@@ -35,6 +35,7 @@ export const NavActions = styled.div`
   width: 100%;
   min-height: 50px;
   justify-content: flex-end;
+  margin-left: 50px;
   gap: ${spacing.md};
 `;
 

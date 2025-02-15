@@ -92,7 +92,6 @@ const Search: React.FC<SearchProps> = ({ isVisible }) => {
   console.log("isVisible", isVisible);
 
   return (
-    // Pass the isVisible prop to the styled container
     <S.SearchContainer isVisible={isVisible}>
       <S.SearchInput
         type="text"
