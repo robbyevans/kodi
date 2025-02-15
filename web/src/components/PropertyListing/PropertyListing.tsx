@@ -25,19 +25,32 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [propertyToDelete, setPropertyToDelete] = useState<number | null>(null);
 
+  // Open editing mode for the selected property.
   const startEditingProperty = (property: IProperty) => {
     setEditingPropertyId(property.id!);
     setPropertyName(property.name);
-    // Reset the image file in edit mode.
     setEditingPropertyImage(null);
   };
 
+  // Cancel editing mode.
   const cancelEditingProperty = () => {
     setEditingPropertyId(null);
     setPropertyName("");
     setEditingPropertyImage(null);
   };
 
+  // Handle clicks on the main (non-interactive) area.
+  const handleMainClick = (property: IProperty) => {
+    if (editingPropertyId === property.id) {
+      // If the property is already open for editing, close it.
+      cancelEditingProperty();
+    } else {
+      // Otherwise, open editing for this property.
+      startEditingProperty(property);
+    }
+  };
+
+  // Save the updated property.
   const saveEditingProperty = (property: IProperty) => {
     const updatedProperty: IProperty = {
       ...property,
@@ -47,14 +60,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
         : property.property_image,
     };
     onEditProperty(updatedProperty);
-    setEditingPropertyId(null);
-    setPropertyName("");
-    setEditingPropertyImage(null);
+    cancelEditingProperty();
   };
 
+  // Setup deletion confirmation.
   const confirmDeletion = (id: number, name: string) => {
     setPropertyToDelete(id);
-    setPropertyName(name); // For displaying the property name in the confirmation modal.
+    setPropertyName(name);
     setShowModal(true);
   };
 
@@ -80,11 +92,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
       </S.ListingHeader>
       <S.PropertiesList>
         {propertiesData.map((property, index) => (
-          <S.PropertyItem
-            key={property.id}
-            onClick={() => startEditingProperty(property)}
-          >
-            <S.PropertyMain>
+          <S.PropertyItem key={property.id}>
+            {/* Only the main display area toggles editing mode */}
+            <S.PropertyMain onClick={() => handleMainClick(property)}>
               <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
               <S.PropertyWrapper>
                 <S.PropertyIcon
@@ -102,14 +112,18 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                 {editingPropertyId !== property.id && (
                   <>
                     <S.EditButton
-                      onClick={() => startEditingProperty(property)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startEditingProperty(property);
+                      }}
                     >
                       <FiEdit />
                     </S.EditButton>
                     <S.DeleteButton
-                      onClick={() =>
-                        confirmDeletion(property.id!, property.name)
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        confirmDeletion(property.id!, property.name);
+                      }}
                     >
                       <FiTrash2 />
                     </S.DeleteButton>
@@ -117,8 +131,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                 )}
               </S.PropertyActions>
             </S.PropertyMain>
-            <S.EditFormContainer expanded={editingPropertyId === property.id}>
-              {editingPropertyId === property.id && (
+
+            {/* Render the edit form if this property is being edited */}
+            {editingPropertyId === property.id && (
+              <S.EditFormContainer
+                expanded
+                onClick={(e) => e.stopPropagation()}
+              >
                 <S.InputGroup>
                   <S.InputWrapper>
                     <S.InputLabel>Update Property Name</S.InputLabel>
@@ -126,6 +145,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                       type="text"
                       value={propertyName}
                       onChange={(e) => setPropertyName(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
                       placeholder="Name"
                     />
                   </S.InputWrapper>
@@ -137,6 +157,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                       onChange={(e) =>
                         setEditingPropertyImage(e.target.files?.[0] || null)
                       }
+                      onClick={(e) => e.stopPropagation()}
                     />
                     {editingPropertyImage && (
                       <S.ImagePreview
@@ -148,7 +169,10 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                   <S.ButtonWrapper>
                     <S.StyledButton
                       $isVariantAccept
-                      onClick={() => saveEditingProperty(property)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        saveEditingProperty(property);
+                      }}
                     >
                       Done
                     </S.StyledButton>
@@ -162,8 +186,8 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                     </S.StyledButton>
                   </S.ButtonWrapper>
                 </S.InputGroup>
-              )}
-            </S.EditFormContainer>
+              </S.EditFormContainer>
+            )}
           </S.PropertyItem>
         ))}
       </S.PropertiesList>
