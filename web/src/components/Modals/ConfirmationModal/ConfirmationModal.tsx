@@ -18,7 +18,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     message.split(/(Deleting .*? will)/);
 
   return (
-    <S.ModalOverlay>
+    <S.ModalOverlay onClick={onCancel}>
       <S.ModalContainer>
         <S.ModalHeader>
           <RiErrorWarningLine size="65px" />

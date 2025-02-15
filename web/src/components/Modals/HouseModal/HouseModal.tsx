@@ -77,13 +77,13 @@ const HouseModal: React.FC<HouseModalProps> = ({
 
   return (
     <>
-      <S.ModalOverlay>
+      <S.ModalOverlay onClick={onClose}>
         <S.ModalContent>
           <S.CloseButton onClick={onClose}>
             <IoClose size={20} color="red" />
           </S.CloseButton>
           <S.ModalHeader>
-            {isVariantEditHouse ? "Edit House" : "Add New House"}
+            {isVariantEditHouse ? "Update or Delete House" : "Add New House"}
           </S.ModalHeader>
           <form onSubmit={handleSubmit}>
             <S.FormGroup>

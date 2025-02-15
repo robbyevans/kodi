@@ -84,7 +84,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
   const hasTenant = tenants && tenants.length > 0;
 
   return (
-    <S.ModalOverlay>
+    <S.ModalOverlay onClick={onClose}>
       <S.ModalContent>
         <S.ModalHeader>
           <S.CloseButton onClick={onClose}>
