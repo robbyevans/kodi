@@ -1,4 +1,3 @@
-// /web/src/components/Navbar/Navbar.tsx
 import React, { useState } from "react";
 import { FaCalendarAlt, FaSearch } from "react-icons/fa";
 import * as S from "./styles";
@@ -40,6 +39,7 @@ const Navbar: React.FC = () => {
     <S.Navbar>
       <S.AppName onClick={() => navigate("/dashboard")}>KODI</S.AppName>
       <S.NavActions>
+        <Search isVisible={showSearch} />
         <S.IconButton onClick={toggleSearch} aria-label="Search">
           <FaSearch />
         </S.IconButton>
@@ -49,19 +49,7 @@ const Navbar: React.FC = () => {
         <ThemeToggle />
         <Notification notifications={dummyNotifications} />
       </S.NavActions>
-      {showSearch && (
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 1000,
-          }}
-        >
-          <Search />
-        </div>
-      )}
+
       {showCalendar && (
         <S.Dropdown>
           <Calendar onChange={setDate} value={date} />

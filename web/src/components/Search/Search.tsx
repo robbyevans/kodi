@@ -12,7 +12,12 @@ interface Suggestion {
   display: string;
 }
 
-const Search: React.FC = () => {
+// Add prop interface to receive visibility state
+interface SearchProps {
+  isVisible: boolean;
+}
+
+const Search: React.FC<SearchProps> = ({ isVisible }) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const properties = useSelector((state: RootState) => state.properties.data);
@@ -69,7 +74,6 @@ const Search: React.FC = () => {
     return results;
   }, [query, properties, houses, tenants]);
 
-  // Handle selection of a suggestion
   const handleSuggestionClick = (suggestion: Suggestion) => {
     if (suggestion.type === "property") {
       navigate(`/property/${suggestion.id}`);
@@ -85,8 +89,11 @@ const Search: React.FC = () => {
     setQuery("");
   };
 
+  console.log("isVisible", isVisible);
+
   return (
-    <S.SearchContainer>
+    // Pass the isVisible prop to the styled container
+    <S.SearchContainer isVisible={isVisible}>
       <S.SearchInput
         type="text"
         placeholder="Search estates, houses, tenants..."
