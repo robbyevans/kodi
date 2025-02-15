@@ -13,6 +13,10 @@ export const PropertyPageContainer = styled.div`
   padding: ${spacing.xl};
   background: ${colors.neutral[100]};
   min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: ${spacing.sm};
+  }
 `;
 
 export const Header = styled.h1`

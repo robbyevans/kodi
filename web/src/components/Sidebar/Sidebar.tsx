@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
 
   const handleNavigation = (path: string) => {
     navigate(path);
-    // When on mobile, close the menu after navigating.
+
     if (isMobileMenuOpen) {
       toggleMobileMenu();
     }
@@ -30,17 +30,13 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Hamburger menu icon (visible on small screens only) */}
       <S.MobileMenuIcon onClick={toggleMobileMenu}>
         {isMobileMenuOpen ? <FiX /> : <FiMenu />}
       </S.MobileMenuIcon>
 
-      {/* Full sidebar (visible on large screens only) */}
       <S.SidebarContainer>
         <div>
-          <S.SidebarHeader>
-            {/* You can add a logo or title here */}
-          </S.SidebarHeader>
+          <S.SidebarHeader></S.SidebarHeader>
           <S.Menu>
             <S.MenuItem onClick={() => handleNavigation("/dashboard")}>
               <FiHome />
@@ -62,7 +58,6 @@ const Sidebar: React.FC = () => {
         </S.LogoutItem>
       </S.SidebarContainer>
 
-      {/* Mobile dropdown menu (visible on small screens only) */}
       {isMobileMenuOpen && (
         <S.MobileDropdown>
           <S.MenuItem onClick={() => handleNavigation("/dashboard")}>

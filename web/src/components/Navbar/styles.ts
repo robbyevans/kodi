@@ -23,11 +23,18 @@ export const AppName = styled.h1`
   font-size: ${fontSizes.lg};
   font-weight: bold;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const NavActions = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
+  min-height: 50px;
+  justify-content: flex-end;
   gap: ${spacing.md};
 `;
 

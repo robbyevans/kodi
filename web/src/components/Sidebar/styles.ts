@@ -76,8 +76,6 @@ export const MenuText = styled.span`
 `;
 
 export const LogoutItem = styled(MenuItem)`
-  margin-bottom: 50px;
-
   &:hover {
     background: ${colors.error};
     transform: translateX(-5px);

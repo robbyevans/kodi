@@ -50,7 +50,6 @@ const Navbar: React.FC = () => {
         <Notification notifications={dummyNotifications} />
       </S.NavActions>
       {showSearch && (
-        // Position the search bar appropriately. You can adjust the style as needed.
         <div
           style={{
             position: "absolute",

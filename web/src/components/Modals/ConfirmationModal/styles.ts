@@ -21,7 +21,6 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
   backdrop-filter: blur(4px);
   overflow: hidden;
-  margin: 0 16px;
 
   &::after {
     content: "";
@@ -48,6 +47,7 @@ export const ModalContainer = styled.div`
   width: 90%;
   text-align: center;
   position: relative;
+  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.div`

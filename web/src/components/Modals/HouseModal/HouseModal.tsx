@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { IHouse } from "../../../redux/slices/houseSlice";
 import { useHouses } from "../../../redux/hooks/useHouses";
 import * as S from "./styles";
+import { IoClose } from "react-icons/io5";
+import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 interface HouseModalProps {
   isOpen: boolean;
@@ -33,6 +35,9 @@ const HouseModal: React.FC<HouseModalProps> = ({
   const [payableDeposit, setPayableDeposit] = useState<number | null>(
     isVariantEditHouse && house ? house.payable_deposit ?? null : null
   );
+
+  const [showConfirmationModal, setShowConfirmationModal] =
+    useState<boolean>(false);
 
   // Update form fields when the passed house changes (in edit mode)
   useEffect(() => {
@@ -68,76 +73,90 @@ const HouseModal: React.FC<HouseModalProps> = ({
     onClose();
   };
 
-  const handleDelete = async () => {
-    if (
-      house &&
-      window.confirm("Are you sure you want to delete this house?")
-    ) {
-      await deleteHouseFromProperty(house.id, propertyId);
-      onClose();
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
-    <S.ModalOverlay>
-      <S.ModalContent>
-        <S.ModalHeader>
-          {isVariantEditHouse ? "Edit House" : "Add New House"}
-        </S.ModalHeader>
-        <form onSubmit={handleSubmit}>
-          <S.FormGroup>
-            <label>House Number</label>
-            <S.InputField
-              type="text"
-              value={houseNumber}
-              onChange={(e) => setHouseNumber(e.target.value)}
-              required
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label>House Deposit</label>
-            <S.InputField
-              type="number"
-              value={payableDeposit !== null ? payableDeposit : ""}
-              onChange={(e) =>
-                setPayableDeposit(
-                  e.target.value === "" ? null : Number(e.target.value)
-                )
-              }
-              placeholder="KSH"
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label>Monthly Rent</label>
-            <S.InputField
-              type="number"
-              value={payableRent !== null ? payableRent : ""}
-              onChange={(e) =>
-                setPayableRent(
-                  e.target.value === "" ? null : Number(e.target.value)
-                )
-              }
-              placeholder="KSH"
-            />
-          </S.FormGroup>
-          <S.ButtonContainer>
-            <S.CancelButton type="button" onClick={onClose}>
-              Cancel
-            </S.CancelButton>
-            {isVariantEditHouse && (
-              <S.DeleteButton type="button" onClick={handleDelete}>
-                Delete
-              </S.DeleteButton>
-            )}
-            <S.SubmitButton type="submit">
-              {isVariantEditHouse ? "Save Changes" : "Add House"}
-            </S.SubmitButton>
-          </S.ButtonContainer>
-        </form>
-      </S.ModalContent>
-    </S.ModalOverlay>
+    <>
+      <S.ModalOverlay>
+        <S.ModalContent>
+          <S.CloseButton onClick={onClose}>
+            <IoClose size={20} color="red" />
+          </S.CloseButton>
+          <S.ModalHeader>
+            {isVariantEditHouse ? "Edit House" : "Add New House"}
+          </S.ModalHeader>
+          <form onSubmit={handleSubmit}>
+            <S.FormGroup>
+              <label>House Number</label>
+              <S.InputField
+                type="text"
+                value={houseNumber}
+                onChange={(e) => setHouseNumber(e.target.value)}
+                required
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label>House Deposit</label>
+              <S.InputField
+                type="number"
+                value={payableDeposit !== null ? payableDeposit : ""}
+                onChange={(e) =>
+                  setPayableDeposit(
+                    e.target.value === "" ? null : Number(e.target.value)
+                  )
+                }
+                placeholder="KSH"
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label>Monthly Rent</label>
+              <S.InputField
+                type="number"
+                value={payableRent !== null ? payableRent : ""}
+                onChange={(e) =>
+                  setPayableRent(
+                    e.target.value === "" ? null : Number(e.target.value)
+                  )
+                }
+                placeholder="KSH"
+              />
+            </S.FormGroup>
+            <S.ButtonContainer>
+              {isVariantEditHouse && (
+                <S.DeleteButton
+                  type="button"
+                  onClick={() => {
+                    setShowConfirmationModal(true);
+                  }}
+                >
+                  Delete
+                </S.DeleteButton>
+              )}
+              <S.SubmitButton type="submit">
+                {isVariantEditHouse ? "Save Changes" : "Add House"}
+              </S.SubmitButton>
+            </S.ButtonContainer>
+          </form>
+        </S.ModalContent>
+      </S.ModalOverlay>
+      {showConfirmationModal && (
+        <ConfirmationModal
+          message={`Deleting ${
+            house?.house_number || "this house"
+          } will also delete all of its related tenants data. Are you sure you want to proceed?`}
+          onConfirm={() => {
+            if (house && propertyId) {
+              deleteHouseFromProperty(house.id, propertyId);
+              setShowConfirmationModal(false);
+              onClose();
+            }
+          }}
+          onCancel={() => {
+            setShowConfirmationModal(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 

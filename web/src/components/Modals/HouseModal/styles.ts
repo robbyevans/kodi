@@ -21,6 +21,7 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
+  position: relative;
   background: ${colors.background};
   border-radius: ${borderRadius.lg};
   width: 90%;
@@ -70,21 +71,6 @@ export const ButtonContainer = styled.div`
   margin-top: ${spacing.lg};
 `;
 
-export const CancelButton = styled.button`
-  padding: ${spacing.sm} ${spacing.md};
-  background: ${colors.neutral[300]};
-  border: none;
-  border-radius: ${borderRadius.md};
-  color: ${colors.text.primary};
-  font-size: ${fontSizes.base};
-  cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background: ${colors.neutral[200]};
-  }
-`;
-
 export const DeleteButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
   background: #e74c3c;
@@ -113,4 +99,16 @@ export const SubmitButton = styled.button`
   &:hover {
     background: ${colors.secondary};
   }
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
 `;

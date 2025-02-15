@@ -14,7 +14,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onCancel,
 }) => {
   // Split the message to identify the property name for bold styling
-  const [preText, propertyName, postText] = message.split(/(Deleting .*? will)/);
+  const [preText, propertyName, postText] =
+    message.split(/(Deleting .*? will)/);
 
   return (
     <S.ModalOverlay>
