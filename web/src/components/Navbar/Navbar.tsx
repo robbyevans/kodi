@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaCalendarAlt, FaSearch } from "react-icons/fa";
+import { FaCalendarAlt, FaSearch, FaEllipsisV } from "react-icons/fa";
 import * as S from "./styles";
 import Notification from "../Notification/Notification";
 import { useNavigate } from "react-router-dom";
@@ -30,24 +30,56 @@ const Navbar: React.FC = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showSearch, setShowSearch] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const navigate = useNavigate();
 
   const toggleCalendar = () => setShowCalendar((prev) => !prev);
   const toggleSearch = () => setShowSearch((prev) => !prev);
+  const toggleMoreMenu = () => setShowMoreMenu((prev) => !prev);
 
   return (
     <S.Navbar>
       <S.AppName onClick={() => navigate("/dashboard")}>KODI</S.AppName>
       <S.NavActions>
+        {/* Search icon always visible */}
         <Search isVisible={showSearch} />
         <S.IconButton onClick={toggleSearch} aria-label="Search">
           <FaSearch />
         </S.IconButton>
-        <S.IconButton onClick={toggleCalendar} aria-label="Calendar">
-          <FaCalendarAlt />
-        </S.IconButton>
-        <ThemeToggle />
-        <Notification notifications={dummyNotifications} />
+
+        {/* Large screen actions */}
+        <S.LargeScreenActions>
+          <S.IconButton onClick={toggleCalendar} aria-label="Calendar">
+            <FaCalendarAlt />
+          </S.IconButton>
+          <ThemeToggle />
+          <Notification notifications={dummyNotifications} />
+        </S.LargeScreenActions>
+
+        {/* Small screen: show three-dots icon */}
+        <S.SmallScreenActions>
+          <S.IconButton onClick={toggleMoreMenu} aria-label="More">
+            <FaEllipsisV />
+          </S.IconButton>
+          {showMoreMenu && (
+            <S.MoreDropdown>
+              <S.MenuItem
+                onClick={() => {
+                  toggleCalendar();
+                  setShowMoreMenu(false);
+                }}
+              >
+                Calendar
+              </S.MenuItem>
+              <S.MenuItem onClick={() => setShowMoreMenu(false)}>
+                <ThemeToggle />
+              </S.MenuItem>
+              <S.MenuItem onClick={() => setShowMoreMenu(false)}>
+                <Notification notifications={dummyNotifications} />
+              </S.MenuItem>
+            </S.MoreDropdown>
+          )}
+        </S.SmallScreenActions>
       </S.NavActions>
 
       {showCalendar && (

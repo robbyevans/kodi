@@ -35,7 +35,6 @@ export const NavActions = styled.div`
   width: 100%;
   min-height: 50px;
   justify-content: flex-end;
-  margin-left: 50px;
   gap: ${spacing.md};
 `;
 
@@ -55,6 +54,43 @@ export const IconButton = styled.button`
   &:hover {
     background: ${colors.neutral[700]};
   }
+`;
+
+// Only show these icons on larger screens.
+export const LargeScreenActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.md};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+// Only show on small screens.
+export const SmallScreenActions = styled.div`
+  display: none;
+  position: relative; /* so that the dropdown positions relative to this container */
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+export const MoreDropdown = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: ${colors.neutral[100]};
+  color: ${colors.text.primary};
+  padding: ${spacing.md};
+  box-shadow: ${shadows.md};
+  border-radius: ${borderRadius.md};
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.sm};
 `;
 
 export const Dropdown = styled.div`
