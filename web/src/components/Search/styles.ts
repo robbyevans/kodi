@@ -10,7 +10,7 @@ export const SearchInput = styled.input`
   width: 100%;
   padding: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.primary};
 `;
 
 export const SuggestionsDropdown = styled.ul`

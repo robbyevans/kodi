@@ -77,7 +77,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
 
   return (
     <>
-      <S.ModalOverlay onClick={onClose}>
+      <S.ModalOverlay>
         <S.ModalContent>
           <S.CloseButton onClick={onClose}>
             <IoClose size={20} color="red" />
@@ -141,7 +141,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
       </S.ModalOverlay>
       {showConfirmationModal && (
         <ConfirmationModal
-          message={`Deleting ${
+          message={`Deleting house ${
             house?.house_number || "this house"
           } will also delete all of its related tenants data. Are you sure you want to proceed?`}
           onConfirm={() => {

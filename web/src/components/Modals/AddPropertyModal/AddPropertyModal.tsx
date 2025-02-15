@@ -41,7 +41,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <S.ModalOverlay onClick={onClose}>
+    <S.ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>Add New Property</S.ModalHeader>
         <form onSubmit={handleSubmit}>
