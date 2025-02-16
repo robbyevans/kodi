@@ -38,7 +38,7 @@ export const Title = styled.h1`
 export const Menu = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${spacing.sm};
+  gap: ${spacing.lg};
 `;
 
 export const MenuItem = styled.button`

@@ -9,7 +9,7 @@ export const SearchContainer = styled.div<{ isVisible: boolean }>`
 
 export const SearchInput = styled.input`
   padding: 0.5rem;
-  width: 100%;
+  width: 94%;
   border-radius: 4px;
   border: 1px solid ${colors.primary};
 `;

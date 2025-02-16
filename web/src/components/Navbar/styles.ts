@@ -52,7 +52,7 @@ export const IconButton = styled.button`
   transition: background 0.3s;
 
   &:hover {
-    background: ${colors.neutral[700]};
+    background: #265d50;
   }
 `;
 
