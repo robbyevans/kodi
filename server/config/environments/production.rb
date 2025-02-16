@@ -104,5 +104,5 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   #to be changes when we the web production-link
-Rails.application.routes.default_url_options = { host: 'your-production-domain.com' }
+  Rails.application.routes.default_url_options = { host: 'kodi-rails-server.onrender.com' }
 end
