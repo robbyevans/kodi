@@ -1,15 +1,18 @@
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import QuickStatCard from "../StatCard/QuickStatCard"; // Import the new component
+import QuickStatCard from "../StatCard/QuickStatCard";
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import PropertyCard from "../PropertyCard/PropertyCard";
+import PropertyCardSkeleton from "../PropertyCard/PropertyCardSkeleton";
+import DashboardHeaderSkeleton from "./DashboardHeaderSkeleton";
 import { IUser } from "../../redux/slices/adminSlice";
 import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
 
 interface DashboardProps {
   propertyData: IProperty[];
   userData: IUser;
+  loading: boolean;
   navigate: (path: string) => void;
   handleAddPropertyClick: () => void;
   totalRevenuePercentage: number;
@@ -23,6 +26,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({
   propertyData,
   userData,
+  loading,
   handleAddPropertyClick,
   totalRevenuePercentage,
   totalProperties,
@@ -31,20 +35,24 @@ const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   return (
     <S.DashboardContainer>
-      <S.DashboardHeader>
-        <div>
-          <h1>Dashboard</h1>
-          <p>Find your property listing and stats below</p>
-        </div>
-        <S.ProfileImage
-          alt="profile-image"
-          src={
-            typeof userData.profile_image === "string"
-              ? userData.profile_image
-              : profilePlaceholder
-          }
-        />
-      </S.DashboardHeader>
+      {loading ? (
+        <DashboardHeaderSkeleton />
+      ) : (
+        <S.DashboardHeader>
+          <div>
+            <h1>Dashboard</h1>
+            <p>Find your property listing and stats below</p>
+          </div>
+          <S.ProfileImage
+            alt="profile-image"
+            src={
+              typeof userData.profile_image === "string"
+                ? userData.profile_image
+                : profilePlaceholder
+            }
+          />
+        </S.DashboardHeader>
+      )}
 
       <S.ContentWrapper>
         <S.PropertyListContainer>
@@ -56,7 +64,13 @@ const Dashboard: React.FC<DashboardProps> = ({
             </S.AddPropertyButton>
           </S.PropertyListHeader>
 
-          {propertyData?.length > 0 ? (
+          {loading ? (
+            <S.PropertyGrid>
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+            </S.PropertyGrid>
+          ) : propertyData?.length > 0 ? (
             <S.PropertyGrid>
               {propertyData.map((property) => (
                 <PropertyCard key={property.id} propertyData={property} />

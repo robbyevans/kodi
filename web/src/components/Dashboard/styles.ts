@@ -151,3 +151,37 @@ export const ProfileImage = styled.img`
   background-size: cover;
   background-position: center;
 `;
+
+export const Skeleton = styled.div`
+  background: #e0e0e0;
+  border-radius: ${borderRadius.sm};
+  animation: pulse 1.5s infinite ease-in-out;
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+
+export const SkeletonText = styled(Skeleton)<{
+  width: string;
+  height: string;
+  marginBottom?: string;
+}>`
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  margin-bottom: ${(props) => props.marginBottom || "0"};
+`;
+
+export const ProfileImageSkeleton = styled(Skeleton)`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+`;
