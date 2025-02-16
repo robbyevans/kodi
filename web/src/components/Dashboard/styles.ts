@@ -146,10 +146,10 @@ export const DateDisplay = styled.span`
 export const ProfileImage = styled.img`
   border: 2px solid ${colors.text.inverted};
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  background-size: cover;
-  background-position: center;
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  object-position: center;
 `;
 
 export const Skeleton = styled.div`

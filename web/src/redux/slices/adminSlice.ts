@@ -1,18 +1,15 @@
-// File: /web/src/redux/slices/adminSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
-import { showToast } from "./toastSlice"; // Import showToast action
+import { showToast } from "./toastSlice";
 
-// In adminSlice.ts:
 export interface IUser {
   name: string;
   email: string;
   password?: string;
-  // When sending an update, profile_image may be a File.
-  // When reading the admin data from the server, it is a URL (string) or null.
   profile_image?: File | string;
   phone_number: string;
-  admin_id: number;
+  admin_id: number | null;
+  role: string;
 }
 
 interface AdminState {
