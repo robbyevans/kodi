@@ -182,3 +182,11 @@ export const ProfileImageSkeleton = styled(Skeleton)`
   height: 50px;
   border-radius: 50%;
 `;
+export const MobileStatsContainer = styled.div`
+  display: block;
+  margin-top: ${spacing.lg};
+
+  @media (min-width: 1020px) {
+    display: none;
+  }
+`;

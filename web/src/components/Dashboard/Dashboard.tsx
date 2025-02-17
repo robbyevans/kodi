@@ -1,6 +1,7 @@
 import React from "react";
 import { FiPlus } from "react-icons/fi";
 import QuickStatCard from "../StatCard/QuickStatCard";
+import MiniQuickStatCard from "../StatCard/MiniQuickStatCard";
 import * as S from "./styles";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import PropertyCard from "../PropertyCard/PropertyCard";
@@ -58,6 +59,15 @@ const Dashboard: React.FC<DashboardProps> = ({
         </S.DashboardHeader>
       )}
 
+      {/* Mobile: Mini Quick Stats Card */}
+      <S.MobileStatsContainer>
+        <MiniQuickStatCard
+          totalProperties={totalProperties}
+          totalUnits={totalUnits}
+          occupancyRate={occupancyRate}
+        />
+      </S.MobileStatsContainer>
+
       <S.ContentWrapper>
         <S.PropertyListContainer>
           <S.PropertyListHeader>
@@ -92,6 +102,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           )}
         </S.PropertyListContainer>
 
+        {/* Desktop: Full Quick Stats Card */}
         <S.SidePanel>
           <QuickStatCard
             totalProperties={totalProperties}

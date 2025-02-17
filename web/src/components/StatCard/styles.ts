@@ -50,3 +50,33 @@ export const StatItem = styled.div`
     font-size: ${fontSizes.sm};
   }
 `;
+
+export const MiniQuickStats = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: ${colors.background};
+  padding: ${spacing.sm};
+  border-radius: ${borderRadius.sm};
+  box-shadow: ${shadows.sm};
+  overflow-x: auto;
+  margin-bottom: ${spacing.lg};
+`;
+
+export const MiniStatItem = styled.div`
+  flex: 1;
+  text-align: center;
+  min-width: 60px;
+
+  span {
+    display: block;
+    font-size: ${fontSizes.xs};
+    color: ${colors.text.secondary};
+  }
+
+  strong {
+    font-size: ${fontSizes.sm};
+    font-weight: ${fontWeights.semibold};
+    color: ${colors.text.primary};
+  }
+`;
