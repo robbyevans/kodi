@@ -22,14 +22,18 @@ export const LandingContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex: 1;
   background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
   color: ${colors.background};
-  padding: ${spacing.xl};
   height: 100vh;
+  padding: ${spacing.xl};
 
   @media (max-width: 768px) {
-    padding: ${spacing.md};
+    justify-content: flex-start;
+    /* Push content a bit higher on mobile */
+    padding-top: 35vh;
+    padding-left: ${spacing.md};
+    padding-right: ${spacing.md};
+    padding-bottom: ${spacing.md};
   }
 `;
 
@@ -38,7 +42,7 @@ export const LogoContainer = styled.div`
   margin-bottom: ${spacing.lg};
 
   @media (max-width: 768px) {
-    margin-bottom: ${spacing.md};
+    margin-bottom: 0;
   }
 `;
 

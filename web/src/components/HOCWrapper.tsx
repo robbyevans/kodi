@@ -27,7 +27,7 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
+  if (!loading) {
     return <LandingPage />;
   }
 
