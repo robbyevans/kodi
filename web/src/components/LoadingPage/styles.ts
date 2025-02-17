@@ -26,15 +26,35 @@ export const LoadingContainer = styled.div`
   background: ${colors.primary};
   color: ${colors.background};
   padding: ${spacing.xl};
+  height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: ${spacing.md};
+  }
 `;
 
 export const LogoContainer = styled.div`
   text-align: center;
+  margin-bottom: ${spacing.lg};
+
+  @media (max-width: 768px) {
+    margin-bottom: ${spacing.md};
+  }
 `;
 
 export const AnimatedIcon = styled.div`
   animation: ${pulse} 2s ease-in-out infinite;
   margin-bottom: ${spacing.sm};
+
+  svg {
+    width: 64px;
+    height: 64px;
+
+    @media (max-width: 768px) {
+      width: 48px;
+      height: 48px;
+    }
+  }
 `;
 
 export const FadeInText = styled.h1`
@@ -42,6 +62,15 @@ export const FadeInText = styled.h1`
   animation: ${fadeIn} 1s ease-out;
   letter-spacing: 2px;
   font-family: sans-serif;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes["xl"]};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${fontSizes["lg"]};
+  }
 `;
 
 export const ProgressBar = styled.div`
@@ -50,6 +79,15 @@ export const ProgressBar = styled.div`
   background: ${colors.secondary}40;
   border-radius: ${spacing.xs};
   overflow: hidden;
+  margin-top: ${spacing.lg};
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
 `;
 
 export const ProgressFill = styled.div`

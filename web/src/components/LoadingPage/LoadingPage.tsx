@@ -6,7 +6,7 @@ const LoadingPage = () => {
     <S.LoadingContainer>
       <S.LogoContainer>
         <S.AnimatedIcon>
-          <FiHome size={64} />
+          <FiHome />
         </S.AnimatedIcon>
         <S.FadeInText>KODI</S.FadeInText>
       </S.LogoContainer>
