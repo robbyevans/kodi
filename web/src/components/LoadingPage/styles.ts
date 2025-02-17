@@ -30,7 +30,6 @@ export const LoadingContainer = styled.div`
 
 export const LogoContainer = styled.div`
   text-align: center;
-  margin-bottom: ${spacing["2xl"]};
 `;
 
 export const AnimatedIcon = styled.div`
