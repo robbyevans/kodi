@@ -54,6 +54,10 @@ export const ConfirmButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.xl};
   transition: background 0.2s ease;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+
   &:hover {
     opacity: 0.9;
   }
@@ -68,6 +72,10 @@ export const CancelButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.xl};
   transition: background 0.2s ease;
+    -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+
   &:hover {
     background: ${colors.neutral[200]};
   }

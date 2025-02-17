@@ -10,9 +10,7 @@ interface HouseModalProps {
   isOpen: boolean;
   onClose: () => void;
   propertyId: number;
-  /** Set to true to use the edit variant */
   isVariantEditHouse?: boolean;
-  /** Required in edit mode */
   house?: IHouse;
 }
 
@@ -26,7 +24,6 @@ const HouseModal: React.FC<HouseModalProps> = ({
   const { addHouseToProperty, editHouseInProperty, deleteHouseFromProperty } =
     useHouses();
 
-  // Initialize local state – if in edit mode, pre-populate with the house details
   const [houseNumber, setHouseNumber] = useState<string>(
     isVariantEditHouse && house ? house.house_number : ""
   );
@@ -40,7 +37,6 @@ const HouseModal: React.FC<HouseModalProps> = ({
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
 
-  // Update form fields when the passed house changes (in edit mode)
   useEffect(() => {
     if (isVariantEditHouse && house) {
       setHouseNumber(house.house_number);
@@ -53,7 +49,6 @@ const HouseModal: React.FC<HouseModalProps> = ({
     e.preventDefault();
 
     if (isVariantEditHouse && house) {
-      // Edit mode: dispatch the update action
       const updatedHouse: IHouse = {
         ...house,
         house_number: houseNumber,
@@ -63,7 +58,6 @@ const HouseModal: React.FC<HouseModalProps> = ({
       };
       await editHouseInProperty(updatedHouse);
     } else {
-      // Add mode: dispatch the add action
       await addHouseToProperty(propertyId, {
         house_number: houseNumber,
         payable_rent: payableRent,
@@ -84,7 +78,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
             <IoClose size={20} color="red" />
           </S.CloseButton>
           <S.ModalHeader>
-            {isVariantEditHouse ? "Update or Delete House" : "Add New House"}
+            {isVariantEditHouse ? "Update House Details" : "Add New House"}
           </S.ModalHeader>
           <form onSubmit={handleSubmit}>
             <S.FormGroup>
