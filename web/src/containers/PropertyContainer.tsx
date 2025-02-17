@@ -262,7 +262,7 @@ const PropertyContainer = () => {
       <PropertyPage
         houses={houses}
         propertyName={selectedProperty?.name || ""}
-        loading={loading}
+        isPropertyLoading={loading}
         error={error}
         propertyId={Number(propertyId)}
         downloadPDF={downloadPDF}

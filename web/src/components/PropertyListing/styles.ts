@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   colors,
   fonts,
@@ -234,4 +234,79 @@ export const StyledButton = styled.button<{ $isVariantAccept?: boolean }>`
   &:hover {
     color: ${colors.secondary};
   }
+`;
+// Skeleton loading keyframes
+const skeletonLoading = keyframes`
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+`;
+
+// Skeleton container (similar to your PropertyListingContainer)
+export const PropertyListingSkeletonContainer = styled.section`
+  background: ${colors.neutral[100]};
+  padding: ${spacing.xl};
+  border-radius: ${borderRadius.lg};
+  box-shadow: ${shadows.md};
+  margin-bottom: ${spacing["2xl"]};
+`;
+
+// Skeleton for the header (e.g., “Managed Properties”)
+export const SkeletonHeader = styled.div`
+  height: 32px;
+  width: 30%;
+  margin-bottom: ${spacing.lg};
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+`;
+
+// Container for the list of property skeleton items
+export const PropertiesSkeletonList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.md};
+`;
+
+// Each skeleton item (mimics a PropertyItem)
+export const PropertySkeletonItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+  padding: ${spacing.md};
+  border: 1px solid ${colors.neutral[300]};
+  border-radius: ${borderRadius.md};
+  box-shadow: ${shadows.sm};
+`;
+
+// A circle skeleton for the image/icon
+export const SkeletonCircle = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+`;
+
+// Wrapper for the text lines
+export const SkeletonTextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.xs};
+  flex: 1;
+`;
+
+// Text skeleton (width is passed as a prop)
+export const SkeletonText = styled.div<{ width: string }>`
+  height: 16px;
+  width: ${({ width }) => width};
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
 `;

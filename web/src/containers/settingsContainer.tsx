@@ -7,10 +7,12 @@ const SettingsContainer: React.FC = () => {
     data: propertiesData,
     handleEditProperty,
     handleDeleteProperty,
+    loading,
   } = useProperties();
 
   return (
     <SettingsPage
+      isPropertyLoading={loading}
       propertiesData={propertiesData}
       onEditProperty={handleEditProperty}
       onDeleteProperty={handleDeleteProperty}

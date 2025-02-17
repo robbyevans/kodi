@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   colors,
   fonts,
@@ -148,4 +148,50 @@ export const DownloadWRapper = styled.div`
   justify-content: flex-end;
   align-items: flex-end;
   width: 100%;
+`;
+
+// Skeleton loading keyframes (same as before)
+const skeletonLoading = keyframes`
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+`;
+
+// Skeleton for the header of the page
+export const SkeletonHeader = styled.div`
+  height: 32px;
+  width: 50%;
+  margin: ${spacing.xl} auto;
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+`;
+
+// Skeleton Table Styles
+export const SkeletonTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+export const SkeletonTableHeader = styled.th`
+  height: 40px;
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+  border: none;
+`;
+
+export const SkeletonTableData = styled.td`
+  height: 40px;
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+  padding: ${spacing.md};
+  border: none;
 `;
