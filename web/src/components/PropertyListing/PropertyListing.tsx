@@ -98,7 +98,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
         <S.PropertiesList>
           {propertiesData.map((property, index) => (
             <S.PropertyItem key={property.id}>
-              {/* Only the main display area toggles editing mode */}
               <S.PropertyMain onClick={() => handleMainClick(property)}>
                 <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
                 <S.PropertyWrapper>

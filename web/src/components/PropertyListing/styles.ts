@@ -128,6 +128,9 @@ export const EditButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.sm};
   transition: background 0.2s ease;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     background: ${colors.secondary};
@@ -143,6 +146,9 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.sm};
   transition: opacity 0.2s ease;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     opacity: 0.9;
