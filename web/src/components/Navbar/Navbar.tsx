@@ -84,7 +84,12 @@ const Navbar: React.FC = () => {
 
       {showCalendar && (
         <S.Dropdown>
-          <Calendar onChange={setDate} value={date} />
+          <Calendar
+            onChange={(value) => {
+              if (value instanceof Date) setDate(value);
+            }}
+            value={date}
+          />
         </S.Dropdown>
       )}
     </S.Navbar>

@@ -31,7 +31,9 @@ export const useAdmins = () => {
     dispatch(logout());
   };
 
-  const handleEditUser = (data: { email?: string }) => {
+  const handleEditUser = (
+    data: FormData | { [key: string]: string | File }
+  ) => {
     if (!user.admin_id) {
       console.error("Admin ID is missing!");
       return;

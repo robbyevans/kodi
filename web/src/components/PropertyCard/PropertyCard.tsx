@@ -15,7 +15,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ propertyData }) => {
   return (
     <S.PropertyCard onClick={() => navigate(`/property/${propertyData.id}`)}>
       <S.PropertyImage
-        $image={propertyData.property_image || "/apartment-placeholder.png"}
+        $image={
+          typeof propertyData.property_image === "string"
+            ? propertyData.property_image
+            : propertyData.property_image
+            ? URL.createObjectURL(propertyData.property_image)
+            : "/apartment-placeholder.png"
+        }
       />
       <S.PropertyInfo>
         <h3>{propertyData.name}</h3>

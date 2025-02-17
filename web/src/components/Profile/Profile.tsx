@@ -5,7 +5,7 @@ import { IUser } from "../../redux/slices/adminSlice";
 
 interface IProfileProps {
   user: IUser;
-  onEditUser: (data: { [key: string]: string }) => void;
+  onEditUser: (data: FormData | { [key: string]: string | File }) => void;
 }
 
 const ProfilePage: React.FC<IProfileProps> = ({ user, onEditUser }) => {

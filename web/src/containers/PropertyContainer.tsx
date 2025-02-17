@@ -163,7 +163,7 @@ const PropertyContainer = () => {
     const tableData = generateTableData(houses);
 
     // Create the table with autoTable and add a footer row for the total Rent Paid
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: 90,
 
       tableWidth: totalTableWidth, // using fixed total width in pixels
@@ -224,7 +224,7 @@ const PropertyContainer = () => {
       },
       // Set a minimum cell height in pixels for readability
       minCellHeight: 25,
-      didParseCell: (data) => {
+      didParseCell: (data: any) => {
         // Example: Highlight the "Deposit Balance" (column index 5) in red if it has a value.
         if (data.column.index === 5 && data.cell.raw !== "") {
           data.cell.styles.textColor = [255, 0, 0];
@@ -245,7 +245,7 @@ const PropertyContainer = () => {
       second: "2-digit",
     });
 
-    const finalY = doc.lastAutoTable.finalY || 90;
+    const finalY = (doc as any).lastAutoTable.finalY || 90;
     doc.setFontSize(10);
     // Add the generated date
     doc.text(`Generated on: ${formattedDate}`, marginLeft, finalY + 30);

@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "../components/Auth/Auth";
 import PropertyContainer from "../containers/PropertyContainer";
-import TenantsPage from "../components/TenantPage/TenantPage";
-import SystemAdminPage from "../components/SystemAdminPage/SystemAdminPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "../components/Utils/AccessRouter";
 import DashboardContainer from "../containers/dashboardContainer";
@@ -44,27 +42,12 @@ const AppRouter = () => {
                 </AccessRouter>
               }
             />
-            <Route
-              path="/system-admin"
-              element={
-                <AccessRouter>
-                  <SystemAdminPage />
-                </AccessRouter>
-              }
-            />
+
             <Route
               path="/property/:propertyId"
               element={
                 <AccessRouter>
                   <PropertyContainer />
-                </AccessRouter>
-              }
-            />
-            <Route
-              path="/tenants"
-              element={
-                <AccessRouter>
-                  <TenantsPage />
                 </AccessRouter>
               }
             />

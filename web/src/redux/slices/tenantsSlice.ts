@@ -11,7 +11,11 @@ export interface ITenant {
   email: string;
   phone_number: string;
   national_id: string;
-  house_deposit_paid?: number;
+  house_deposit_paid?: number | null;
+  rent_paid?: number | null;
+  date_of_payment?: string | null;
+  mode_of_payment?: string | null;
+  status?: string | null;
 }
 
 interface TenantsState {

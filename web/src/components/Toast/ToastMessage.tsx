@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import * as S from "./styles";
 
-export type ToastType = "success" | "error" | "info" | "warning";
+export type ToastType = "success" | "error" | "info" | "warning" | null;
 
 interface ToastProps {
   message: string | null;

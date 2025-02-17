@@ -7,7 +7,7 @@ import { IUser } from "../../redux/slices/adminSlice";
 interface ProfileSectionProps {
   user: IUser;
   // Allow onEditUser to accept either an object or a FormData.
-  onEditUser: (data: { [key: string]: string | File } | FormData) => void;
+  onEditUser: (data: FormData | { [key: string]: string | File }) => void;
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({

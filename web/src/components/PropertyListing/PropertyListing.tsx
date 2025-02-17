@@ -98,7 +98,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
               <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
               <S.PropertyWrapper>
                 <S.PropertyIcon
-                  src={property.property_image}
+                  src={
+                    typeof property.property_image === "string"
+                      ? property.property_image
+                      : property.property_image
+                      ? URL.createObjectURL(property.property_image)
+                      : "/apartment-placeholder.png"
+                  }
                   alt="property-image"
                 />
                 <div>
