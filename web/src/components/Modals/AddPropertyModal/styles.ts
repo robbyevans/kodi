@@ -57,16 +57,19 @@ export const ButtonContainer = styled.div`
 `;
 
 export const CancelButton = styled.button`
-  background: ${colors.error};
-  color: ${colors.text.inverted};
+  background: ${colors.neutral};
+  color: ${colors.text.primary};
   padding: ${spacing.sm} ${spacing.md};
   border: none;
   border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
-    background: #d32f2f;
+    background: ${colors.neutral[500]};
   }
 `;
 
@@ -78,6 +81,9 @@ export const SubmitButton = styled.button`
   border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     background: #2c8d45;

@@ -67,6 +67,9 @@ export const DeleteButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     background: #c0392b;
@@ -82,6 +85,9 @@ export const SubmitButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     background: ${colors.secondary};

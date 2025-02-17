@@ -81,7 +81,6 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
 
   if (!visible) return null;
 
-  // Determine whether a tenant already exists.
   const hasTenant = tenants && tenants.length > 0;
 
   return (
@@ -94,7 +93,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
           {editingTenant
             ? `Edit Tenant - ${editingTenant.name}`
             : hasTenant
-            ? `Tenant for ${house.house_number}`
+            ? `Tenant for House ${house.house_number}`
             : `Add Tenant to ${house.house_number}`}
         </S.ModalHeader>
 

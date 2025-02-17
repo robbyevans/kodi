@@ -127,6 +127,9 @@ export const IconButton = styled.button`
   cursor: pointer;
   font-size: ${fontSizes.lg};
   padding: ${spacing.xs};
+  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
+  box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
     color: ${colors.secondary};
