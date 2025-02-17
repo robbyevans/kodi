@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 export const colors = {
   primary: "#034d3c", // Deep Teal
   secondary: "#2d6a4f", // Muted Forest Green
@@ -66,3 +68,18 @@ export const borderRadius = {
   lg: "12px",
   full: "9999px",
 };
+
+export const ModalOverlay = styled.div<{ $isBlury?: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: ${({ $isBlury }) => ($isBlury ? "blur(4px)" : "0")};
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;

@@ -5,6 +5,7 @@ import { IHouse } from "../../../redux/slices/houseSlice";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import * as S from "./styles";
+import { ModalOverlay } from "../../../styles/foundation";
 
 interface AddTenantModalProps {
   house: IHouse;
@@ -84,7 +85,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
   const hasTenant = tenants && tenants.length > 0;
 
   return (
-    <S.ModalOverlay>
+    <ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>
           <S.CloseButton onClick={onClose}>
@@ -194,7 +195,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
           </>
         )}
       </S.ModalContent>
-    </S.ModalOverlay>
+    </ModalOverlay>
   );
 };
 

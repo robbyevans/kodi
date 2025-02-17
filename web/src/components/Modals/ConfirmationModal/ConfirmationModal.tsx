@@ -1,6 +1,7 @@
 import React from "react";
 import { RiErrorWarningLine } from "react-icons/ri";
 import * as S from "./styles";
+import { ModalOverlay } from "../../../styles/foundation";
 
 interface ConfirmationModalProps {
   message: string;
@@ -17,7 +18,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     message.split(/(Deleting .*? will)/);
 
   return (
-    <S.ModalOverlay>
+    <ModalOverlay $isBlury>
       <S.ModalContainer>
         <S.ModalHeader>
           <RiErrorWarningLine size="65px" />
@@ -33,7 +34,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <S.CancelButton onClick={onCancel}>Cancel</S.CancelButton>
         </S.ModalActions>
       </S.ModalContainer>
-    </S.ModalOverlay>
+    </ModalOverlay>
   );
 };
 
