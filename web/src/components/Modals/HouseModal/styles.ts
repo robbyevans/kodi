@@ -60,7 +60,7 @@ export const ButtonContainer = styled.div`
 
 export const DeleteButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
-  background: #e74c3c;
+  background: ${colors.error};
   border: none;
   border-radius: ${borderRadius.md};
   color: ${colors.text.inverted};
