@@ -4,6 +4,7 @@ import { useHouses } from "../../../redux/hooks/useHouses";
 import * as S from "./styles";
 import { IoClose } from "react-icons/io5";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import { ModalOverlay } from "../../../styles/foundation";
 
 interface HouseModalProps {
   isOpen: boolean;
@@ -77,7 +78,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
 
   return (
     <>
-      <S.ModalOverlay>
+      <ModalOverlay>
         <S.ModalContent>
           <S.CloseButton onClick={onClose}>
             <IoClose size={20} color="red" />
@@ -138,7 +139,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
             </S.ButtonContainer>
           </form>
         </S.ModalContent>
-      </S.ModalOverlay>
+      </ModalOverlay>
       {showConfirmationModal && (
         <ConfirmationModal
           message={`Deleting house ${

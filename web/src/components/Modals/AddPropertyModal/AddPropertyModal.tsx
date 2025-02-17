@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
+import { ModalOverlay } from "../../../styles/foundation";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -41,7 +42,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <S.ModalOverlay>
+    <ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>Add New Property</S.ModalHeader>
         <form onSubmit={handleSubmit}>
@@ -72,7 +73,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
           </S.ButtonContainer>
         </form>
       </S.ModalContent>
-    </S.ModalOverlay>
+    </ModalOverlay>
   );
 };
 

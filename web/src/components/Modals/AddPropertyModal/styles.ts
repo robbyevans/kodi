@@ -7,18 +7,6 @@ import {
   shadows,
 } from "../../../styles/foundation";
 
-export const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const ModalContent = styled.div`
   background: ${colors.background};
   padding: ${spacing.xl};
@@ -83,7 +71,7 @@ export const CancelButton = styled.button`
 `;
 
 export const SubmitButton = styled.button`
-  background: ${colors.success};
+  background: ${colors.primary};
   color: ${colors.text.inverted};
   padding: ${spacing.sm} ${spacing.md};
   border: none;
