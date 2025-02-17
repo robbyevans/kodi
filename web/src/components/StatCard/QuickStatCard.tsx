@@ -8,35 +8,38 @@ interface QuickStatCardProps {
   totalUnits: number;
   occupancyRate: number;
   totalRevenuePercentage: number;
+  totalTenants: number;
+  averageRent: number;
+  vacancyRate: number;
 }
 
-const COLORS = ["#F17F1E", colors.primary];
+const COLORS = [colors.primary, "#F17F1E"];
 
 const QuickStatCard: React.FC<QuickStatCardProps> = ({
   totalProperties,
   totalUnits,
   occupancyRate,
   totalRevenuePercentage,
+  totalTenants,
+  averageRent,
+  vacancyRate,
 }) => {
   const data = [
-    { name: "Current Payable Revenue", value: totalRevenuePercentage },
-    { name: "Vacant Units Revenue", value: 100 - totalRevenuePercentage },
+    { name: "Collected Revenue", value: totalRevenuePercentage },
+    { name: "Pending Revenue", value: 100 - totalRevenuePercentage },
   ];
 
   return (
-    <S.QuickStats data-testid="quick-start-container">
-      {/* Pie Chart */}
+    <S.QuickStats data-testid="quick-stats-container">
       <S.ChartContainer>
-        <ResponsiveContainer width="100%" height={100}>
+        <ResponsiveContainer width="100%" height={120}>
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={30}
+              innerRadius={35}
               outerRadius={50}
-              fill="#8884d8"
-              paddingAngle={3}
               dataKey="value"
               labelLine={false}
               label={({ cx, cy }) => (
@@ -45,7 +48,7 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
                   y={cy}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="#F17F1E"
+                  fill={colors.text.primary}
                   fontSize={16}
                   fontWeight="bold"
                 >
@@ -71,8 +74,20 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         <strong>{totalUnits}</strong>
       </S.StatItem>
       <S.StatItem>
+        <span>Occupied Units</span>
+        <strong>{totalTenants}</strong>
+      </S.StatItem>
+      <S.StatItem>
+        <span>Vacancy Rate</span>
+        <strong>{vacancyRate}%</strong>
+      </S.StatItem>
+      <S.StatItem>
         <span>Occupancy Rate</span>
         <strong>{occupancyRate}%</strong>
+      </S.StatItem>
+      <S.StatItem>
+        <span>Average Rent</span>
+        <strong>${averageRent.toLocaleString()}</strong>
       </S.StatItem>
     </S.QuickStats>
   );

@@ -1,25 +1,21 @@
 import { IProperty } from "../../redux/slices/propertiesSlice";
 
-// Unified function to handle both single property and multiple properties
+// Compute property statistics including additional metrics
 export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
-  // Normalize input to always be an array
   const properties = Array.isArray(propertyData)
     ? propertyData
     : [propertyData];
 
-  // Initialize counters
   let totalUnits = 0;
   let totalTenants = 0;
   let currentPayableRevenue = 0;
   let totalPayableRevenue = 0;
 
-  // Iterate through each property
   properties.forEach((property) => {
     if (property.houses && Array.isArray(property.houses)) {
       totalUnits += property.houses.length;
 
       property.houses.forEach((house) => {
-        // Ensure payable_rent is treated as a number
         const rent =
           typeof house.payable_rent === "string"
             ? parseFloat(house.payable_rent) || 0
@@ -35,20 +31,24 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
     }
   });
 
-  // Calculate occupancy rate and current revenue rate
   const occupancyRate = totalUnits > 0 ? (totalTenants / totalUnits) * 100 : 0;
   const currentRevenueRate =
     totalPayableRevenue > 0
       ? (currentPayableRevenue / totalPayableRevenue) * 100
       : 0;
 
-  // Return the aggregated statistics
+  // New metrics: Average Rent & Vacancy Rate
+  const averageRent = totalUnits > 0 ? totalPayableRevenue / totalUnits : 0;
+  const vacancyRate = 100 - occupancyRate;
+
   return {
-    totalUnits, // Total number of houses
-    totalTenants, // Total occupied houses
-    occupancyRate: parseFloat(occupancyRate.toFixed(2)), // Overall occupancy rate
+    totalUnits,
+    totalTenants,
+    occupancyRate: parseFloat(occupancyRate.toFixed(2)),
     currentPayableRevenue: parseFloat(currentPayableRevenue.toFixed(2)),
-    totalPayableRevenue: parseFloat(totalPayableRevenue.toFixed(2)), // Total possible revenue from all houses
-    currentRevenueRate: parseFloat(currentRevenueRate.toFixed(2)), // Percentage of revenue collected from occupied houses
+    totalPayableRevenue: parseFloat(totalPayableRevenue.toFixed(2)),
+    currentRevenueRate: parseFloat(currentRevenueRate.toFixed(2)),
+    averageRent: parseFloat(averageRent.toFixed(2)),
+    vacancyRate: parseFloat(vacancyRate.toFixed(2)),
   };
 };

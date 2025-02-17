@@ -17,10 +17,11 @@ interface DashboardProps {
   handleAddPropertyClick: () => void;
   totalRevenuePercentage: number;
   totalProperties: number;
-  formattedDate: string;
-  formattedTime: string;
   totalUnits: number;
   occupancyRate: number;
+  totalTenants: number;
+  averageRent: number;
+  vacancyRate: number;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -32,6 +33,9 @@ const Dashboard: React.FC<DashboardProps> = ({
   totalProperties,
   totalUnits,
   occupancyRate,
+  totalTenants,
+  averageRent,
+  vacancyRate,
 }) => {
   return (
     <S.DashboardContainer>
@@ -41,7 +45,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         <S.DashboardHeader>
           <div>
             <h1>Dashboard</h1>
-            <p>Find your property listing and stats below</p>
+            <p>Manage your properties and view detailed stats</p>
           </div>
           <S.ProfileImage
             alt="profile-image"
@@ -94,6 +98,9 @@ const Dashboard: React.FC<DashboardProps> = ({
             totalUnits={totalUnits}
             occupancyRate={occupancyRate}
             totalRevenuePercentage={totalRevenuePercentage}
+            totalTenants={totalTenants}
+            averageRent={averageRent}
+            vacancyRate={vacancyRate}
           />
         </S.SidePanel>
       </S.ContentWrapper>

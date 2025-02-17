@@ -15,8 +15,14 @@ const DashboardContainer = () => {
   const handleAddPropertyClick = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const { totalUnits, occupancyRate, currentRevenueRate } =
-    getPropertyStats(propertyData);
+  const {
+    totalUnits,
+    occupancyRate,
+    currentRevenueRate,
+    totalTenants,
+    averageRent,
+    vacancyRate,
+  } = getPropertyStats(propertyData);
 
   return (
     <>
@@ -27,11 +33,12 @@ const DashboardContainer = () => {
         navigate={navigate}
         handleAddPropertyClick={handleAddPropertyClick}
         totalProperties={propertyData?.length || 0}
-        formattedDate={"0"}
-        formattedTime={"0"}
         totalRevenuePercentage={currentRevenueRate}
         totalUnits={totalUnits}
         occupancyRate={occupancyRate}
+        totalTenants={totalTenants}
+        averageRent={averageRent}
+        vacancyRate={vacancyRate}
       />
       <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>

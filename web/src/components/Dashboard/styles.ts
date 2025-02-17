@@ -3,7 +3,6 @@ import {
   colors,
   fonts,
   fontSizes,
-  fontWeights,
   spacing,
   shadows,
   borderRadius,
@@ -13,7 +12,7 @@ export const DashboardContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: ${colors.neutral[100]};
-  overflow: scroll;
+  overflow-y: auto;
   padding: ${spacing.md};
   min-height: 100vh;
 `;
@@ -21,22 +20,21 @@ export const DashboardContainer = styled.div`
 export const DashboardHeader = styled.header`
   margin-bottom: ${spacing.xl};
   padding: ${spacing.lg};
-  background: ${colors.background};
+  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.sm};
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: ${colors.text.inverted};
 
   h1 {
     font-family: ${fonts.secondary};
     font-size: ${fontSizes["3xl"]};
-    color: ${colors.primary};
     margin-bottom: ${spacing.sm};
   }
 
   p {
-    color: ${colors.text.secondary};
     font-size: ${fontSizes.lg};
     margin: 0;
   }
@@ -48,7 +46,7 @@ export const ContentWrapper = styled.div`
   gap: ${spacing.xl};
 
   @media (min-width: 1024px) {
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 320px;
   }
 `;
 
@@ -63,7 +61,7 @@ export const PropertyListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: ${spacing.sm};
   margin-bottom: ${spacing.xl};
 
   h2 {
@@ -83,7 +81,7 @@ export const AddPropertyButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${spacing.sm};
-  background: ${colors.primary};
+  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
   color: ${colors.text.inverted};
   padding: ${spacing.sm} ${spacing.md};
   border: none;
@@ -97,16 +95,15 @@ export const AddPropertyButton = styled.button`
   }
 
   &:hover {
-    background: ${colors.secondary};
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: ${shadows.sm};
   }
 
-  // Media query for mobile devices
   @media (max-width: 768px) {
     .button-text {
-      display: none; // Hide the text on mobile
+      display: none;
     }
-    padding: ${spacing.sm}; // Reduce padding on mobile
+    padding: ${spacing.sm};
   }
 `;
 
@@ -137,38 +134,21 @@ export const EmptyState = styled.div`
   }
 `;
 
-export const ErrorMessage = styled.p`
-  color: ${colors.warning};
-  font-size: ${fontSizes.base};
-  text-align: center;
-`;
-
-export const LoadingMessage = styled.p`
-  color: ${colors.success};
-  font-size: ${fontSizes.base};
-  text-align: center;
-`;
-
-export const DateDisplay = styled.span`
-  font-size: ${fontSizes.base};
-  font-weight: ${fontWeights.medium};
-  color: ${colors.text.secondary};
-`;
-
 export const ProfileImage = styled.img`
   border: 2px solid ${colors.text.inverted};
   border-radius: 50%;
-  width: 55px !important;
-  height: 55px !important;
+  width: 55px;
+  height: 55px;
   object-fit: cover;
   object-position: center;
 
   @media (max-width: 1020px) {
-    width: 45px !important;
-    height: 45px !important;
+    width: 45px;
+    height: 45px;
   }
 `;
 
+// Reusable skeleton animations
 export const Skeleton = styled.div`
   background: #e0e0e0;
   border-radius: ${borderRadius.sm};
