@@ -23,7 +23,7 @@ export const LoadingContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background: ${colors.primary};
+  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
   color: ${colors.background};
   padding: ${spacing.xl};
   height: 100vh;

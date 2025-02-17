@@ -10,7 +10,7 @@ import {
 
 // Full Sidebar for large screens
 export const SidebarContainer = styled.nav`
-  max-width: 250px;
+  min-width: 185px;
   background: ${colors.primary};
   color: ${colors.text.inverted};
   display: flex;
@@ -41,8 +41,9 @@ export const Menu = styled.div`
   gap: ${spacing.lg};
 `;
 
-export const MenuItem = styled.button`
-  background: none;
+// Updated MenuItem with active styling
+export const MenuItem = styled.button<{ active?: boolean }>`
+  background: ${(props) => (props.active ? "#265d50" : "none")};
   border: none;
   color: ${colors.text.inverted};
   width: 100%;
@@ -55,7 +56,7 @@ export const MenuItem = styled.button`
   border-radius: ${borderRadius.sm};
 
   &:hover {
-    background: ${colors.secondary};
+    background: ${(props) => (props.active ? "#265d50" : colors.secondary)};
     transform: translateX(-5px);
   }
 

@@ -1,4 +1,3 @@
-// Refactored Sidebar.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
@@ -22,9 +21,13 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAdmins();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Track the active menu item (default to dashboard)
+  const [activePath, setActivePath] = useState("/dashboard");
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+
   const handleNavigation = (path: string) => {
+    setActivePath(path);
     navigate(path);
     if (isMobileMenuOpen) toggleMobileMenu();
   };
@@ -32,7 +35,11 @@ const Sidebar: React.FC = () => {
   const renderMenuItems = () => (
     <>
       {menuItems.map(({ path, icon, label }) => (
-        <S.MenuItem key={path} onClick={() => handleNavigation(path)}>
+        <S.MenuItem
+          key={path}
+          onClick={() => handleNavigation(path)}
+          active={activePath === path}
+        >
           {icon}
           <S.MenuText>{label}</S.MenuText>
         </S.MenuItem>
