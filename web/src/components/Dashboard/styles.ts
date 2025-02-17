@@ -92,9 +92,21 @@ export const AddPropertyButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
 
+  .button-text {
+    display: inline;
+  }
+
   &:hover {
     background: ${colors.secondary};
     transform: translateY(-1px);
+  }
+
+  // Media query for mobile devices
+  @media (max-width: 768px) {
+    .button-text {
+      display: none; // Hide the text on mobile
+    }
+    padding: ${spacing.sm}; // Reduce padding on mobile
   }
 `;
 

@@ -60,7 +60,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             <h2>Your Properties</h2>
             <S.AddPropertyButton onClick={handleAddPropertyClick}>
               <FiPlus />
-              Add Property
+              <span className="button-text">Add Property</span>
             </S.AddPropertyButton>
           </S.PropertyListHeader>
 
