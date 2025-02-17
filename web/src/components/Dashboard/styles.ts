@@ -28,6 +28,18 @@ export const DashboardHeader = styled.header`
   justify-content: space-between;
   color: ${colors.text.inverted};
 
+  .header-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .welcome-text {
+    font-size: ${fontSizes.sm};
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.9;
+  }
+
   h1 {
     font-family: ${fonts.secondary};
     font-size: ${fontSizes["3xl"]};
@@ -182,6 +194,7 @@ export const ProfileImageSkeleton = styled(Skeleton)`
   height: 50px;
   border-radius: 50%;
 `;
+
 export const MobileStatsContainer = styled.div`
   display: block;
   margin-top: ${spacing.lg};

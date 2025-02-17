@@ -44,7 +44,8 @@ const Dashboard: React.FC<DashboardProps> = ({
         <DashboardHeaderSkeleton />
       ) : (
         <S.DashboardHeader>
-          <div>
+          <div className="header-content">
+            <p className="welcome-text">Welcome, {userData.name}</p>
             <h1>Dashboard</h1>
             <p>Manage your properties and view detailed stats</p>
           </div>
