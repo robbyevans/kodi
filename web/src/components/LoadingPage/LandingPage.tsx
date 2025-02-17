@@ -1,9 +1,9 @@
 import { FiHome } from "react-icons/fi";
 import * as S from "./styles";
 
-const LoadingPage = () => {
+const LandingPage = () => {
   return (
-    <S.LoadingContainer>
+    <S.LandingContainer>
       <S.LogoContainer>
         <S.AnimatedIcon>
           <FiHome />
@@ -13,8 +13,8 @@ const LoadingPage = () => {
       <S.ProgressBar>
         <S.ProgressFill />
       </S.ProgressBar>
-    </S.LoadingContainer>
+    </S.LandingContainer>
   );
 };
 
-export default LoadingPage;
+export default LandingPage;

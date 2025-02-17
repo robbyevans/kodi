@@ -17,7 +17,7 @@ const progress = keyframes`
   to { width: 100%; }
 `;
 
-export const LoadingContainer = styled.div`
+export const LandingContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

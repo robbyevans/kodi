@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import LoadingPage from "./LoadingPage/LoadingPage";
+import LandingPage from "./LoadingPage/LandingPage";
 import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import { useToast } from "../redux/hooks/useToast";
@@ -28,7 +28,7 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (loading) {
-    return <LoadingPage />;
+    return <LandingPage />;
   }
 
   return (
