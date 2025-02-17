@@ -63,17 +63,17 @@ const Navbar: React.FC = () => {
           </S.IconButton>
           {showMoreMenu && (
             <S.MoreDropdown>
-              <S.MenuItem
+              {/* <S.MenuItem
                 onClick={() => {
                   toggleCalendar();
                   setShowMoreMenu(false);
                 }}
               >
                 Calendar
-              </S.MenuItem>
-              <S.MenuItem onClick={() => setShowMoreMenu(false)}>
+              </S.MenuItem> */}
+              {/* <S.MenuItem onClick={() => setShowMoreMenu(false)}>
                 <ThemeToggle />
-              </S.MenuItem>
+              </S.MenuItem> */}
               <S.MenuItem onClick={() => setShowMoreMenu(false)}>
                 <Notification notifications={dummyNotifications} />
               </S.MenuItem>
