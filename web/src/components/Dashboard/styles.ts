@@ -158,10 +158,15 @@ export const DateDisplay = styled.span`
 export const ProfileImage = styled.img`
   border: 2px solid ${colors.text.inverted};
   border-radius: 50%;
-  width: 55px;
-  height: 55px;
+  width: 55px !important;
+  height: 55px !important;
   object-fit: cover;
   object-position: center;
+
+  @media (max-width: 1020px) {
+    width: 45px !important;
+    height: 45px !important;
+  }
 `;
 
 export const Skeleton = styled.div`
