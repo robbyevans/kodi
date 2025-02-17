@@ -75,8 +75,7 @@ export const ModalOverlay = styled.div<{ $isBlury?: boolean }>`
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: ${({ $isBlury }) => ($isBlury ? "blur(4px)" : "0")};
-  backdrop-filter: blur(4px);
+  backdrop-filter: ${({ $isBlury }) => ($isBlury ? "blur(4px)" : "none")};
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
