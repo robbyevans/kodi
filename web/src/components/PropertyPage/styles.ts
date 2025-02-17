@@ -10,12 +10,12 @@ import {
 } from "../../styles/foundation";
 
 export const PropertyPageContainer = styled.div`
-  padding: ${spacing.xl};
+  padding: 2rem 2rem 10rem 2rem;
   background: ${colors.neutral[100]};
   min-height: 100vh;
 
   @media (max-width: 768px) {
-    padding: ${spacing.sm};
+    padding: 0.5rem 0.5rem 5rem 0.5rem;
   }
 `;
 

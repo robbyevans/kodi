@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Auth from "../components/Auth/Auth";
 import PropertyContainer from "../containers/PropertyContainer";
 import { useAdmins } from "../redux/hooks/useAdmin";
@@ -14,6 +15,12 @@ import * as S from "./styles";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
+  const location = useLocation(); // Get the current location
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]); // Only trigger when the location changes
 
   return (
     <>

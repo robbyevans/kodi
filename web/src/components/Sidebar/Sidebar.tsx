@@ -1,3 +1,4 @@
+// Refactored Sidebar.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
@@ -11,22 +12,37 @@ import {
 } from "react-icons/fi";
 import * as S from "./styles";
 
+const menuItems = [
+  { path: "/dashboard", icon: <FiHome />, label: "Dashboard" },
+  { path: "/settings", icon: <FiSettings />, label: "Settings" },
+  { path: "/profile", icon: <FiUser />, label: "Profile" },
+];
+
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAdmins();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
-
+  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const handleNavigation = (path: string) => {
     navigate(path);
-
-    if (isMobileMenuOpen) {
-      toggleMobileMenu();
-    }
+    if (isMobileMenuOpen) toggleMobileMenu();
   };
+
+  const renderMenuItems = () => (
+    <>
+      {menuItems.map(({ path, icon, label }) => (
+        <S.MenuItem key={path} onClick={() => handleNavigation(path)}>
+          {icon}
+          <S.MenuText>{label}</S.MenuText>
+        </S.MenuItem>
+      ))}
+      <S.LogoutItem onClick={handleLogout}>
+        <FiLogOut />
+        <S.MenuText>Logout</S.MenuText>
+      </S.LogoutItem>
+    </>
+  );
 
   return (
     <>
@@ -36,47 +52,13 @@ const Sidebar: React.FC = () => {
 
       <S.SidebarContainer>
         <div>
-          <S.SidebarHeader></S.SidebarHeader>
-          <S.Menu>
-            <S.MenuItem onClick={() => handleNavigation("/dashboard")}>
-              <FiHome />
-              <S.MenuText>Dashboard</S.MenuText>
-            </S.MenuItem>
-            <S.MenuItem onClick={() => handleNavigation("/settings")}>
-              <FiSettings />
-              <S.MenuText>Settings</S.MenuText>
-            </S.MenuItem>
-            <S.MenuItem onClick={() => handleNavigation("/profile")}>
-              <FiUser />
-              <S.MenuText>Profile</S.MenuText>
-            </S.MenuItem>
-          </S.Menu>
+          <S.SidebarHeader />
+          <S.Menu>{renderMenuItems()}</S.Menu>
         </div>
-        <S.LogoutItem onClick={handleLogout}>
-          <FiLogOut />
-          <S.MenuText>Logout</S.MenuText>
-        </S.LogoutItem>
       </S.SidebarContainer>
 
       {isMobileMenuOpen && (
-        <S.MobileDropdown>
-          <S.MenuItem onClick={() => handleNavigation("/dashboard")}>
-            <FiHome />
-            <S.MenuText>Dashboard</S.MenuText>
-          </S.MenuItem>
-          <S.MenuItem onClick={() => handleNavigation("/settings")}>
-            <FiSettings />
-            <S.MenuText>Settings</S.MenuText>
-          </S.MenuItem>
-          <S.MenuItem onClick={() => handleNavigation("/profile")}>
-            <FiUser />
-            <S.MenuText>Profile</S.MenuText>
-          </S.MenuItem>
-          <S.LogoutItem onClick={handleLogout}>
-            <FiLogOut />
-            <S.MenuText>Logout</S.MenuText>
-          </S.LogoutItem>
-        </S.MobileDropdown>
+        <S.MobileDropdown>{renderMenuItems()}</S.MobileDropdown>
       )}
     </>
   );
