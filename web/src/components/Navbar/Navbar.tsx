@@ -74,9 +74,9 @@ const Navbar: React.FC = () => {
               {/* <S.MenuItem onClick={() => setShowMoreMenu(false)}>
                 <ThemeToggle />
               </S.MenuItem> */}
-              <S.MenuItem onClick={() => setShowMoreMenu(false)}>
+              {/* <S.MenuItem onClick={() => setShowMoreMenu(false)}>
                 <Notification notifications={dummyNotifications} />
-              </S.MenuItem>
+              </S.MenuItem> */}
             </S.MoreDropdown>
           )}
         </S.SmallScreenActions>
