@@ -60,55 +60,51 @@ class AdminsController < ApplicationController
   #Admin google login/signup
   def google_auth
     token = params[:token]
-    mode  = params[:mode]
-
-    # Verify the token with Google.
-    # Ensure you have added gem 'google-id-token' to your Gemfile and run `bundle install`
+  
+    # Verify the token with Google
     validator = GoogleIDToken::Validator.new
     begin
-      # ENV['GOOGLE_CLIENT_ID'] should be set in your server environment
+      # ENV['GOOGLE_CLIENT_ID'] should match the frontend client ID
       payload = validator.check(token, ENV['GOOGLE_CLIENT_ID'])
     rescue GoogleIDToken::ValidationError => e
       Rails.logger.error "Google token validation error: #{e}"
       render json: { error: "Invalid Google token" }, status: :unauthorized and return
     end
-
-    # Extract info from the payload
+  
+    # Extract the email and name from the payload
     email = payload["email"]
     name  = payload["name"]
-
-    if mode == "signup"
-      # If the admin already exists, prompt them to log in instead
-      if Admin.exists?(email: email)
-        render json: { error: "Admin already exists. Please login." }, status: :unprocessable_entity and return
-      else
-        # Create a new admin. Generate a random password since Google users won't use it.
-        random_password = SecureRandom.hex(10)
-        admin = Admin.new(
-          email: email,
-          name: name,
-          password: random_password,
-          password_confirmation: random_password,
-          role: "admin"
-        )
-        if admin.save
-          jwt = encode_jwt(admin.id)
-          render json: { token: jwt, admin: admin.as_json(only: [:email, :name, :role, :id, :profile_image, :phone_number]) }, status: :created and return
-        else
-          render json: { error: admin.errors.full_messages.join(", ") }, status: :unprocessable_entity and return
-        end
+  
+    # Look for an existing admin by email
+    admin = Admin.find_by(email: email)
+  
+    if admin.nil?
+      # Admin doesn't exist: auto-create the account
+      # Generate a random password that meets complexity by ensuring at least one uppercase letter.
+      random_password = "#{SecureRandom.alphanumeric(9)}A"  # 10 characters, always ending with an uppercase 'A'
+      admin = Admin.new(
+        email: email,
+        name: name,
+        password: random_password,
+        password_confirmation: random_password,
+        role: "admin"
+      )
+      unless admin.save
+        render json: { error: admin.errors.full_messages.join(", ") }, status: :unprocessable_entity and return
       end
-    elsif mode == "login"
-      admin = Admin.find_by(email: email)
-      unless admin
-        render json: { error: "Admin not found. Please signup first." }, status: :unauthorized and return
-      end
-      jwt = encode_jwt(admin.id)
-      render json: { token: jwt, admin: admin.as_json(only: [:email, :name, :role, :id, :profile_image, :phone_number]) }, status: :ok and return
+      status_code = :created
     else
-      render json: { error: "Invalid mode parameter" }, status: :bad_request and return
+      status_code = :ok
     end
+  
+    # Generate and return your JWT (from your own auth system)
+    jwt = encode_jwt(admin.id)
+    render json: {
+      token: jwt,
+      admin: admin.as_json(only: [:email, :name, :role, :id, :profile_image, :phone_number])
+    }, status: status_code
   end
+  
   
 
   private
