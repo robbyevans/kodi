@@ -109,7 +109,6 @@ export const deleteHouse = createAsyncThunk(
     { id, property_id }: { id: number; property_id: number },
     { dispatch, rejectWithValue }
   ) => {
-    console.log("property_id", property_id);
     try {
       await axiosInstance.delete(`/properties/${property_id}/houses/${id}`);
       dispatch(fetchAllProperties());

@@ -48,17 +48,15 @@ const Auth = () => {
   const handleGoogleSuccess = (credentialResponse: any) => {
     const token = credentialResponse.credential;
     if (!token) {
-      console.log("No token returned from Google");
+      console.info("No token returned from Google");
       return;
     }
-
-    console.log("google-token", token);
     // Pass the Google token along with the current mode ("login" or "signup")
     handleGoogleAuth(token, isLogin ? "login" : "signup");
   };
 
   const handleGoogleError = () => {
-    console.log("Google login failed");
+    console.info("Google login failed");
   };
 
   // Clear password fields on error
@@ -68,8 +66,6 @@ const Auth = () => {
       setPasswordConfirmation("");
     }
   }, [error]);
-
-  console.log("google_id", import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

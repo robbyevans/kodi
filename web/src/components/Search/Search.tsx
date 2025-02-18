@@ -89,8 +89,6 @@ const Search: React.FC<SearchProps> = ({ isVisible }) => {
     setQuery("");
   };
 
-  console.log("isVisible", isVisible);
-
   return (
     <S.SearchContainer isVisible={isVisible}>
       <S.SearchInput
