@@ -1,6 +1,8 @@
 import styled, { keyframes } from "styled-components";
 import { colors, fontSizes, spacing } from "../../styles/foundation";
 
+import TestimonialsBackground from "../../assets/Testimonials Background.png";
+
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -22,14 +24,16 @@ export const LandingContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
+  background-image: url(${TestimonialsBackground});
+  background-position: center;
+  background-repeat: repeat;
+
   color: ${colors.background};
   height: 100vh;
   padding: ${spacing.xl};
 
   @media (max-width: 768px) {
     justify-content: flex-start;
-    /* Push content a bit higher on mobile */
     padding-top: 35vh;
     padding-left: ${spacing.md};
     padding-right: ${spacing.md};
