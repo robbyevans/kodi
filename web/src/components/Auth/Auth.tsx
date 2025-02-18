@@ -5,8 +5,15 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import * as S from "./styles";
 
 const Auth = () => {
-  const { loading, error, user, isAuthenticated, handleLogin, handleSignup } =
-    useAdmins();
+  const {
+    loading,
+    error,
+    user,
+    isAuthenticated,
+    handleLogin,
+    handleSignup,
+    handleGoogleAuth,
+  } = useAdmins();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,8 +46,15 @@ const Auth = () => {
   }, [isAuthenticated, user.role, navigate]);
 
   const handleGoogleSuccess = (credentialResponse: any) => {
-    console.log("Google login success:", credentialResponse);
-    // Implement Google OAuth logic here
+    const token = credentialResponse.credential;
+    if (!token) {
+      console.log("No token returned from Google");
+      return;
+    }
+
+    console.log("google-token", token);
+    // Pass the Google token along with the current mode ("login" or "signup")
+    handleGoogleAuth(token, isLogin ? "login" : "signup");
   };
 
   const handleGoogleError = () => {
@@ -55,13 +69,13 @@ const Auth = () => {
     }
   }, [error]);
 
+  console.log("google_id", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <S.Container>
         <S.Title>{isLogin ? "Login" : "Signup"}</S.Title>
         <S.Form onSubmit={handleSubmit}>
-          {" "}
-          {/* Wrap inputs inside a form */}
           {!isLogin && (
             <S.Input
               type="text"

@@ -56,6 +56,59 @@ class AdminsController < ApplicationController
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
   end
+
+  #Admin google login/signup
+  def google_auth
+    token = params[:token]
+    mode  = params[:mode]
+
+    # Verify the token with Google.
+    # Ensure you have added gem 'google-id-token' to your Gemfile and run `bundle install`
+    validator = GoogleIDToken::Validator.new
+    begin
+      # ENV['GOOGLE_CLIENT_ID'] should be set in your server environment
+      payload = validator.check(token, ENV['GOOGLE_CLIENT_ID'])
+    rescue GoogleIDToken::ValidationError => e
+      Rails.logger.error "Google token validation error: #{e}"
+      render json: { error: "Invalid Google token" }, status: :unauthorized and return
+    end
+
+    # Extract info from the payload
+    email = payload["email"]
+    name  = payload["name"]
+
+    if mode == "signup"
+      # If the admin already exists, prompt them to log in instead
+      if Admin.exists?(email: email)
+        render json: { error: "Admin already exists. Please login." }, status: :unprocessable_entity and return
+      else
+        # Create a new admin. Generate a random password since Google users won't use it.
+        random_password = SecureRandom.hex(10)
+        admin = Admin.new(
+          email: email,
+          name: name,
+          password: random_password,
+          password_confirmation: random_password,
+          role: "admin"
+        )
+        if admin.save
+          jwt = encode_jwt(admin.id)
+          render json: { token: jwt, admin: admin.as_json(only: [:email, :name, :role, :id, :profile_image, :phone_number]) }, status: :created and return
+        else
+          render json: { error: admin.errors.full_messages.join(", ") }, status: :unprocessable_entity and return
+        end
+      end
+    elsif mode == "login"
+      admin = Admin.find_by(email: email)
+      unless admin
+        render json: { error: "Admin not found. Please signup first." }, status: :unauthorized and return
+      end
+      jwt = encode_jwt(admin.id)
+      render json: { token: jwt, admin: admin.as_json(only: [:email, :name, :role, :id, :profile_image, :phone_number]) }, status: :ok and return
+    else
+      render json: { error: "Invalid mode parameter" }, status: :bad_request and return
+    end
+  end
   
 
   private

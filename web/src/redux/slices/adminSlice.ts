@@ -120,6 +120,37 @@ export const signupAdmin = createAsyncThunk(
   }
 );
 
+// Async thunk for Google Authentication (for both login and signup)
+export const googleAuthAdmin = createAsyncThunk(
+  "admin/googleAuthAdmin",
+  async (
+    { token, mode }: { token: string; mode: "login" | "signup" },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.post("/auth/google", {
+        token,
+        mode,
+      });
+      dispatch(
+        showToast({
+          message:
+            mode === "login"
+              ? "Logged in successfully!"
+              : "Signed up successfully!",
+          type: "success",
+        })
+      );
+      return response.data;
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error || "Google authentication failed";
+      dispatch(showToast({ message: errorMessage, type: "error" }));
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const editAdmin = createAsyncThunk(
   "admin/editAdmin",
   async (
@@ -128,24 +159,20 @@ export const editAdmin = createAsyncThunk(
   ) => {
     try {
       let payload: FormData | object;
-      const headers: Record<string, string> = {}; // Explicit type
+      const headers: Record<string, string> = {};
 
-      // If data is already a FormData, use it.
       if (data instanceof FormData) {
         payload = data;
         headers["Content-Type"] = "multipart/form-data";
       } else {
-        // If profile_image is a File, use FormData.
         if (data.profile_image && data.profile_image instanceof File) {
           const formData = new FormData();
-          // Append all keys; adjust if your backend expects nested keys.
           Object.entries(data).forEach(([key, value]) => {
             formData.append(`admin[${key}]`, value as any);
           });
           payload = formData;
           headers["Content-Type"] = "multipart/form-data";
         } else {
-          // Otherwise, send as JSON.
           payload = { admin: data };
         }
       }
@@ -156,7 +183,7 @@ export const editAdmin = createAsyncThunk(
       dispatch(
         showToast({ message: "Admin updated successfully!", type: "success" })
       );
-      return response.data; // expecting the updated admin object from the server
+      return response.data;
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error || "Failed to update admin";
@@ -221,6 +248,21 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      // Extra reducers for Google Auth
+      .addCase(googleAuthAdmin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(googleAuthAdmin.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.admin = action.payload.admin;
+        storeAuthData(action.payload.token, action.payload.admin);
+      })
+      .addCase(googleAuthAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       // Extra reducers for editAdmin
       .addCase(editAdmin.pending, (state) => {
         state.loading = true;
@@ -228,12 +270,10 @@ const adminSlice = createSlice({
       })
       .addCase(editAdmin.fulfilled, (state, action) => {
         state.loading = false;
-        // Update the admin state with the new details.
         state.admin = {
           ...state.admin,
-          ...action.payload, // assuming response is the updated admin object
+          ...action.payload,
         };
-        // Optionally update localStorage if email has changed.
         if (action.payload.email) {
           localStorage.setItem("admin_email", action.payload.email);
         }

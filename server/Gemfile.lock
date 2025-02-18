@@ -137,6 +137,8 @@ GEM
       net-http (>= 0.5.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-id-token (1.4.2)
+      jwt (>= 1)
     http-accept (1.7.0)
     http-cookie (1.0.8)
       domain_name (~> 0.5)
@@ -374,6 +376,7 @@ DEPENDENCIES
   error_highlight (>= 0.4.0)
   faker
   faraday
+  google-id-token
   httparty
   importmap-rails
   jbuilder

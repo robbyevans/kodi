@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   
   post "/signup", to: "admins#create"
   post "/login", to: "admins#login"
+    post "/auth/google", to: "admins#google_auth"
 
   # Payment routes remain unchanged
   post 'payments/authenticate', to: 'payments#authenticate'

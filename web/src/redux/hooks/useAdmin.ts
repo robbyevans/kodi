@@ -4,6 +4,7 @@ import {
   loginAdmin,
   logout,
   editAdmin,
+  googleAuthAdmin,
 } from "../slices/adminSlice";
 import {
   selectCurrentAdmin,
@@ -41,6 +42,10 @@ export const useAdmins = () => {
     dispatch(editAdmin({ adminId: user.admin_id, data }));
   };
 
+  const handleGoogleAuth = (token: string, mode: "login" | "signup") => {
+    dispatch(googleAuthAdmin({ token, mode }));
+  };
+
   return {
     user,
     isAuthenticated,
@@ -50,5 +55,6 @@ export const useAdmins = () => {
     handleLogout,
     handleSignup,
     handleEditUser,
+    handleGoogleAuth,
   };
 };
