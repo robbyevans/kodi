@@ -7,6 +7,7 @@ import {
   shadows,
   borderRadius,
 } from "../../styles/foundation";
+import TestimonialsBackground from "../../assets/Testimonials Background.png";
 
 export const DashboardContainer = styled.div`
   display: flex;
@@ -20,7 +21,9 @@ export const DashboardContainer = styled.div`
 export const DashboardHeader = styled.header`
   margin-bottom: ${spacing.xl};
   padding: ${spacing.lg};
-  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
+  background-image: url(${TestimonialsBackground});
+  background-position: center;
+  background-repeat: repeat;
   border-radius: ${borderRadius.lg};
   box-shadow: ${shadows.sm};
   display: flex;
