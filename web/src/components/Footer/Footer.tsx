@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <S.FooterContainer>
       <S.FooterContent>
-        <S.FooterText>© kodi 2025</S.FooterText>
+        <S.FooterText>© KODI 2025 🏠</S.FooterText>
         <S.SocialIcons>
           <S.SocialIconLink
             href="https://facebook.com"
