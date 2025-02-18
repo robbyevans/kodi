@@ -7,15 +7,11 @@ import {
   fontWeights,
   borderRadius,
 } from "../../styles/foundation";
-import TestimonialsBackground from "../../assets/Testimonials Background.png";
 
 // Full Sidebar for large screens
 export const SidebarContainer = styled.nav`
   min-width: 185px;
-
-  background-image: url(${TestimonialsBackground});
-  background-position: center;
-  background-repeat: repeat;
+  background: ${colors.primary};
   color: ${colors.text.inverted};
   display: flex;
   flex-direction: column;

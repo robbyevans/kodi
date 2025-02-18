@@ -1,5 +1,6 @@
 import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
+import { colors } from "../../styles/foundation";
 import * as S from "./styles";
 
 const Footer: React.FC = () => {
@@ -14,7 +15,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             aria-label="Facebook"
           >
-            <FaFacebookF />
+            <FaFacebookF color={colors.primary} />
           </S.SocialIconLink>
           <S.SocialIconLink
             href="https://twitter.com"
@@ -22,7 +23,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             aria-label="Twitter"
           >
-            <FaTwitter />
+            <FaTwitter color={colors.primary} />
           </S.SocialIconLink>
           <S.SocialIconLink
             href="https://instagram.com"
@@ -30,7 +31,7 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             aria-label="Instagram"
           >
-            <FaInstagram />
+            <FaInstagram color={colors.primary} />
           </S.SocialIconLink>
         </S.SocialIcons>
       </S.FooterContent>
