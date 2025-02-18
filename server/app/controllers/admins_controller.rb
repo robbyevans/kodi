@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
   
-  skip_before_action :authenticate_admin, only: [:create, :login] 
+  skip_before_action :authenticate_admin, only: [:create, :login, :google_auth] 
 
   # Admin creation action
   def create
