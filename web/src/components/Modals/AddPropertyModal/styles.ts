@@ -1,3 +1,4 @@
+// File: /web/src/components/Modals/AddPropertyModal/styles.ts
 import styled from "styled-components";
 import {
   colors,
@@ -35,7 +36,8 @@ export const FormGroup = styled.div`
     font-weight: 500;
   }
 
-  input {
+  input,
+  select {
     width: 100%;
     padding: ${spacing.sm};
     font-size: ${fontSizes.base};
@@ -47,6 +49,14 @@ export const FormGroup = styled.div`
       border-color: ${colors.primary};
     }
   }
+`;
+
+export const PaymentSection = styled.div`
+  padding: ${spacing.md};
+  margin-bottom: ${spacing.lg};
+  border: 1px solid ${colors.neutral[300]};
+  border-radius: ${borderRadius.md};
+  background: #bfc1c4;
 `;
 
 export const ButtonContainer = styled.div`
@@ -64,8 +74,6 @@ export const CancelButton = styled.button`
   border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
-  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {
@@ -81,8 +89,6 @@ export const SubmitButton = styled.button`
   border-radius: ${borderRadius.md};
   cursor: pointer;
   transition: background-color 0.3s;
-  -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
 
   &:hover {

@@ -1,3 +1,4 @@
+// File: /web/src/components/PropertyListing/PropertyListing.tsx
 import React, { useState } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import * as S from "./styles";
@@ -25,6 +26,10 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const [editingPropertyImage, setEditingPropertyImage] = useState<File | null>(
     null
   );
+  const [mpesaPaybillNumber, setMpesaPaybillNumber] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [propertyToDelete, setPropertyToDelete] = useState<number | null>(null);
 
@@ -32,6 +37,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const startEditingProperty = (property: IProperty) => {
     setEditingPropertyId(property.id!);
     setPropertyName(property.name);
+    setMpesaPaybillNumber(property.mpesa_paybill_number || "");
+    setLocation(property.location || "");
+    setAddress(property.address || "");
     setEditingPropertyImage(null);
   };
 
@@ -39,16 +47,17 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const cancelEditingProperty = () => {
     setEditingPropertyId(null);
     setPropertyName("");
+    setMpesaPaybillNumber("");
+    setLocation("");
+    setAddress("");
     setEditingPropertyImage(null);
   };
 
   // Handle clicks on the main (non-interactive) area.
   const handleMainClick = (property: IProperty) => {
     if (editingPropertyId === property.id) {
-      // If the property is already open for editing, close it.
       cancelEditingProperty();
     } else {
-      // Otherwise, open editing for this property.
       startEditingProperty(property);
     }
   };
@@ -58,6 +67,9 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     const updatedProperty: IProperty = {
       ...property,
       name: propertyName,
+      mpesa_paybill_number: mpesaPaybillNumber,
+      location: location,
+      address: address,
       property_image: editingPropertyImage
         ? editingPropertyImage
         : property.property_image,
@@ -86,6 +98,13 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     setPropertyToDelete(null);
     setShowModal(false);
     setPropertyName("");
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEditingPropertyImage(file);
+    }
   };
 
   return (
@@ -155,8 +174,34 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                         type="text"
                         value={propertyName}
                         onChange={(e) => setPropertyName(e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
                         placeholder="Name"
+                      />
+                    </S.InputWrapper>
+                    <S.InputWrapper>
+                      <S.InputLabel>Update MPESA Paybill Number</S.InputLabel>
+                      <S.InputField
+                        type="text"
+                        value={mpesaPaybillNumber}
+                        onChange={(e) => setMpesaPaybillNumber(e.target.value)}
+                        placeholder="Paybill Number"
+                      />
+                    </S.InputWrapper>
+                    <S.InputWrapper>
+                      <S.InputLabel>Update Location</S.InputLabel>
+                      <S.InputField
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="Location"
+                      />
+                    </S.InputWrapper>
+                    <S.InputWrapper>
+                      <S.InputLabel>Update Address</S.InputLabel>
+                      <S.InputField
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="Address"
                       />
                     </S.InputWrapper>
                     <S.InputWrapper>
@@ -164,10 +209,7 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                       <S.FileInput
                         type="file"
                         accept="image/*"
-                        onChange={(e) =>
-                          setEditingPropertyImage(e.target.files?.[0] || null)
-                        }
-                        onClick={(e) => e.stopPropagation()}
+                        onChange={handleImageUpload}
                       />
                       {editingPropertyImage && (
                         <S.ImagePreview
