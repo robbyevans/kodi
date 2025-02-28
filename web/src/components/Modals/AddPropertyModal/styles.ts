@@ -1,4 +1,3 @@
-// File: /web/src/components/Modals/AddPropertyModal/styles.ts
 import styled from "styled-components";
 import {
   colors,
@@ -56,7 +55,22 @@ export const PaymentSection = styled.div`
   margin-bottom: ${spacing.lg};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.md};
-  background: #bfc1c4;
+
+  max-height: 263px;
+  overflow-y: scroll;
+`;
+
+export const Instructions = styled.div`
+  margin-bottom: ${spacing.md};
+  padding: ${spacing.sm};
+  border-left: 3px solid ${colors.primary};
+  background: ${colors.neutral[100]};
+  p {
+    margin: ${spacing.xs} 0;
+    font-size: ${fontSizes.sm};
+    color: ${colors.text.secondary};
+    line-height: 1.5;
+  }
 `;
 
 export const ButtonContainer = styled.div`

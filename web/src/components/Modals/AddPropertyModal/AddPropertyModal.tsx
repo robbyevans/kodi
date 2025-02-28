@@ -1,4 +1,3 @@
-// File: /web/src/components/Modals/AddPropertyModal/AddPropertyModal.tsx
 import React, { useState } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
@@ -136,6 +135,28 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
           </S.FormGroup>
           {showPaymentSection && (
             <S.PaymentSection>
+              <S.Instructions>
+                <p>
+                  <strong>Payment Instructions:</strong>
+                </p>
+                <p>
+                  The paybill number is the business number your tenants will
+                  use to pay their rent. When paying, tenants will use this
+                  number as the Business Number and then enter their specific
+                  house number as the Account Number.
+                </p>
+                <p>
+                  For example, if your property uses paybill{" "}
+                  <strong>00000</strong> and a tenant wishes to pay for house{" "}
+                  <strong>A101</strong>, the tenant will select MPESA Paybill
+                  with:
+                </p>
+                <p>
+                  <strong>Business Number:</strong> 00000
+                  <br />
+                  <strong>Account Number:</strong> A101
+                </p>
+              </S.Instructions>
               <S.FormGroup>
                 <label htmlFor="paymentMethod">Select Payment Option</label>
                 <select
@@ -150,7 +171,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                   <option value="equity">Equity Bank</option>
                 </select>
               </S.FormGroup>
-              {/* Only show paybill field if a payment option is selected */}
               {paymentMethod && (
                 <>
                   <S.FormGroup>
@@ -164,7 +184,12 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                     />
                   </S.FormGroup>
                   <S.FormGroup>
-                    <label htmlFor="terms">
+                    <label htmlFor="terms" className="terms-label">
+                      I agree that the payment details provided will be used by
+                      Kodi-analytics for tracking and monitoring payments for
+                      analytics and reporting purposes in accordance to
+                      Kodi-analytics terms and conditions. I confirm that the
+                      above paybill number attached is accurate.
                       <input
                         type="checkbox"
                         id="terms"
@@ -172,9 +197,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                         onChange={handleAgreeTerms}
                         required
                       />
-                      I agree that the payment information provided will be used
-                      by Kodi to track and monitor all payment data made to this
-                      paybill account for analytics purposes only.
                     </label>
                   </S.FormGroup>
                 </>
