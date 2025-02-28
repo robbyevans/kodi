@@ -8,7 +8,9 @@ export interface IProperty {
   id?: number;
   admin_id: number;
   name: string;
-  // Similarly, property_image can be a File (for new uploads) or a string URL.
+  mpesa_paybill_number?: string;
+  location?: string;
+  address?: string;
   property_image?: File | string;
   houses?: IHouse[] | null;
 }
@@ -55,18 +57,37 @@ export const addProperty = createAsyncThunk(
   async (property: IProperty, { dispatch, rejectWithValue }) => {
     try {
       let payload: FormData | object;
-      const headers: Record<string, string> = {}; // Explicitly typed headers
+      const headers: Record<string, string> = {};
 
       if (property.property_image && property.property_image instanceof File) {
         const formData = new FormData();
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
+        // New optional fields:
+        if (property.mpesa_paybill_number) {
+          formData.append(
+            "property[mpesa_paybill_number]",
+            property.mpesa_paybill_number
+          );
+        }
+        if (property.location) {
+          formData.append("property[location]", property.location);
+        }
+        if (property.address) {
+          formData.append("property[address]", property.address);
+        }
         formData.append("property[property_image]", property.property_image);
         payload = formData;
         headers["Content-Type"] = "multipart/form-data";
       } else {
         payload = {
-          property: { name: property.name, admin_id: property.admin_id },
+          property: {
+            name: property.name,
+            admin_id: property.admin_id,
+            mpesa_paybill_number: property.mpesa_paybill_number,
+            location: property.location,
+            address: property.address,
+          },
         };
       }
 
@@ -98,6 +119,19 @@ export const editProperty = createAsyncThunk(
         const formData = new FormData();
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
+        // Include new optional fields:
+        if (property.mpesa_paybill_number) {
+          formData.append(
+            "property[mpesa_paybill_number]",
+            property.mpesa_paybill_number
+          );
+        }
+        if (property.location) {
+          formData.append("property[location]", property.location);
+        }
+        if (property.address) {
+          formData.append("property[address]", property.address);
+        }
         formData.append("property[property_image]", property.property_image);
         if (property.id) {
           formData.append("property[id]", property.id.toString());
@@ -105,10 +139,13 @@ export const editProperty = createAsyncThunk(
         payload = formData;
         headers["Content-Type"] = "multipart/form-data";
       } else {
-        // When editing only non-file fields, omit the property_image field.
+        // When editing only non-file fields.
         const payloadData: Partial<IProperty> = {
           name: property.name,
           admin_id: property.admin_id,
+          mpesa_paybill_number: property.mpesa_paybill_number,
+          location: property.location,
+          address: property.address,
         };
         if (property.id) {
           payloadData.id = property.id;

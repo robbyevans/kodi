@@ -59,7 +59,7 @@ class PropertiesController < ApplicationController
   end
 
   def property_params
-    params.require(:property).permit(:name, :property_image)
+    params.require(:property).permit(:name, :property_image, :mpesa_paybill_number, :location, :address)
   end
   
   def authorize_admin
