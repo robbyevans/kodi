@@ -90,134 +90,138 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     <ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>Add New Property</S.ModalHeader>
-        <form onSubmit={handleSubmit}>
-          <S.FormGroup>
-            <label htmlFor="propertyName">Property Name</label>
-            <input
-              type="text"
-              id="propertyName"
-              value={propertyName}
-              onChange={(e) => setPropertyName(e.target.value)}
-              required
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label htmlFor="location">Location (optional)</label>
-            <input
-              type="text"
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label htmlFor="address">Address (optional)</label>
-            <input
-              type="text"
-              id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label htmlFor="propertyImage">Property Image (optional)</label>
-            <input
-              type="file"
-              id="propertyImage"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-          </S.FormGroup>
-          <S.FormGroup>
-            <label htmlFor="numberOfUnits">
-              Number of Houses in this property (max 100) (optional)
-            </label>
-            <S.InfoPoint>
-              <LuInfo style={{ marginRight: "8px" }} />
-              This will prefill your property with default houses but you will
-              be able to add, remove or edit these houses later in the property
-              page.
-            </S.InfoPoint>
-            <input
-              type="number"
-              id="numberOfUnits"
-              min="0"
-              max="100"
-              value={numberOfUnits}
-              onChange={(e) =>
-                setNumberOfUnits(Math.min(100, parseInt(e.target.value) || 0))
-              }
-            />
-          </S.FormGroup>
+        <S.ModalBody>
+          <form onSubmit={handleSubmit}>
+            <S.FormGroup>
+              <label htmlFor="propertyName">Property Name</label>
+              <input
+                type="text"
+                id="propertyName"
+                value={propertyName}
+                onChange={(e) => setPropertyName(e.target.value)}
+                required
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label htmlFor="location">Location (optional)</label>
+              <input
+                type="text"
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label htmlFor="address">Address (optional)</label>
+              <input
+                type="text"
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label htmlFor="propertyImage">Property Image (optional)</label>
+              <input
+                type="file"
+                id="propertyImage"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+            </S.FormGroup>
+            <S.FormGroup>
+              <label htmlFor="numberOfUnits">
+                Number of Houses in this property (max 100) (optional)
+              </label>
+              <S.InfoPoint>
+                <LuInfo style={{ marginRight: "8px" }} />
+                This will prefill your property with default houses but you will
+                be able to add, remove or edit these houses later in the
+                property page.
+              </S.InfoPoint>
+              <input
+                type="number"
+                id="numberOfUnits"
+                min="0"
+                max="100"
+                value={numberOfUnits}
+                onChange={(e) =>
+                  setNumberOfUnits(Math.min(100, parseInt(e.target.value) || 0))
+                }
+              />
+            </S.FormGroup>
 
-          {/* Payment Details Section */}
-          <S.FormGroup>
-            <button type="button" onClick={handleTogglePaymentSelection}>
-              {showPaymentSelection
-                ? "Hide Payment Options"
-                : "Add Payment Details"}
-            </button>
-          </S.FormGroup>
-          {showPaymentSelection && (
-            <S.PaymentSection>
-              <S.FormGroup>
-                <label>Select Payment Option</label>
-                <S.PaymentOption>
-                  <S.PaymentLogo src={mpesaLogo} alt="Mpesa Logo" />
-                  <label>
-                    <input
-                      type="radio"
-                      name="paymentOption"
-                      value="mpesa"
-                      onChange={() => setSelectedPaymentMethod("mpesa")}
-                    />
-                    <S.paymentText>MPESA</S.paymentText>
-                  </label>
-                </S.PaymentOption>
-                <S.PaymentOption>
-                  <S.PaymentLogo src={kcbLogo} alt="KCB Logo" />
-                  <label>
-                    <input
-                      type="radio"
-                      name="paymentOption"
-                      value="kcb"
-                      disabled
-                    />
-                    <S.paymentText>KCB (Disabled)</S.paymentText>
-                  </label>
-                </S.PaymentOption>
-                <S.PaymentOption>
-                  <S.PaymentLogo src={equityLogo} alt="Equity Bank Logo" />
-                  <label>
-                    <input
-                      type="radio"
-                      name="paymentOption"
-                      value="equity"
-                      disabled
-                    />
-                    <S.paymentText>Equity Bank (Disabled)</S.paymentText>
-                  </label>
-                </S.PaymentOption>
-              </S.FormGroup>
-              {selectedPaymentMethod === "mpesa" && (
+            {/* Payment Details Section */}
+            <S.FormGroup>
+              <button type="button" onClick={handleTogglePaymentSelection}>
+                {showPaymentSelection
+                  ? "Hide Payment Options"
+                  : "Add Payment Details"}
+              </button>
+            </S.FormGroup>
+            {showPaymentSelection && (
+              <S.PaymentSection>
                 <S.FormGroup>
-                  <button
-                    type="button"
-                    onClick={() => setShowPaymentModal(true)}
-                  >
-                    Proceed with MPESA Payment
-                  </button>
+                  <label>Select Payment Option</label>
+                  <S.PaymentOption>
+                    <S.PaymentLogo src={mpesaLogo} alt="Mpesa Logo" />
+                    <label>
+                      <input
+                        type="radio"
+                        name="paymentOption"
+                        value="mpesa"
+                        onChange={() => setSelectedPaymentMethod("mpesa")}
+                      />
+                      <S.paymentText>MPESA</S.paymentText>
+                    </label>
+                  </S.PaymentOption>
+                  <S.PaymentOption>
+                    <S.PaymentLogo src={kcbLogo} alt="KCB Logo" />
+                    <label>
+                      <input
+                        type="radio"
+                        name="paymentOption"
+                        value="kcb"
+                        disabled
+                      />
+                      <S.paymentText>KCB (Disabled)</S.paymentText>
+                    </label>
+                  </S.PaymentOption>
+                  <S.PaymentOption>
+                    <S.PaymentLogo src={equityLogo} alt="Equity Bank Logo" />
+                    <label>
+                      <input
+                        type="radio"
+                        name="paymentOption"
+                        value="equity"
+                        disabled
+                      />
+                      <S.paymentText>Equity Bank (Disabled)</S.paymentText>
+                    </label>
+                  </S.PaymentOption>
                 </S.FormGroup>
-              )}
-            </S.PaymentSection>
-          )}
-          <S.ButtonContainer>
-            <S.CancelButton type="button" onClick={onClose}>
-              Cancel
-            </S.CancelButton>
-            <S.SubmitButton type="submit">Add Property</S.SubmitButton>
-          </S.ButtonContainer>
-        </form>
+                {selectedPaymentMethod === "mpesa" && (
+                  <S.FormGroup>
+                    <button
+                      type="button"
+                      onClick={() => setShowPaymentModal(true)}
+                    >
+                      Proceed with MPESA Payment
+                    </button>
+                  </S.FormGroup>
+                )}
+              </S.PaymentSection>
+            )}
+          </form>
+        </S.ModalBody>
+        <S.ButtonContainer>
+          <S.CancelButton type="button" onClick={onClose}>
+            Cancel
+          </S.CancelButton>
+          <S.SubmitButton type="submit" onClick={handleSubmit}>
+            Add Property
+          </S.SubmitButton>
+        </S.ButtonContainer>
         <PaymentModal
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}

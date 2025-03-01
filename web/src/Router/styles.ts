@@ -14,4 +14,5 @@ export const BodyWrapper = styled.div<{ $isAuthPage: boolean }>`
   overflow: scroll;
   background: ${colors.neutral["100"]};
   display: ${({ $isAuthPage }) => ($isAuthPage ? "flex" : "block")};
+  -webkit-overflow-scrolling: touch;
 `;

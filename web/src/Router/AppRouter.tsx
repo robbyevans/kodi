@@ -1,11 +1,10 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Auth from "../components/Auth/Auth";
 import PropertyContainer from "../containers/PropertyContainer";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "../components/Utils/AccessRouter";
 import DashboardContainer from "../containers/dashboardContainer";
-
 import SettingsPageContainer from "../containers/settingsContainer";
 import ProfileContainer from "../containers/profileContainer";
 import Navbar from "../components/Navbar/Navbar";
@@ -15,12 +14,16 @@ import * as S from "./styles";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
+  // Create a ref for the BodyWrapper element
+  const bodyWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to top on route change
+  // Scroll the BodyWrapper to top on route change
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]); // Only trigger when the location changes
+    if (bodyWrapperRef.current) {
+      bodyWrapperRef.current.scrollTop = 0;
+    }
+  }, [location]);
 
   return (
     <>
@@ -30,6 +33,7 @@ const AppRouter = () => {
         <S.BodyWrapper
           data-testid="body-wrapper"
           $isAuthPage={!isAuthenticated}
+          ref={bodyWrapperRef} // Attach the ref here
         >
           <Routes>
             <Route

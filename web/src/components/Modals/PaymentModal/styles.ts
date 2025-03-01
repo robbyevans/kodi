@@ -27,6 +27,7 @@ export const ModalContent = styled.div`
   width: 100%;
   max-width: 400px;
   box-shadow: ${shadows.md};
+  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.h2`

@@ -15,6 +15,10 @@ export const ModalContent = styled.div`
   max-width: 500px;
   box-shadow: ${shadows.md};
   margin: 0 16px;
+
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
 `;
 
 export const ModalHeader = styled.h2`
@@ -52,16 +56,23 @@ export const FormGroup = styled.div`
 
 export const PaymentSection = styled.div`
   padding: ${spacing.md};
-  margin-bottom: ${spacing.lg};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.md};
   display: flex;
   flex-direction: column;
-  gap: ${spacing.md};
 
   /* Optionally limit height on smaller screens */
   max-height: 263px;
   overflow-y: auto;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Instructions = styled.div`
@@ -150,4 +161,32 @@ export const InfoPoint = styled.div`
   font-size: ${fontSizes.sm};
   margin-top: ${spacing.xs};
   margin: 10px 0;
+`;
+
+export const ModalBody = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+
+  /* For WebKit browsers */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 `;
