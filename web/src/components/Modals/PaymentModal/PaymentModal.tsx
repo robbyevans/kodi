@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as P from "./styles";
+import { ModalOverlay } from "../../../styles/foundation";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -27,7 +28,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <P.ModalOverlay>
+    <ModalOverlay>
       <P.ModalContent>
         <P.ModalHeader>MPESA Payment Details</P.ModalHeader>
         <P.Instructions>
@@ -86,7 +87,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           </P.SubmitButton>
         </P.ButtonContainer>
       </P.ModalContent>
-    </P.ModalOverlay>
+    </ModalOverlay>
   );
 };
 
