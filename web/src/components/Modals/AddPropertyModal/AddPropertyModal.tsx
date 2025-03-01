@@ -7,6 +7,7 @@ import { ModalOverlay } from "../../../styles/foundation";
 import mpesaLogo from "../../../assets/mpesa-logo.png";
 import kcbLogo from "../../../assets/kcb-logo.png";
 import equityLogo from "../../../assets/equity-logo.png";
+import { LuInfo } from "react-icons/lu";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -128,7 +129,15 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             />
           </S.FormGroup>
           <S.FormGroup>
-            <label htmlFor="numberOfUnits">Number of Units (max 100)</label>
+            <label htmlFor="numberOfUnits">
+              Number of Houses in this property (max 100) (optional)
+            </label>
+            <S.InfoPoint>
+              <LuInfo style={{ marginRight: "8px" }} />
+              This will prefill your property with default houses but you will
+              be able to add, remove or edit these houses later in the property
+              page.
+            </S.InfoPoint>
             <input
               type="number"
               id="numberOfUnits"

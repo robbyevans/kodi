@@ -138,3 +138,16 @@ export const PaymentLogo = styled.img`
 export const paymentText = styled.p`
   white-space: nowrap;
 `;
+
+export const InfoPoint = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: ${colors.neutral[100]}; /* a light background */
+  color: ${colors.primary}; /* matching primary color */
+  padding: ${spacing.sm};
+  border-left: 4px solid ${colors.primary};
+  border-radius: ${borderRadius.sm};
+  font-size: ${fontSizes.sm};
+  margin-top: ${spacing.xs};
+  margin: 10px 0;
+`;
