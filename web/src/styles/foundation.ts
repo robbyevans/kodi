@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 export const colors = {
   primary: "#034d3c", // Deep Teal
   secondary: "#2d6a4f", // Muted Forest Green
