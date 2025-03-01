@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
+import PaymentModal from "../PaymentModal/PaymentModal";
 import { ModalOverlay } from "../../../styles/foundation";
+import mpesaLogo from "../../../assets/mpesa-logo.png";
+import kcbLogo from "../../../assets/kcb-logo.png";
+import equityLogo from "../../../assets/equity-logo.png";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -19,10 +23,11 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [propertyImage, setPropertyImage] = useState<File | null>(null);
 
   // Payment details state
-  const [showPaymentSection, setShowPaymentSection] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [showPaymentSelection, setShowPaymentSelection] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [paybillNumber, setPaybillNumber] = useState("");
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
@@ -30,7 +35,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      // Only include payment details if the user agreed
+      // Include payment details if available
       const paymentData =
         termsAgreed && paybillNumber
           ? { mpesa_paybill_number: paybillNumber }
@@ -51,10 +56,10 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
       setLocation("");
       setAddress("");
       setPropertyImage(null);
-      setPaymentMethod("");
+      setSelectedPaymentMethod("");
       setPaybillNumber("");
       setTermsAgreed(false);
-      setShowPaymentSection(false);
+      setShowPaymentSelection(false);
       onClose();
     }
   };
@@ -66,18 +71,16 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     }
   };
 
-  // Toggle payment section display
-  const handleTogglePayment = () => {
-    setShowPaymentSection(!showPaymentSection);
+  // Toggle payment selection section
+  const handleTogglePaymentSelection = () => {
+    setShowPaymentSelection(!showPaymentSelection);
   };
 
-  // When the user agrees to terms, collapse the payment section automatically.
-  const handleAgreeTerms = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTermsAgreed(e.target.checked);
-    if (e.target.checked) {
-      // Optionally collapse the section once agreed
-      setShowPaymentSection(false);
-    }
+  // Callback when PaymentModal submits details
+  const handleAddPayment = (number: string) => {
+    setPaybillNumber(number);
+    setTermsAgreed(true);
+    setShowPaymentModal(false);
   };
 
   if (!isOpen) return null;
@@ -127,79 +130,62 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 
           {/* Payment Details Section */}
           <S.FormGroup>
-            <button type="button" onClick={handleTogglePayment}>
-              {showPaymentSection
-                ? "Hide Payment Details"
+            <button type="button" onClick={handleTogglePaymentSelection}>
+              {showPaymentSelection
+                ? "Hide Payment Options"
                 : "Add Payment Details"}
             </button>
           </S.FormGroup>
-          {showPaymentSection && (
+          {showPaymentSelection && (
             <S.PaymentSection>
-              <S.Instructions>
-                <p>
-                  <strong>Payment Instructions:</strong>
-                </p>
-                <p>
-                  The paybill number is the business number your tenants will
-                  use to pay their rent. When paying, tenants will use this
-                  number as the Business Number and then enter their specific
-                  house number as the Account Number.
-                </p>
-                <p>
-                  For example, if your property uses paybill{" "}
-                  <strong>00000</strong> and a tenant wishes to pay for house{" "}
-                  <strong>A101</strong>, the tenant will select MPESA Paybill
-                  with:
-                </p>
-                <p>
-                  <strong>Business Number:</strong> 00000
-                  <br />
-                  <strong>Account Number:</strong> A101
-                </p>
-              </S.Instructions>
               <S.FormGroup>
-                <label htmlFor="paymentMethod">Select Payment Option</label>
-                <select
-                  id="paymentMethod"
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  required
-                >
-                  <option value="">--Select Payment Option--</option>
-                  <option value="mpesa">MPESA</option>
-                  <option value="kcb">KCB</option>
-                  <option value="equity">Equity Bank</option>
-                </select>
-              </S.FormGroup>
-              {paymentMethod && (
-                <>
-                  <S.FormGroup>
-                    <label htmlFor="paybillNumber">Paybill Number</label>
+                <label>Select Payment Option</label>
+                <S.PaymentOption>
+                  <S.PaymentLogo src={mpesaLogo} alt="Mpesa Logo" />
+                  <label>
                     <input
-                      type="text"
-                      id="paybillNumber"
-                      value={paybillNumber}
-                      onChange={(e) => setPaybillNumber(e.target.value)}
-                      required
+                      type="radio"
+                      name="paymentOption"
+                      value="mpesa"
+                      onChange={() => setSelectedPaymentMethod("mpesa")}
                     />
-                  </S.FormGroup>
-                  <S.FormGroup>
-                    <label htmlFor="terms" className="terms-label">
-                      I agree that the payment details provided will be used by
-                      Kodi-analytics for tracking and monitoring payments for
-                      analytics and reporting purposes in accordance to
-                      Kodi-analytics terms and conditions. I confirm that the
-                      above paybill number attached is accurate.
-                      <input
-                        type="checkbox"
-                        id="terms"
-                        checked={termsAgreed}
-                        onChange={handleAgreeTerms}
-                        required
-                      />
-                    </label>
-                  </S.FormGroup>
-                </>
+                    <S.paymentText>MPESA</S.paymentText>
+                  </label>
+                </S.PaymentOption>
+                <S.PaymentOption>
+                  <S.PaymentLogo src={kcbLogo} alt="KCB Logo" />
+                  <label>
+                    <input
+                      type="radio"
+                      name="paymentOption"
+                      value="kcb"
+                      disabled
+                    />
+                    <S.paymentText>KCB (Disabled)</S.paymentText>
+                  </label>
+                </S.PaymentOption>
+                <S.PaymentOption>
+                  <S.PaymentLogo src={equityLogo} alt="Equity Bank Logo" />
+                  <label>
+                    <input
+                      type="radio"
+                      name="paymentOption"
+                      value="equity"
+                      disabled
+                    />
+                    <S.paymentText>Equity Bank (Disabled)</S.paymentText>
+                  </label>
+                </S.PaymentOption>
+              </S.FormGroup>
+              {selectedPaymentMethod === "mpesa" && (
+                <S.FormGroup>
+                  <button
+                    type="button"
+                    onClick={() => setShowPaymentModal(true)}
+                  >
+                    Proceed with MPESA Payment
+                  </button>
+                </S.FormGroup>
               )}
             </S.PaymentSection>
           )}
@@ -211,6 +197,12 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             <S.SubmitButton type="submit">Add Property</S.SubmitButton>
           </S.ButtonContainer>
         </form>
+        {/* Render PaymentModal for MPESA */}
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          onAddPayment={handleAddPayment}
+        />
       </S.ModalContent>
     </ModalOverlay>
   );

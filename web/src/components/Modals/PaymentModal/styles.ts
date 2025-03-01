@@ -7,14 +7,26 @@ import {
   shadows,
 } from "../../../styles/foundation";
 
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
 export const ModalContent = styled.div`
   background: ${colors.background};
   padding: ${spacing.xl};
   border-radius: ${borderRadius.lg};
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   box-shadow: ${shadows.md};
-  margin: 0 16px;
 `;
 
 export const ModalHeader = styled.h2`
@@ -22,46 +34,6 @@ export const ModalHeader = styled.h2`
   margin-bottom: ${spacing.lg};
   color: ${colors.primary};
   text-align: center;
-`;
-
-export const FormGroup = styled.div`
-  margin-bottom: ${spacing.lg};
-
-  label {
-    display: block;
-    margin-bottom: ${spacing.xs};
-    font-size: ${fontSizes.base};
-    color: ${colors.primary};
-    font-weight: 500;
-  }
-
-  input,
-  select {
-    width: 100%;
-    padding: ${spacing.sm};
-    font-size: ${fontSizes.base};
-    border: 1px solid ${colors.neutral[300]};
-    border-radius: ${borderRadius.md};
-
-    &:focus {
-      outline: none;
-      border-color: ${colors.primary};
-    }
-  }
-`;
-
-export const PaymentSection = styled.div`
-  padding: ${spacing.md};
-  margin-bottom: ${spacing.lg};
-  border: 1px solid ${colors.neutral[300]};
-  border-radius: ${borderRadius.md};
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing.md};
-
-  /* Optionally limit height on smaller screens */
-  max-height: 263px;
-  overflow-y: auto;
 `;
 
 export const Instructions = styled.div`
@@ -77,11 +49,45 @@ export const Instructions = styled.div`
   }
 `;
 
+export const FormGroup = styled.div`
+  margin-bottom: ${spacing.lg};
+
+  label {
+    display: block;
+    margin-bottom: ${spacing.xs};
+    font-size: ${fontSizes.base};
+    color: ${colors.primary};
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: ${spacing.sm};
+    font-size: ${fontSizes.base};
+    border: 1px solid ${colors.neutral[300]};
+    border-radius: ${borderRadius.md};
+
+    &:focus {
+      outline: none;
+      border-color: ${colors.primary};
+    }
+  }
+
+  .terms-label {
+    display: flex;
+    align-items: center;
+    gap: ${spacing.sm};
+
+    input {
+      width: auto;
+    }
+  }
+`;
+
 export const ButtonContainer = styled.div`
   display: flex;
   gap: ${spacing.md};
   justify-content: flex-end;
-  margin-top: ${spacing.lg};
 `;
 
 export const CancelButton = styled.button`
@@ -112,29 +118,9 @@ export const SubmitButton = styled.button`
   &:hover {
     background: #2c8d45;
   }
-`;
 
-export const PaymentOption = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.sm};
-  margin-bottom: ${spacing.md};
-
-  label {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: ${spacing.sm};
-    cursor: pointer;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
-`;
-
-export const PaymentLogo = styled.img`
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-`;
-
-export const paymentText = styled.p`
-  white-space: nowrap;
 `;
