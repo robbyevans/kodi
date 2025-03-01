@@ -12,6 +12,7 @@ export interface IProperty {
   location?: string;
   address?: string;
   property_image?: File | string;
+  number_of_units?: number;
   houses?: IHouse[] | null;
 }
 
@@ -63,7 +64,6 @@ export const addProperty = createAsyncThunk(
         const formData = new FormData();
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
-        // New optional fields:
         if (property.mpesa_paybill_number) {
           formData.append(
             "property[mpesa_paybill_number]",
@@ -76,6 +76,12 @@ export const addProperty = createAsyncThunk(
         if (property.address) {
           formData.append("property[address]", property.address);
         }
+        if (property.number_of_units && property.number_of_units > 0) {
+          formData.append(
+            "property[number_of_units]",
+            property.number_of_units.toString()
+          );
+        }
         formData.append("property[property_image]", property.property_image);
         payload = formData;
         headers["Content-Type"] = "multipart/form-data";
@@ -87,6 +93,10 @@ export const addProperty = createAsyncThunk(
             mpesa_paybill_number: property.mpesa_paybill_number,
             location: property.location,
             address: property.address,
+            number_of_units:
+              property.number_of_units && property.number_of_units > 0
+                ? property.number_of_units
+                : undefined,
           },
         };
       }

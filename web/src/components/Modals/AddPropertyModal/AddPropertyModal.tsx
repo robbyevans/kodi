@@ -21,8 +21,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [location, setLocation] = useState("");
   const [address, setAddress] = useState("");
   const [propertyImage, setPropertyImage] = useState<File | null>(null);
+  const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
 
-  // Payment details state
+  // Payment details state (unchanged)
   const [showPaymentSelection, setShowPaymentSelection] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [paybillNumber, setPaybillNumber] = useState("");
@@ -32,10 +33,26 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPropertyImage(file);
+    }
+  };
+
+  const handleTogglePaymentSelection = () => {
+    setShowPaymentSelection(!showPaymentSelection);
+  };
+
+  const handleAddPayment = (number: string) => {
+    setPaybillNumber(number);
+    setTermsAgreed(true);
+    setShowPaymentModal(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      // Include payment details if available
       const paymentData =
         termsAgreed && paybillNumber
           ? { mpesa_paybill_number: paybillNumber }
@@ -46,8 +63,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
         name: propertyName,
         location: location || undefined,
         address: address || undefined,
-        ...paymentData,
         property_image: propertyImage || undefined,
+        number_of_units: numberOfUnits > 0 ? numberOfUnits : undefined,
+        ...paymentData,
       };
 
       await handleAddProperty(newProperty);
@@ -60,27 +78,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
       setPaybillNumber("");
       setTermsAgreed(false);
       setShowPaymentSelection(false);
+      setNumberOfUnits(0);
       onClose();
     }
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPropertyImage(file);
-    }
-  };
-
-  // Toggle payment selection section
-  const handleTogglePaymentSelection = () => {
-    setShowPaymentSelection(!showPaymentSelection);
-  };
-
-  // Callback when PaymentModal submits details
-  const handleAddPayment = (number: string) => {
-    setPaybillNumber(number);
-    setTermsAgreed(true);
-    setShowPaymentModal(false);
   };
 
   if (!isOpen) return null;
@@ -125,6 +125,19 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               id="propertyImage"
               accept="image/*"
               onChange={handleImageUpload}
+            />
+          </S.FormGroup>
+          <S.FormGroup>
+            <label htmlFor="numberOfUnits">Number of Units (max 100)</label>
+            <input
+              type="number"
+              id="numberOfUnits"
+              min="0"
+              max="100"
+              value={numberOfUnits}
+              onChange={(e) =>
+                setNumberOfUnits(Math.min(100, parseInt(e.target.value) || 0))
+              }
             />
           </S.FormGroup>
 
@@ -189,7 +202,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               )}
             </S.PaymentSection>
           )}
-
           <S.ButtonContainer>
             <S.CancelButton type="button" onClick={onClose}>
               Cancel
@@ -197,7 +209,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             <S.SubmitButton type="submit">Add Property</S.SubmitButton>
           </S.ButtonContainer>
         </form>
-        {/* Render PaymentModal for MPESA */}
         <PaymentModal
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}
