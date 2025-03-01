@@ -28,6 +28,13 @@ export const ModalContent = styled.div`
   max-width: 400px;
   box-shadow: ${shadows.md};
   margin: 0 16px;
+
+  @media (max-width: 480px) {
+    /* Reduce padding and adjust width for smaller screens */
+    padding: ${spacing.lg};
+    max-height: 70vh;
+    margin: 16px;
+  }
 `;
 
 export const ModalHeader = styled.h2`

@@ -23,8 +23,7 @@ export const ModalContent = styled.div`
   @media (max-width: 480px) {
     /* Reduce padding and adjust width for smaller screens */
     padding: ${spacing.lg};
-    max-height: 76vh;
-    width: calc(100vw - 32px);
+    max-height: 70vh;
     margin: 16px;
   }
 `;
