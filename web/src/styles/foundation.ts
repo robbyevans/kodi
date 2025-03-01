@@ -68,17 +68,3 @@ export const borderRadius = {
   lg: "12px",
   full: "9999px",
 };
-
-export const ModalOverlay = styled.div<{ $isBlury?: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: ${({ $isBlury }) => ($isBlury ? "blur(4px)" : "none")};
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-`;

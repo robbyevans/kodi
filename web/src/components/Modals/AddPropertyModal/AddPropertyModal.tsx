@@ -3,7 +3,7 @@ import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
 import PaymentModal from "../PaymentModal/PaymentModal";
-import { ModalOverlay } from "../../../styles/foundation";
+import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import mpesaLogo from "../../../assets/mpesa-logo.png";
 import kcbLogo from "../../../assets/kcb-logo.png";
 import equityLogo from "../../../assets/equity-logo.png";
@@ -175,10 +175,10 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
               </S.PaymentToggleButton>
             </S.FormGroup>
             {showPaymentSelection && (
-              <S.PaymentSection>
-                <S.FormGroup>
+              <S.PaymentSection data-testid="payment-section">
+                <S.PaymentFormGroup data-testid="paymentFormGroup">
                   <label>Select Payment Option</label>
-                  <S.PaymentOption>
+                  <S.PaymentOption data-testid="payment-option">
                     <S.PaymentLogo src={mpesaLogo} alt="Mpesa Logo" />
                     <label>
                       <input
@@ -214,16 +214,14 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                       <S.paymentText>Equity Bank (Disabled)</S.paymentText>
                     </label>
                   </S.PaymentOption>
-                </S.FormGroup>
+                </S.PaymentFormGroup>
                 {selectedPaymentMethod === "mpesa" && (
-                  <S.FormGroup>
-                    <S.PaymentActionButton
-                      type="button"
-                      onClick={() => setShowPaymentModal(true)}
-                    >
-                      Configure MPESA Payment
-                    </S.PaymentActionButton>
-                  </S.FormGroup>
+                  <S.PaymentActionButton
+                    type="button"
+                    onClick={() => setShowPaymentModal(true)}
+                  >
+                    Configure MPESA Payment
+                  </S.PaymentActionButton>
                 )}
               </S.PaymentSection>
             )}

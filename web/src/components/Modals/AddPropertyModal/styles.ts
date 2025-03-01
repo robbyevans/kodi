@@ -137,7 +137,6 @@ export const PaymentOption = styled.div`
   display: flex;
   align-items: center;
   gap: ${spacing.sm};
-  margin-bottom: ${spacing.md};
 
   label {
     margin: 0;
@@ -213,4 +212,28 @@ export const PaymentActionButton = styled.button`
   transition: background-color 0.3s;
   margin-top: ${spacing.sm};
   font-size: ${fontSizes.base};
+`;
+
+export const PaymentFormGroup = styled.div`
+  label {
+    display: flex;
+    font-size: ${fontSizes.base};
+    color: ${colors.primary};
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: ${spacing.sm};
+    font-size: ${fontSizes.base};
+    border: 1px solid ${colors.neutral[300]};
+    border-radius: ${borderRadius.md};
+
+    &:focus {
+      outline: none;
+      border-color: ${colors.primary};
+    }
+  }
 `;

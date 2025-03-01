@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as P from "./styles";
-import { ModalOverlay } from "../../../styles/foundation";
+import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 interface PaymentModalProps {
   isOpen: boolean;

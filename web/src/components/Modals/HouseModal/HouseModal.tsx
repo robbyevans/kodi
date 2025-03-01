@@ -4,7 +4,7 @@ import { useHouses } from "../../../redux/hooks/useHouses";
 import * as S from "./styles";
 import { IoClose } from "react-icons/io5";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
-import { ModalOverlay } from "../../../styles/foundation";
+import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 interface HouseModalProps {
   isOpen: boolean;
