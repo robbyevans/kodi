@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
@@ -84,13 +84,25 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     }
   };
 
+  const modalBodyRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to show payment section when it becomes visible
+  useEffect(() => {
+    if (showPaymentSelection && modalBodyRef.current) {
+      modalBodyRef.current.scrollTo({
+        top: modalBodyRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [showPaymentSelection]);
+
   if (!isOpen) return null;
 
   return (
     <ModalOverlay>
       <S.ModalContent>
         <S.ModalHeader>Add New Property</S.ModalHeader>
-        <S.ModalBody>
+        <S.ModalBody ref={modalBodyRef}>
           <form onSubmit={handleSubmit}>
             <S.FormGroup>
               <label htmlFor="propertyName">Property Name</label>
@@ -153,11 +165,14 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 
             {/* Payment Details Section */}
             <S.FormGroup>
-              <button type="button" onClick={handleTogglePaymentSelection}>
+              <S.PaymentToggleButton
+                type="button"
+                onClick={handleTogglePaymentSelection}
+              >
                 {showPaymentSelection
                   ? "Hide Payment Options"
                   : "Add Payment Details"}
-              </button>
+              </S.PaymentToggleButton>
             </S.FormGroup>
             {showPaymentSelection && (
               <S.PaymentSection>
@@ -202,12 +217,12 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                 </S.FormGroup>
                 {selectedPaymentMethod === "mpesa" && (
                   <S.FormGroup>
-                    <button
+                    <S.PaymentActionButton
                       type="button"
                       onClick={() => setShowPaymentModal(true)}
                     >
-                      Proceed with MPESA Payment
-                    </button>
+                      Configure MPESA Payment
+                    </S.PaymentActionButton>
                   </S.FormGroup>
                 )}
               </S.PaymentSection>

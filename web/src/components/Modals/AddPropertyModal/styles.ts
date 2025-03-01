@@ -19,6 +19,14 @@ export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   max-height: 80vh;
+
+  @media (max-width: 480px) {
+    /* Reduce padding and adjust width for smaller screens */
+    padding: ${spacing.lg};
+    max-height: 76vh;
+    width: calc(100vw - 32px);
+    margin: 16px;
+  }
 `;
 
 export const ModalHeader = styled.h2`
@@ -189,4 +197,20 @@ export const ModalBody = styled.div`
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+`;
+
+export const PaymentToggleButton = styled.button`
+  border: 1px solid "#e0e0e0";
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: ${spacing.sm};
+  font-size: ${fontSizes.base};
+`;
+
+export const PaymentActionButton = styled.button`
+  border: 1px solid "#e0e0e0";
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: ${spacing.sm};
+  font-size: ${fontSizes.base};
 `;
