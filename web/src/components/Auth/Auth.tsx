@@ -54,7 +54,7 @@ const Auth = () => {
         <S.LeftPane>
           <S.AuthContainer>
             <S.InfoTitle>
-              "Own your properties, not the hassle. Kodi does the rest."
+              Own your properties, not the hassle. Kodi does the rest.
             </S.InfoTitle>
 
             <S.GetStartedContainer>
@@ -88,13 +88,15 @@ const Auth = () => {
 
             <S.Divider>OR</S.Divider>
 
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              text="signin_with"
-              shape="pill"
-              size="large"
-            />
+            <S.GoogleContainer>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                text="signin_with"
+                shape="pill"
+                size="large"
+              />
+            </S.GoogleContainer>
           </S.AuthContainer>
         </S.LeftPane>
         <S.RightPane>

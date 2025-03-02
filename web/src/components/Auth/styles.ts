@@ -183,18 +183,21 @@ export const GetStartedContainer = styled.div`
 
 export const GetStartedButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
-  background: ${colors.accent};
+  background: linear-gradient(135deg, ${colors.accent}, ${colors.secondary});
   color: ${colors.text.inverted};
-  border: none;
+  border: 1px solid ${colors.primary};
   border-radius: ${borderRadius.md};
   font-size: ${fontSizes.base};
   font-weight: ${fontWeights.semibold};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: ${colors.secondary};
-    transform: translateY(-1px);
+    transform: scale(1.03);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -249,3 +252,13 @@ export const InfoImage = styled.img`
     margin-top: ${spacing.lg};
   }
 `;
+
+export const GoogleContainer = styled.div`
+  width: 100%;
+  margin: ${spacing.lg} 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+s;
