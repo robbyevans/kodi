@@ -34,7 +34,6 @@ export const BackButton = styled.button`
   left: ${spacing.lg};
   background: transparent;
   border: none;
-  font-size: ${fontSizes["2xl"]};
   color: ${colors.primary};
   cursor: pointer;
   transition: color 0.2s ease;
@@ -56,8 +55,8 @@ export const QuizSection = styled.div`
   max-width: 500px;
   background: ${colors.text.inverted};
   padding: ${spacing.lg};
-  border-radius: ${borderRadius.md};
-  box-shadow: ${shadows.md};
+  border-radius: ${borderRadius.lg};
+  box-shadow: ${shadows.lg};
   margin-bottom: ${spacing.lg};
 
   @media (max-width: 768px) {
@@ -71,6 +70,7 @@ export const QuizTitle = styled.h2`
   font-size: ${fontSizes["2xl"]};
   color: ${colors.primary};
   margin-bottom: ${spacing.lg};
+  text-align: center;
 
   @media (max-width: 768px) {
     font-size: ${fontSizes["xl"]};
@@ -89,7 +89,7 @@ export const OptionButton = styled.button`
   background: ${colors.background};
   color: ${colors.primary};
   border: 1px solid ${colors.primary};
-  border-radius: ${borderRadius.md};
+  border-radius: ${borderRadius.sm};
   font-size: ${fontSizes.base};
   font-weight: ${fontWeights.semibold};
   cursor: pointer;
@@ -106,21 +106,25 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${spacing.md};
-  align-items: center;
+  align-items: stretch; /* Ensures children (inputs) take full width */
   margin-bottom: ${spacing.lg};
 `;
 
+// File: /web/src/components/Quiz/styles.ts
+
 export const Input = styled.input`
-  width: 100%;
   padding: ${spacing.sm} ${spacing.md};
-  border: 1px solid ${colors.neutral[300]};
-  border-radius: ${borderRadius.md};
+  border: 1px solid ${colors.primary}; /* Solid border in primary color */
+  border-radius: ${borderRadius.sm};
   font-size: ${fontSizes.base};
+  background: ${colors.background};
+  transition: all 0.2s ease;
 
   &:focus {
-    border-color: ${colors.primary};
+    border-color: ${colors.secondary}; /* Change border color on focus */
     box-shadow: 0 0 0 3px ${colors.primary}20;
     outline: none;
+    transform: scale(1.02); /* Slight scaling effect */
   }
 `;
 
@@ -130,7 +134,7 @@ export const Button = styled.button`
   background: ${colors.primary};
   color: ${colors.text.inverted};
   border: none;
-  border-radius: ${borderRadius.md};
+  border-radius: ${borderRadius.sm};
   font-size: ${fontSizes.base};
   font-weight: ${fontWeights.semibold};
   cursor: pointer;

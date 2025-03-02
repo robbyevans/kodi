@@ -15,20 +15,20 @@ const AccessRouter: React.FC<AccessRouterProps> = ({
 }) => {
   const { isAuthenticated } = useAdmins();
   const navigate = useNavigate();
-  const location = useLocation();
-  const isAuthPage = location.pathname === "/auth";
-  const isQuizPage = location.pathname === "/quiz";
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    // If the route is not public and the user is not authenticated, redirect to /auth.
-    if (!publicRoute && !isAuthenticated) {
+    // If the route is not public and the user is not authenticated,
+    // redirect to /auth if not already there.
+    if (!publicRoute && !isAuthenticated && pathname !== "/auth") {
       navigate("/auth");
     }
-    // Additionally, if the user is authenticated and they try to access /auth, redirect them to dashboard.
-    if (isAuthenticated && (isAuthPage || isQuizPage)) {
+    // If the user is authenticated and tries to access public pages "/auth" or "/quiz",
+    // redirect them to /dashboard.
+    if (isAuthenticated && ["/auth", "/quiz"].includes(pathname)) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated, publicRoute, navigate, location]);
+  }, [isAuthenticated, publicRoute, navigate, pathname]);
 
   return <>{children}</>;
 };
