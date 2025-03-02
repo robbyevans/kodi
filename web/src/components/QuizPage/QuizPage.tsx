@@ -26,6 +26,8 @@ const QuizPage = () => {
   const handleBack = () => {
     if (step > 1) {
       setStep((prev) => prev - 1);
+    } else {
+      navigate("/auth");
     }
   };
 
@@ -58,7 +60,7 @@ const QuizPage = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <S.QuizContainer>
-        {step > 1 && <S.BackButton onClick={handleBack}>←</S.BackButton>}
+        {<S.BackButton onClick={handleBack}>←</S.BackButton>}
 
         {step === 1 && (
           <S.QuizSection>
