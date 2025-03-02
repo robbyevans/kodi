@@ -1,4 +1,7 @@
+// File: /web/src/components/Auth/styles.ts
+
 import styled from "styled-components";
+import TestimonialsBackground from "../../assets/Testimonials Background.png";
 import {
   colors,
   fonts,
@@ -6,16 +9,55 @@ import {
   fontWeights,
   spacing,
   borderRadius,
+  shadows,
 } from "../../styles/foundation";
 
-export const Container = styled.div`
+// Overall split screen container
+export const SplitContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+// Left pane for auth form
+export const LeftPane = styled.div`
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  padding: ${spacing.xl};
   background: ${colors.neutral[100]};
+  padding: ${spacing.xl};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.lg};
+    width: 100%;
+  }
+`;
+
+// Right pane for Kodi information
+export const RightPane = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${spacing.xl};
+  background-image: url(${TestimonialsBackground});
+  background-position: center;
+  background-repeat: repeat;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const AuthContainer = styled.div`
+  width: 100%;
+  max-width: 400px;
 `;
 
 export const Title = styled.h1`
@@ -25,6 +67,15 @@ export const Title = styled.h1`
   margin-bottom: ${spacing.lg};
   font-weight: ${fontWeights.bold};
   letter-spacing: -0.5px;
+`;
+
+export const Form = styled.form`
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${spacing.sm};
 `;
 
 export const Input = styled.input`
@@ -125,11 +176,77 @@ export const Divider = styled.div`
   }
 `;
 
-export const Form = styled.form`
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${spacing.sm};
+// Section for the GET STARTED button and helper text
+export const GetStartedContainer = styled.div`
+  margin-top: ${spacing.lg};
+  text-align: center;
+`;
+
+export const GetStartedButton = styled.button`
+  padding: ${spacing.sm} ${spacing.md};
+  background: ${colors.accent};
+  color: ${colors.text.inverted};
+  border: none;
+  border-radius: ${borderRadius.md};
+  font-size: ${fontSizes.base};
+  font-weight: ${fontWeights.semibold};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${colors.secondary};
+    transform: translateY(-1px);
+  }
+`;
+
+export const GetStartedText = styled.p`
+  margin-top: ${spacing.sm};
+  font-size: ${fontSizes.sm};
+  color: ${colors.text.secondary};
+`;
+
+// Styles for the right pane (information)
+export const InfoContainer = styled.div`
+  position: absolute;
+  color: ${colors.text.primary};
+  max-width: 500px;
+  text-align: left;
+`;
+
+export const InfoTitle = styled.h1`
+  font-family: ${fonts.secondary};
+  font-size: ${fontSizes["3xl"]};
+  color: ${colors.primary};
+  margin-bottom: ${spacing.lg};
+`;
+
+export const InfoText = styled.p`
+  font-size: ${fontSizes.base};
+  margin-bottom: ${spacing.lg};
+`;
+
+export const InfoFeatures = styled.ul`
+  position: relative;
+  top: 268px;
+  right: 134px;
+  list-style-type: disc;
+  padding-left: ${spacing.lg};
+  margin-bottom: ${spacing.lg};
+  font-size: ${fontSizes.base};
+  color: ${colors.text.inverted};
+`;
+
+export const InfoImage = styled.img`
+  position: relative;
+  right: 78px;
+  top: -36px;
+  width: 114%;
+  border-radius: ${borderRadius.md};
+  box-shadow: ${shadows.md};
+
+  @media (max-width: 768px) {
+    position: static;
+    width: 90%;
+    margin-top: ${spacing.lg};
+  }
 `;

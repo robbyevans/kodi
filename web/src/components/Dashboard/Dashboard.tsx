@@ -73,10 +73,13 @@ const Dashboard: React.FC<DashboardProps> = ({
         <S.PropertyListContainer>
           <S.PropertyListHeader>
             <h2>Your Properties</h2>
-            <S.AddPropertyButton onClick={handleAddPropertyClick}>
-              <FiPlus />
-              <span className="button-text">Add Property</span>
-            </S.AddPropertyButton>
+            {!loading && (
+              <S.AddPropertyButton onClick={handleAddPropertyClick}>
+                <FiPlus />
+
+                <span className="button-text">Add Property</span>
+              </S.AddPropertyButton>
+            )}
           </S.PropertyListHeader>
 
           {loading ? (
@@ -95,10 +98,12 @@ const Dashboard: React.FC<DashboardProps> = ({
             <S.EmptyState>
               <h3>No Properties Found</h3>
               <p>Start by adding your first property</p>
-              <S.AddPropertyButton onClick={handleAddPropertyClick}>
-                <FiPlus />
-                Add Property
-              </S.AddPropertyButton>
+              {!loading && (
+                <S.AddPropertyButton onClick={handleAddPropertyClick}>
+                  <FiPlus />
+                  Add Property
+                </S.AddPropertyButton>
+              )}
             </S.EmptyState>
           )}
         </S.PropertyListContainer>

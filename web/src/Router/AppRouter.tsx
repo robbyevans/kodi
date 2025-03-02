@@ -1,3 +1,5 @@
+// File: /web/src/Router/AppRouter.tsx
+
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import Auth from "../components/Auth/Auth";
@@ -10,15 +12,14 @@ import ProfileContainer from "../containers/profileContainer";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
+import QuizPage from "../components/QuizPage/QuizPage";
 import * as S from "./styles";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
   const location = useLocation();
-  // Create a ref for the BodyWrapper element
   const bodyWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Scroll the BodyWrapper to top on route change
   useEffect(() => {
     if (bodyWrapperRef.current) {
       bodyWrapperRef.current.scrollTop = 0;
@@ -33,7 +34,7 @@ const AppRouter = () => {
         <S.BodyWrapper
           data-testid="body-wrapper"
           $isAuthPage={!isAuthenticated}
-          ref={bodyWrapperRef} // Attach the ref here
+          ref={bodyWrapperRef}
         >
           <Routes>
             <Route
@@ -41,6 +42,16 @@ const AppRouter = () => {
               element={
                 <AccessRouter>
                   <Auth />
+                </AccessRouter>
+              }
+            />
+
+            <Route
+              path="/quiz"
+              element={
+                // Marking quiz as a public route allows unauthenticated users to access it.
+                <AccessRouter publicRoute>
+                  <QuizPage />
                 </AccessRouter>
               }
             />
@@ -62,6 +73,7 @@ const AppRouter = () => {
                 </AccessRouter>
               }
             />
+
             <Route
               path="/settings"
               element={
@@ -70,6 +82,7 @@ const AppRouter = () => {
                 </AccessRouter>
               }
             />
+
             <Route
               path="/profile"
               element={

@@ -1,7 +1,10 @@
+// File: /web/src/components/Auth/Auth.tsx
+
 import { useState, useEffect } from "react";
 import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import dashboardImage from "../../assets/dashboard.png";
 import * as S from "./styles";
 
 const Auth = () => {
@@ -11,32 +14,16 @@ const Auth = () => {
     user,
     isAuthenticated,
     handleLogin,
-    handleSignup,
     handleGoogleAuth,
   } = useAdmins();
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isLogin && password !== passwordConfirmation) {
-      setErrorMessage("Passwords do not match. Please confirm your password.");
-      return;
-    } else {
-      setErrorMessage("");
-    }
-
-    if (!isLogin) {
-      handleSignup(name, email, password);
-    } else {
-      handleLogin(email, password);
-    }
+    handleLogin(email, password);
   };
 
   useEffect(() => {
@@ -51,79 +38,79 @@ const Auth = () => {
       console.info("No token returned from Google");
       return;
     }
-    // Pass the Google token along with the current mode ("login" or "signup")
-    handleGoogleAuth(token, isLogin ? "login" : "signup");
+    handleGoogleAuth(token, "login");
   };
 
   const handleGoogleError = () => {
     console.info("Google login failed");
   };
 
-  // Clear password fields on error
-  useEffect(() => {
-    if (error) {
-      setPassword("");
-      setPasswordConfirmation("");
-    }
-  }, [error]);
+  const handleGetStarted = () => {
+    navigate("/quiz");
+  };
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <S.Container>
-        <S.Title>{isLogin ? "Login" : "Signup"}</S.Title>
-        <S.Form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <S.Input
-              type="text"
-              placeholder="User Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+      <S.SplitContainer>
+        <S.LeftPane>
+          <S.AuthContainer>
+            <S.InfoTitle>
+              "Own your properties, not the hassle. Kodi does the rest."
+            </S.InfoTitle>
+
+            <S.GetStartedContainer>
+              <S.GetStartedButton onClick={handleGetStarted}>
+                GET STARTED
+              </S.GetStartedButton>
+              <S.GetStartedText>
+                New to Kodi? Begin your journey and set up your property
+                management experience.
+              </S.GetStartedText>
+            </S.GetStartedContainer>
+
+            <S.Form onSubmit={handleSubmit}>
+              <S.Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <S.Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
+              {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+              <S.Button type="submit" disabled={loading}>
+                {loading ? "Processing..." : "Login"}
+              </S.Button>
+            </S.Form>
+
+            <S.Divider>OR</S.Divider>
+
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              text="signin_with"
+              shape="pill"
+              size="large"
             />
-          )}
-          <S.Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <S.Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {!isLogin && (
-            <S.Input
-              type="password"
-              placeholder="Confirm Password"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-            />
-          )}
-          {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
-          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-          <S.Button type="submit" disabled={loading}>
-            {loading ? "Processing..." : isLogin ? "Login" : "Signup"}
-          </S.Button>
-        </S.Form>
-
-        <S.ToggleText>
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <S.ToggleLink onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Signup" : "Login"}
-          </S.ToggleLink>
-        </S.ToggleText>
-
-        <S.Divider>OR</S.Divider>
-
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          text={isLogin ? "signin_with" : "signup_with"}
-          shape="pill"
-          size="large"
-        />
-      </S.Container>
+          </S.AuthContainer>
+        </S.LeftPane>
+        <S.RightPane>
+          <S.InfoContainer>
+            <S.InfoFeatures>
+              <li>Manage properties and houses effortlessly</li>
+              <li>Real-time rent payment tracking</li>
+              <li>Easy integration with your workflow</li>
+              <li>Advanced reporting and analytics</li>
+            </S.InfoFeatures>
+          </S.InfoContainer>
+          <S.InfoImage src={dashboardImage} alt="Kodi Dashboard Preview" />
+        </S.RightPane>
+      </S.SplitContainer>
     </GoogleOAuthProvider>
   );
 };
