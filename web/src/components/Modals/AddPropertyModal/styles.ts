@@ -49,7 +49,7 @@ export const FormGroup = styled.div`
 
   input,
   select {
-    width: 95%;
+    width: 93%;
     padding: ${spacing.sm};
     font-size: ${fontSizes.base};
     border: 1px solid ${colors.neutral[300]};
