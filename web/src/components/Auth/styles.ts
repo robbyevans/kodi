@@ -261,4 +261,3 @@ export const GoogleContainer = styled.div`
   align-items: center;
   text-align: center;
 `;
-s;
