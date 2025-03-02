@@ -15,9 +15,12 @@ const QuizPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const { handleSignup, handleGoogleAuth } = useAdmins();
+  const { handleSignup, handleGoogleAuth, error } = useAdmins();
+  const [errorMessage, setErrorMessage] = useState(error);
   const navigate = useNavigate();
+
+  console.info("userType", userType);
+  console.info("houseCount", houseCount);
 
   const handleNext = () => {
     setStep((prev) => prev + 1);

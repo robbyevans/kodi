@@ -175,3 +175,10 @@ export const TermsLabel = styled.label`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
 `;
+
+export const ErrorMessage = styled.p`
+  color: ${colors.error};
+  font-size: ${fontSizes.sm};
+  margin-top: ${spacing.sm};
+  text-align: center;
+`;

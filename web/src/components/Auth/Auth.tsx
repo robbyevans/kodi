@@ -18,7 +18,6 @@ const Auth = () => {
   } = useAdmins();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -81,7 +80,6 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
               {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
               <S.Button type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Login"}
