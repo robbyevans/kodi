@@ -38,6 +38,7 @@ export const BackButton = styled.button`
   color: ${colors.primary};
   cursor: pointer;
   transition: color 0.2s ease;
+  font-size: 30px;
 
   &:hover {
     color: ${colors.secondary};

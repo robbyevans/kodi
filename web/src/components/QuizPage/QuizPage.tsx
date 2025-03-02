@@ -58,7 +58,7 @@ const QuizPage = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <S.QuizContainer>
-        {step > 1 && <S.BackButton onClick={handleBack}>← Back</S.BackButton>}
+        {step > 1 && <S.BackButton onClick={handleBack}>←</S.BackButton>}
 
         {step === 1 && (
           <S.QuizSection>
