@@ -88,6 +88,7 @@ export const ProgressBar = styled.div`
   border-radius: ${spacing.xs};
   overflow: hidden;
   margin-top: ${spacing.lg};
+  margin-bottom: ${spacing["2xl"]};
 
   @media (max-width: 768px) {
     width: 80%;

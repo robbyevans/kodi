@@ -1,5 +1,3 @@
-// File: /web/src/components/Auth/Auth.tsx
-
 import { useState, useEffect } from "react";
 import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
@@ -100,14 +98,6 @@ const Auth = () => {
           </S.AuthContainer>
         </S.LeftPane>
         <S.RightPane>
-          <S.InfoContainer>
-            <S.InfoFeatures>
-              <li>Manage properties and houses effortlessly</li>
-              <li>Real-time rent payment tracking</li>
-              <li>Easy integration with your workflow</li>
-              <li>Advanced reporting and analytics</li>
-            </S.InfoFeatures>
-          </S.InfoContainer>
           <S.InfoImage src={dashboardImage} alt="Kodi Dashboard Preview" />
         </S.RightPane>
       </S.SplitContainer>

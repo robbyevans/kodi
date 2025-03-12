@@ -23,7 +23,7 @@ const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
   }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000);
+    const timer = setTimeout(() => setLoading(false), 8000);
     return () => clearTimeout(timer);
   }, []);
 

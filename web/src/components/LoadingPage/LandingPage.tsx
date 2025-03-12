@@ -1,5 +1,8 @@
 import { FiHome } from "react-icons/fi";
 import * as S from "./styles";
+import RotatingPoints from "../RotatingPoints/RotatingPoints";
+
+<RotatingPoints />;
 
 const LandingPage = () => {
   return (
@@ -13,6 +16,7 @@ const LandingPage = () => {
       <S.ProgressBar>
         <S.ProgressFill />
       </S.ProgressBar>
+      <RotatingPoints />
     </S.LandingContainer>
   );
 };

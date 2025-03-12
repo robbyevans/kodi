@@ -1,4 +1,3 @@
-// File: /web/src/components/HouseCard/HouseCard.tsx
 import React from "react";
 
 import { IHouse } from "../../redux/slices/houseSlice";
