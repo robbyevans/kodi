@@ -2,12 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useProperties } from "../../../redux/hooks/useProperties";
 import { useAdmins } from "../../../redux/hooks/useAdmin";
 import * as S from "./styles";
-import PaymentModal from "../PaymentModal/PaymentModal";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
-import mpesaLogo from "../../../assets/mpesa-logo.png";
-import kcbLogo from "../../../assets/kcb-logo.png";
-import equityLogo from "../../../assets/equity-logo.png";
 import { LuInfo } from "react-icons/lu";
+import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -24,13 +20,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [propertyImage, setPropertyImage] = useState<File | null>(null);
   const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
 
-  // Payment details state (unchanged)
-  const [showPaymentSelection, setShowPaymentSelection] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const [paybillNumber, setPaybillNumber] = useState("");
-  const [termsAgreed, setTermsAgreed] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
 
@@ -41,24 +30,9 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
     }
   };
 
-  const handleTogglePaymentSelection = () => {
-    setShowPaymentSelection(!showPaymentSelection);
-  };
-
-  const handleAddPayment = (number: string) => {
-    setPaybillNumber(number);
-    setTermsAgreed(true);
-    setShowPaymentModal(false);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (user) {
-      const paymentData =
-        termsAgreed && paybillNumber
-          ? { mpesa_paybill_number: paybillNumber }
-          : {};
-
       const newProperty = {
         admin_id: user.admin_id!,
         name: propertyName,
@@ -66,7 +40,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
         address: address || undefined,
         property_image: propertyImage || undefined,
         number_of_units: numberOfUnits > 0 ? numberOfUnits : undefined,
-        ...paymentData,
       };
 
       await handleAddProperty(newProperty);
@@ -75,10 +48,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
       setLocation("");
       setAddress("");
       setPropertyImage(null);
-      setSelectedPaymentMethod("");
-      setPaybillNumber("");
-      setTermsAgreed(false);
-      setShowPaymentSelection(false);
       setNumberOfUnits(0);
       onClose();
     }
@@ -86,15 +55,14 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
 
   const modalBodyRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to show payment section when it becomes visible
   useEffect(() => {
-    if (showPaymentSelection && modalBodyRef.current) {
+    if (modalBodyRef.current) {
       modalBodyRef.current.scrollTo({
         top: modalBodyRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [showPaymentSelection]);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -143,7 +111,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             </S.FormGroup>
             <S.FormGroup>
               <label htmlFor="numberOfUnits">
-                Number of Houses in this property (max 100) (optional)
+                Number of Houses in this property (optional)
               </label>
               <S.InfoPoint>
                 <LuInfo style={{ marginRight: "8px" }} />
@@ -162,69 +130,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                 }
               />
             </S.FormGroup>
-
-            {/* Payment Details Section */}
-            <S.FormGroup>
-              <S.PaymentToggleButton
-                type="button"
-                onClick={handleTogglePaymentSelection}
-              >
-                {showPaymentSelection
-                  ? "Hide Payment Options"
-                  : "Add Payment Details"}
-              </S.PaymentToggleButton>
-            </S.FormGroup>
-            {showPaymentSelection && (
-              <S.PaymentSection data-testid="payment-section">
-                <S.PaymentFormGroup data-testid="paymentFormGroup">
-                  <label>Select Payment Option</label>
-                  <S.PaymentOption data-testid="payment-option">
-                    <S.PaymentLogo src={mpesaLogo} alt="Mpesa Logo" />
-                    <label>
-                      <input
-                        type="radio"
-                        name="paymentOption"
-                        value="mpesa"
-                        onChange={() => setSelectedPaymentMethod("mpesa")}
-                      />
-                      <S.paymentText>MPESA</S.paymentText>
-                    </label>
-                  </S.PaymentOption>
-                  <S.PaymentOption>
-                    <S.PaymentLogo src={kcbLogo} alt="KCB Logo" />
-                    <label>
-                      <input
-                        type="radio"
-                        name="paymentOption"
-                        value="kcb"
-                        disabled
-                      />
-                      <S.paymentText>KCB (Disabled)</S.paymentText>
-                    </label>
-                  </S.PaymentOption>
-                  <S.PaymentOption>
-                    <S.PaymentLogo src={equityLogo} alt="Equity Bank Logo" />
-                    <label>
-                      <input
-                        type="radio"
-                        name="paymentOption"
-                        value="equity"
-                        disabled
-                      />
-                      <S.paymentText>Equity Bank (Disabled)</S.paymentText>
-                    </label>
-                  </S.PaymentOption>
-                </S.PaymentFormGroup>
-                {selectedPaymentMethod === "mpesa" && (
-                  <S.PaymentActionButton
-                    type="button"
-                    onClick={() => setShowPaymentModal(true)}
-                  >
-                    Configure MPESA Payment
-                  </S.PaymentActionButton>
-                )}
-              </S.PaymentSection>
-            )}
           </form>
         </S.ModalBody>
         <S.ButtonContainer>
@@ -235,11 +140,6 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
             Add Property
           </S.SubmitButton>
         </S.ButtonContainer>
-        <PaymentModal
-          isOpen={showPaymentModal}
-          onClose={() => setShowPaymentModal(false)}
-          onAddPayment={handleAddPayment}
-        />
       </S.ModalContent>
     </ModalOverlay>
   );

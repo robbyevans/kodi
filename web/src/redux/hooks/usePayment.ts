@@ -1,47 +1,42 @@
 import { useAppDispatch, useAppSelector } from "../utils";
 import {
-  fetchPropertyPayments,
+  fetchPaymentsByProperty,
   fetchMonthlyPropertyPayments,
   fetchYearlyPropertyPayments,
+  fetchAllPaymentData,
 } from "../slices/paymentSlice";
 
 export const usePayments = () => {
   const dispatch = useAppDispatch();
-  const { data, loading, error } = useAppSelector(
-    (state: any) => state.payments
-  );
+  const { data, loading, error } = useAppSelector((state) => state.payments);
 
-  /**
-   * Retrieves all payment data for the property identified by its short code.
-   */
-  const getPropertyPayments = (shortCode: string) => {
-    dispatch(fetchPropertyPayments(shortCode));
+  const getPaymentsByProperty = (propertyId: string) => {
+    dispatch(fetchPaymentsByProperty(propertyId));
   };
 
-  /**
-   * Retrieves payment data for a specific property filtered by both month and year.
-   */
-  const getMonthlyPaymentData = (
-    shortCode: string,
+  const getMonthlyPayments = (
+    propertyId: string,
     month: number,
     year: number
   ) => {
-    dispatch(fetchMonthlyPropertyPayments({ shortCode, month, year }));
+    dispatch(fetchMonthlyPropertyPayments({ propertyId, month, year }));
   };
 
-  /**
-   * Retrieves payment data for a specific property filtered by year.
-   */
-  const getYearlyPaymentData = (shortCode: string, year: number) => {
-    dispatch(fetchYearlyPropertyPayments({ shortCode, year }));
+  const getYearlyPayments = (propertyId: string, year: number) => {
+    dispatch(fetchYearlyPropertyPayments({ propertyId, year }));
+  };
+
+  const getAllPayments = (year: number, month?: number) => {
+    dispatch(fetchAllPaymentData({ year, month }));
   };
 
   return {
     data,
     loading,
     error,
-    getPropertyPayments,
-    getMonthlyPaymentData,
-    getYearlyPaymentData,
+    getPaymentsByProperty,
+    getMonthlyPayments,
+    getYearlyPayments,
+    getAllPayments,
   };
 };

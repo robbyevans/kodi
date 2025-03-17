@@ -8,9 +8,9 @@ export interface IProperty {
   id?: number;
   admin_id: number;
   name: string;
-  mpesa_paybill_number?: string;
   location?: string;
   address?: string;
+  unique_id?: string;
   property_image?: File | string;
   number_of_units?: number;
   houses?: IHouse[] | null;
@@ -64,12 +64,7 @@ export const addProperty = createAsyncThunk(
         const formData = new FormData();
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
-        if (property.mpesa_paybill_number) {
-          formData.append(
-            "property[mpesa_paybill_number]",
-            property.mpesa_paybill_number
-          );
-        }
+
         if (property.location) {
           formData.append("property[location]", property.location);
         }
@@ -90,7 +85,6 @@ export const addProperty = createAsyncThunk(
           property: {
             name: property.name,
             admin_id: property.admin_id,
-            mpesa_paybill_number: property.mpesa_paybill_number,
             location: property.location,
             address: property.address,
             number_of_units:
@@ -130,12 +124,7 @@ export const editProperty = createAsyncThunk(
         formData.append("property[name]", property.name);
         formData.append("property[admin_id]", property.admin_id.toString());
         // Include new optional fields:
-        if (property.mpesa_paybill_number) {
-          formData.append(
-            "property[mpesa_paybill_number]",
-            property.mpesa_paybill_number
-          );
-        }
+
         if (property.location) {
           formData.append("property[location]", property.location);
         }
@@ -153,7 +142,6 @@ export const editProperty = createAsyncThunk(
         const payloadData: Partial<IProperty> = {
           name: property.name,
           admin_id: property.admin_id,
-          mpesa_paybill_number: property.mpesa_paybill_number,
           location: property.location,
           address: property.address,
         };

@@ -5,28 +5,40 @@ class HousesController < ApplicationController
 
   # GET /houses (new endpoint)
   def all
-    # Get houses for all properties owned by the current admin.
     @houses = House
                 .joins(:property)
                 .where(properties: { admin_id: current_admin.id })
                 .includes(:tenant)
-    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] } })
+    render json: @houses.as_json(
+      only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
+      include: {
+        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+      }
+    )
   end
 
   # GET /properties/:property_id/houses
   def index
-    # Ensure that the property belongs to the current admin:
     property = current_admin.properties.find(params[:property_id])
     @houses = property.houses.includes(:tenant)
-    render json: @houses.as_json(include: { tenant: { only: [:id, :name, :email, :phone_number,:national_id, :house_deposit_paid] } })
+    render json: @houses.as_json(
+      only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
+      include: {
+        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+      }
+    )
   end
 
   # POST /properties/:property_id/houses
   def create
-    # Because the URL provides property_id, we use the associated property directly:
     @house = @property.houses.new(house_params)
     if @house.save
-      render json: @house, status: :created
+      render json: @house.as_json(
+        only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
+        include: {
+          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+        }
+      ), status: :created
     else
       render json: @house.errors, status: :unprocessable_entity
     end
@@ -35,7 +47,12 @@ class HousesController < ApplicationController
   # PUT/PATCH /houses/:id
   def update
     if @house.update(house_params)
-      render json: @house, status: :ok
+      render json: @house.as_json(
+        only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
+        include: {
+          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+        }
+      ), status: :ok
     else
       render json: @house.errors, status: :unprocessable_entity
     end
@@ -50,7 +67,6 @@ class HousesController < ApplicationController
   private
 
   def set_property
-    # Look up the property via the nested parameter and ensure it belongs to current_admin
     @property = current_admin.properties.find(params[:property_id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'Property not found or unauthorized' }, status: :unauthorized
@@ -61,8 +77,6 @@ class HousesController < ApplicationController
   end
 
   def authorize_property_owner
-    # When creating, @property is already set by set_property
-    # When updating/deleting, check that the house's property belongs to the current admin
     property = params[:property_id] ? @property : @house.property
     unless property.admin_id == current_admin.id
       render json: { error: 'Unauthorized' }, status: :unauthorized
@@ -70,7 +84,7 @@ class HousesController < ApplicationController
   end
 
   def house_params
-    # Permit the new payable_deposit parameter along with existing ones.
+    # Account number is auto-generated; no need to permit it.
     params.require(:house).permit(:house_number, :payable_rent, :payable_deposit, :tenant_id)
   end
 end

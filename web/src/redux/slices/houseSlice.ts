@@ -11,6 +11,7 @@ export interface IHouse {
   tenant: ITenant | null;
   property_id: number;
   payable_deposit?: number | null;
+  account_number: string;
 }
 
 interface HousesState {

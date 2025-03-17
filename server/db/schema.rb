@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_28_153055) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_16_125144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_28_153055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "payable_deposit", precision: 10, scale: 2
+    t.string "account_number"
+    t.index ["account_number"], name: "index_houses_on_account_number", unique: true
     t.index ["property_id"], name: "index_houses_on_property_id"
     t.index ["tenant_id"], name: "index_houses_on_tenant_id"
   end
@@ -76,6 +78,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_28_153055) do
     t.string "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "property_id"
+    t.string "house_number"
+    t.boolean "settled", default: false
     t.index ["bill_ref_number", "msisdn"], name: "index_payments_on_bill_ref_number_and_msisdn"
     t.index ["transaction_id"], name: "index_payments_on_transaction_id", unique: true
   end
@@ -85,10 +90,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_28_153055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "admin_id"
-    t.string "mpesa_paybill_number"
     t.string "location"
     t.string "address"
+    t.string "unique_id"
     t.index ["admin_id"], name: "index_properties_on_admin_id"
+    t.index ["unique_id"], name: "index_properties_on_unique_id", unique: true
   end
 
   create_table "tenants", force: :cascade do |t|

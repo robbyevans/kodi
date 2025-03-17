@@ -1,72 +1,56 @@
 class PaymentsController < ApplicationController
-  skip_before_action :authenticate_admin, only: [:authenticate, :add_paybill, :update_paybill, :delete_paybill, :ipn]
-  skip_before_action :verify_authenticity_token, only: [:authenticate, :add_paybill, :update_paybill, :delete_paybill, :ipn]
+  skip_before_action :authenticate_admin, only: [:ipn, :index]
+  skip_before_action :verify_authenticity_token, only: [:ipn]
 
-  require 'faraday'
-  require 'json'
-
-  # Authenticate with Pesapal
-  def authenticate
-    response = Faraday.post("#{ENV['PESAPAL_API_URL']}/Auth/RequestToken") do |req|
-      req.headers['Content-Type'] = 'application/json'
-      req.body = {
-        consumer_key: ENV['PESAPAL_CONSUMER_KEY'],
-        consumer_secret: ENV['PESAPAL_CONSUMER_SECRET']
-      }.to_json
-    end
-
-    if response.success?
-      token_data = JSON.parse(response.body)
-      session[:pesapal_token] = token_data['token']
-      render json: token_data
-    else
-      render json: { error: 'Invalid or expired token', details: JSON.parse(response.body) }, status: :unauthorized
-    end
-  end
-
-  # Register IPN URL for Paybill
-  def add_paybill
-    token = session[:pesapal_token]
-    return render json: { error: 'Token is missing' }, status: :unauthorized if token.nil?
-
-    response = Faraday.post("#{ENV['PESAPAL_API_URL']}/URLSetup/RegisterIPN") do |req|
-      req.headers['Authorization'] = "Bearer #{token}"
-      req.headers['Content-Type'] = 'application/json'
-      req.body = {
-        url: params[:ipn_url],
-        ipn_notification_type: 'POST'
-      }.to_json
-    end
-
-    if response.success?
-      ipn_data = JSON.parse(response.body)
-      render json: { message: 'Paybill added successfully', data: ipn_data }, status: :created
-    else
-      render json: { error: 'Failed to add Paybill', details: JSON.parse(response.body) }, status: :unprocessable_entity
-    end
-  end
-
-  # Handle IPN notifications from Pesapal
+  # Existing IPN action remains unchanged...
   def ipn
-    paybill_number = params[:merchant_reference]
-    amount = params[:amount]
-    payment_status = params[:status]
-    transaction_id = params[:transaction_id]
-    timestamp = params[:timestamp] || Time.now
+    transaction_id       = params[:transaction_id]
+    bill_ref_number      = params[:bill_ref_number]  # e.g., "9010#A101"
+    msisdn               = params[:msisdn]
+    transaction_amount   = params[:transaction_amount]
+    short_code           = params[:short_code]
+    payment_date         = params[:timestamp] || Time.zone.now
 
-    landlord = Landlord.find_by(paybill: paybill_number)
+    property_uid, house_no = bill_ref_number.split('#')
+    property = Property.find_by(unique_id: property_uid)
+    house    = property.present? ? property.houses.find_by(house_number: house_no) : nil
+    settled  = property.present? && house.present?
 
-    if landlord
-      Payment.create!(
-        landlord_id: landlord.id,
-        amount: amount,
-        payment_status: payment_status,
-        transaction_id: transaction_id,
-        payment_date: timestamp
-      )
-      render json: { status: 'Payment recorded successfully' }, status: :ok
-    else
-      render json: { error: 'Landlord not found' }, status: :not_found
+    payment_data = {
+      transaction_id:     transaction_id,
+      bill_ref_number:    bill_ref_number,
+      msisdn:             msisdn,
+      transaction_amount: transaction_amount,
+      transaction_type:   "rent",
+      payment_date:       payment_date,
+      short_code:         short_code,
+      status:             "success",
+      property_id:        property_uid,
+      house_number:       house_no,
+      settled:            settled
+    }
+
+    Payment.create!(payment_data)
+    render json: payment_data, status: :ok
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  # New index action to fetch payments by property_id and payment_date
+  def index
+    payments = Payment.all
+
+    # Filter by property_id if provided
+    payments = payments.where(property_id: params[:property_id]) if params[:property_id].present?
+
+    # Filter by month and/or year using SQL EXTRACT
+    if params[:month].present? && params[:year].present?
+      payments = payments.where("EXTRACT(MONTH FROM payment_date) = ? AND EXTRACT(YEAR FROM payment_date) = ?",
+                                params[:month].to_i, params[:year].to_i)
+    elsif params[:year].present?
+      payments = payments.where("EXTRACT(YEAR FROM payment_date) = ?", params[:year].to_i)
     end
+
+    render json: payments
   end
 end

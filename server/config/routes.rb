@@ -17,16 +17,15 @@ Rails.application.routes.draw do
 
   # Admin-related routes (for management and authentication)
   resources :admins, only: [:index, :create, :update, :destroy]
+ 
+
   
   post "/signup", to: "admins#create"
   post "/login", to: "admins#login"
     post "/auth/google", to: "admins#google_auth"
 
-  # Payment routes remain unchanged
-  post 'payments/authenticate', to: 'payments#authenticate'
-  post 'payments/add_paybill', to: 'payments#add_paybill'
-  put 'payments/update_paybill', to: 'payments#update_paybill'
-  delete 'payments/delete_paybill', to: 'payments#delete_paybill'
+  # Payment routes 
+  resources :payments, only: [:index]
   post 'payments/ipn', to: 'payments#ipn'  # IPN listener route
 
   # Root path – returns all properties for the current admin

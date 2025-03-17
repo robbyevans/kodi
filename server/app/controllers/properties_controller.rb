@@ -5,16 +5,17 @@ class PropertiesController < ApplicationController
   def create
     @property = current_admin.properties.new(property_params)
 
-    # If a valid number_of_units is provided, build nested house records.
+    # Use the virtual attribute "number_of_units" to prefill nested house records.
     if params[:property][:number_of_units].present? && params[:property][:number_of_units].to_i > 0
       units = params[:property][:number_of_units].to_i
+      # At creation, property.unique_id is not available yet; it will be set in the after_create callback.
       @property.houses_attributes = generate_houses(units)
     end
 
     if @property.save
       # Reload the property so that associations (houses) are available.
       @property.reload
-      render json: @property.as_json(include: { houses: { only: [:id, :house_number, :payable_rent, :payable_deposit] } }), status: :created
+      render json: @property.as_json(include: { houses: { only: [:id, :house_number, :payable_rent, :payable_deposit, :account_number] } }), status: :created
     else
       render json: @property.errors, status: :unprocessable_entity
     end
@@ -25,7 +26,7 @@ class PropertiesController < ApplicationController
     render json: @properties.as_json(
       include: {
         houses: {
-          only: [:id, :house_number, :payable_rent, :payable_deposit],
+          only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
           include: {
             tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
           }
@@ -38,7 +39,7 @@ class PropertiesController < ApplicationController
     render json: @property.as_json(
       include: {
         houses: {
-          only: [:id, :house_number, :payable_rent, :payable_deposit],
+          only: [:id, :house_number, :payable_rent, :payable_deposit, :account_number],
           include: {
             tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
           }
@@ -69,25 +70,25 @@ class PropertiesController < ApplicationController
   def property_params
     params.require(:property).permit(
       :name, 
-      :property_image, 
-      :mpesa_paybill_number, 
+      :property_image,  
       :location, 
       :address, 
-      :number_of_units  # Allow the new parameter.
+      :number_of_units  # Virtual attribute for prefilling houses; not persisted.
     )
   end
 
   # Build an array of nested attributes for houses.
-  def generate_houses(units)
+  # The property_unique_id parameter is optional. When creating a new property, it will be nil.
+  def generate_houses(units, property_unique_id = nil)
     houses = []
-    # Allowed letters (skipping some letters as needed)
     allowed_letters = %w[A B C D E F G H K M N P R S T U V W X Y Z]
     units.times do |i|
       group = i / 10                          # Each letter group represents 10 houses.
       letter = allowed_letters[group] || "X"    # Fallback if units exceed allowed groups.
-      # For group 0: house numbers 101-110; group 1: 111-120; etc.
       num = 101 + group * 10 + (i % 10)
-      houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0" }
+      # Build the account number if property_unique_id is provided; otherwise, leave as empty string.
+      account_num = property_unique_id.present? ? "#{property_unique_id}##{letter}#{num}" : ""
+      houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0", account_number: account_num }
     end
     houses
   end

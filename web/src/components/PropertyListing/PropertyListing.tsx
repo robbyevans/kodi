@@ -37,7 +37,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const startEditingProperty = (property: IProperty) => {
     setEditingPropertyId(property.id!);
     setPropertyName(property.name);
-    setMpesaPaybillNumber(property.mpesa_paybill_number || "");
     setLocation(property.location || "");
     setAddress(property.address || "");
     setEditingPropertyImage(null);
@@ -67,7 +66,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     const updatedProperty: IProperty = {
       ...property,
       name: propertyName,
-      mpesa_paybill_number: mpesaPaybillNumber,
       location: location,
       address: address,
       property_image: editingPropertyImage

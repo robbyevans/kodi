@@ -4,7 +4,7 @@ import housesReducer from "./slices/houseSlice";
 import tenantsReducer from "./slices/tenantsSlice";
 import adminsReducer from "./slices/adminSlice";
 import toastReducer from "./slices/toastSlice";
-// import paymentReducer from "./slices/paymentSlice";
+import paymentReducer from "./slices/paymentSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +12,7 @@ const store = configureStore({
     houses: housesReducer,
     tenants: tenantsReducer,
     admins: adminsReducer,
+    payments: paymentReducer,
     toast: toastReducer,
   },
 });
