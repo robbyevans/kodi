@@ -64,7 +64,7 @@ const PropertyContainer: React.FC = () => {
         : 0;
       const payableRent = house.payable_rent ? Number(house.payable_rent) : 0;
       const balance = payableRent - rentPaid;
-      const status = balance === 0 ? "✅" : "❌";
+      const status = currentPayment && balance === 0 ? "✅" : "❌";
       return {
         ...house,
         rentPaid,

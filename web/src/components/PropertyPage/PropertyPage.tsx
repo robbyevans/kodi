@@ -104,7 +104,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
                   </S.TableData>
                   <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
                   <S.TableData>
-                    {house.tenant?.phone_number || "Vacant"}
+                    {house.tenant?.phone_number || "N/A"}
                   </S.TableData>
                   <S.TableData>{house.payable_deposit || "N/A"}</S.TableData>
                   <S.TableData>
