@@ -9,24 +9,36 @@ import * as S from "../components/PropertyPage/styles";
 
 const PropertyContainer: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
+
   const {
     getPropertyById,
     data: propertyData,
     loading,
     error,
   } = useProperties();
-  const { data: payments } = usePayments();
 
+  const { data: payments, getPaymentsByProperty } = usePayments();
+  console.log("payments", payments);
+
+  // First, fetch the property using its id from the URL.
   useEffect(() => {
     if (propertyId) {
       getPropertyById(Number(propertyId));
     }
   }, [propertyId]);
 
+  // Once the property is fetched (and its unique_id is set), fetch its payments.
   const selectedProperty = useMemo(
     () => propertyData.find((property) => property.id === Number(propertyId)),
     [propertyData, propertyId]
   );
+  useEffect(() => {
+    if (selectedProperty && selectedProperty.unique_id) {
+      // Call getPaymentsByProperty using the unique_id (a string)
+      getPaymentsByProperty(selectedProperty.unique_id);
+    }
+  }, [selectedProperty]);
+
   const houses = selectedProperty?.houses || [];
 
   // Get current month and year
@@ -34,7 +46,7 @@ const PropertyContainer: React.FC = () => {
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
-  // For each house, compute payment-related data
+  // For each house, compute payment-related data.
   const computedHouses = useMemo(() => {
     return houses.map((house) => {
       // Find current payment for this house (for current month and year)
@@ -52,7 +64,7 @@ const PropertyContainer: React.FC = () => {
         : 0;
       const payableRent = house.payable_rent ? Number(house.payable_rent) : 0;
       const balance = payableRent - rentPaid;
-      const status = currentPayment ? (balance === 0 ? "✅" : "Pending") : "❌";
+      const status = balance === 0 ? "✅" : "❌";
       return {
         ...house,
         rentPaid,
@@ -66,7 +78,7 @@ const PropertyContainer: React.FC = () => {
     });
   }, [houses, payments, selectedProperty, currentMonth, currentYear]);
 
-  // totalRentPaid calculation (for current payments)
+  // Calculate total rent paid (for current payments)
   const totalRentPaid = useMemo(() => {
     return houses.reduce((acc, house) => {
       const currentPayment = payments.find((payment) => {
@@ -84,7 +96,7 @@ const PropertyContainer: React.FC = () => {
     }, 0);
   }, [houses, payments, selectedProperty, currentMonth, currentYear]);
 
-  // PDF Download function using jsPDF (all layout constants are now used)
+  // PDF Download function (unchanged)
   const downloadPDF = useCallback(() => {
     const doc = new jsPDF({
       orientation: "landscape",
@@ -100,7 +112,6 @@ const PropertyContainer: React.FC = () => {
     const yearNum = new Date().getFullYear();
     const companyName = `@ KODI PMS`;
 
-    // Add company name at bottom right
     doc.setFont("helvetica", "normal");
     doc.setTextColor(45, 106, 79);
     doc.setFontSize(8);
@@ -110,7 +121,6 @@ const PropertyContainer: React.FC = () => {
       pageHeight - bottomMargin
     );
 
-    // Add title in the center
     const title = `Rent payment for ${
       selectedProperty?.name || "Property Details"
     }, ${monthName}, ${yearNum}`;
@@ -121,7 +131,6 @@ const PropertyContainer: React.FC = () => {
     const centerX = (pageWidth - titleWidth) / 2;
     doc.text(title, centerX, 50);
 
-    // Generate table data
     const tableHeaders = [
       "House Number",
       "Tenant Name",
@@ -175,7 +184,6 @@ const PropertyContainer: React.FC = () => {
       startY: 90,
       head: [tableHeaders],
       body: tableData,
-      // Footer and column styles can be added as needed...
     });
 
     const formattedDate = new Date().toLocaleString("default", {

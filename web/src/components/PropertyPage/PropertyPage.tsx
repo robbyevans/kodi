@@ -120,7 +120,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
                   </S.TableData>
                   <S.TableData>{house.payable_rent || "N/A"}</S.TableData>
                   <S.TableData>{house.rentPaid || "N/A"}</S.TableData>
-                  <S.TableData>{house.balance || "N/A"}</S.TableData>
+                  <S.TableData>{house.balance || "NILL"}</S.TableData>
                   <S.TableData>
                     {house.paymentDate
                       ? house.paymentDate.toLocaleDateString()
