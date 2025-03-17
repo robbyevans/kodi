@@ -4,13 +4,21 @@ import { IHouse } from "../../redux/slices/houseSlice";
 import HouseModal from "../Modals/HouseModal/HouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { MdSimCardDownload } from "react-icons/md";
-import { colors } from "../../styles/foundation";
 import { TbSquareChevronRightFilled } from "react-icons/tb";
+import { MdSimCardDownload } from "react-icons/md";
 import PropertyPageSkeleton from "./PropertyPageSkeleton";
+import { colors } from "../../styles/foundation";
+
+interface ComputedHouse extends IHouse {
+  rentPaid?: number;
+  balance?: number;
+  paymentDate?: Date | null;
+  paymentMode?: string | null;
+  paymentStatus?: string;
+}
 
 interface PropertyPageProps {
-  houses: IHouse[];
+  houses: ComputedHouse[];
   isPropertyLoading: boolean;
   propertyId: number;
   propertyName: string;
@@ -24,18 +32,24 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
   propertyId,
   propertyName,
   downloadPDF,
+  // error,
 }) => {
   const [isAddHouseModalOpen, setIsAddHouseModalOpen] = useState(false);
   const [isEditHouseModalOpen, setIsEditHouseModalOpen] = useState(false);
-  const [selectedHouse, setSelectedHouse] = useState<IHouse | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<ComputedHouse | null>(
+    null
+  );
   const [isTenantModalOpen, setIsTenantModalOpen] = useState(false);
 
-  const openTenantModal = (house: IHouse) => {
+  const openTenantModal = (house: ComputedHouse) => {
     setSelectedHouse(house);
     setIsTenantModalOpen(true);
   };
 
-  const handleClickEdit = (e: React.MouseEvent<SVGElement>, house: IHouse) => {
+  const handleClickEdit = (
+    e: React.MouseEvent<SVGElement>,
+    house: ComputedHouse
+  ) => {
     e.stopPropagation();
     setSelectedHouse(house);
     setIsEditHouseModalOpen(true);
@@ -52,7 +66,6 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
             color={colors.primary}
           />
         </S.DownloadWRapper>
-
         <S.Header>Houses for {propertyName}</S.Header>
         <S.TableContainer>
           <S.Table>
@@ -70,52 +83,54 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
                 <S.TableHeader>Date of Payment</S.TableHeader>
                 <S.TableHeader>Mode of Payment</S.TableHeader>
                 <S.TableHeader>Status</S.TableHeader>
+                <S.TableHeader>Account Number</S.TableHeader>
               </tr>
             </thead>
             <tbody>
-              {houses
-                .slice()
-                .sort((a, b) => a.id - b.id)
-                .map((house) => (
-                  <S.TableRow
-                    key={house.id}
-                    onClick={() => openTenantModal(house)}
-                  >
-                    <S.TableData>
-                      <S.IconTableData>
-                        <HiOutlineDotsVertical
-                          width="25px"
-                          height="25px"
-                          onClick={(e) => handleClickEdit(e, house)}
-                        />
-                        <TbSquareChevronRightFilled color={colors.primary} />
-                        {house.house_number}
-                      </S.IconTableData>
-                    </S.TableData>
-                    <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
-                    <S.TableData>
-                      {house.tenant?.phone_number || "Vacant"}
-                    </S.TableData>
-                    <S.TableData>{house.payable_deposit || "N/A"}</S.TableData>
-                    <S.TableData>
-                      {house.tenant?.house_deposit_paid != null
-                        ? house.tenant.house_deposit_paid
-                        : "N/A"}
-                    </S.TableData>
-                    <S.TableData>
-                      {house.payable_deposit != null
-                        ? house.payable_deposit -
-                          (house.tenant?.house_deposit_paid ?? 0)
-                        : "N/A"}
-                    </S.TableData>
-                    <S.TableData>{house.payable_rent}</S.TableData>
-                    <S.TableData>{null}</S.TableData>
-                    <S.TableData>{null}</S.TableData>
-                    <S.TableData>{null}</S.TableData>
-                    <S.TableData>{null}</S.TableData>
-                    <S.TableData>{house.tenant ? "✅" : "❌"}</S.TableData>
-                  </S.TableRow>
-                ))}
+              {houses.map((house) => (
+                <S.TableRow
+                  key={house.id}
+                  onClick={() => openTenantModal(house)}
+                >
+                  <S.TableData>
+                    <S.IconTableData>
+                      <HiOutlineDotsVertical
+                        size="25px"
+                        onClick={(e) => handleClickEdit(e, house)}
+                      />
+                      <TbSquareChevronRightFilled color={colors.primary} />
+                      {house.house_number}
+                    </S.IconTableData>
+                  </S.TableData>
+                  <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
+                  <S.TableData>
+                    {house.tenant?.phone_number || "Vacant"}
+                  </S.TableData>
+                  <S.TableData>{house.payable_deposit || "N/A"}</S.TableData>
+                  <S.TableData>
+                    {house.tenant?.house_deposit_paid != null
+                      ? house.tenant.house_deposit_paid
+                      : "N/A"}
+                  </S.TableData>
+                  <S.TableData>
+                    {house.payable_deposit != null &&
+                    house.tenant?.house_deposit_paid != null
+                      ? house.payable_deposit - house.tenant.house_deposit_paid
+                      : "N/A"}
+                  </S.TableData>
+                  <S.TableData>{house.payable_rent || "N/A"}</S.TableData>
+                  <S.TableData>{house.rentPaid || "N/A"}</S.TableData>
+                  <S.TableData>{house.balance || "N/A"}</S.TableData>
+                  <S.TableData>
+                    {house.paymentDate
+                      ? house.paymentDate.toLocaleDateString()
+                      : "N/A"}
+                  </S.TableData>
+                  <S.TableData>{house.paymentMode || "N/A"}</S.TableData>
+                  <S.TableData>{house.paymentStatus || "N/A"}</S.TableData>
+                  <S.TableData>{house.account_number || "N/A"}</S.TableData>
+                </S.TableRow>
+              ))}
             </tbody>
           </S.Table>
         </S.TableContainer>
@@ -134,7 +149,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           />
         )}
 
-        {/* AddTenantModal remains unchanged */}
+        {/* AddTenantModal for adding tenant info or viewing payment history */}
         {selectedHouse && (
           <AddTenantModal
             house={selectedHouse}

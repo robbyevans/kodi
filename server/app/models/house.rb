@@ -12,9 +12,7 @@ class House < ApplicationRecord
 
   def generate_account_number
     if property && property.unique_id.present? && house_number.present?
-      # Combine property unique_id and house_number using a '#' separator.
       self.account_number = "#{property.unique_id}##{house_number}"
     end
   end
 end
-

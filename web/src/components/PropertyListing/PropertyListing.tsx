@@ -26,7 +26,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const [editingPropertyImage, setEditingPropertyImage] = useState<File | null>(
     null
   );
-  const [mpesaPaybillNumber, setMpesaPaybillNumber] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [address, setAddress] = useState<string>("");
 
@@ -46,7 +45,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const cancelEditingProperty = () => {
     setEditingPropertyId(null);
     setPropertyName("");
-    setMpesaPaybillNumber("");
     setLocation("");
     setAddress("");
     setEditingPropertyImage(null);
@@ -173,15 +171,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
                         value={propertyName}
                         onChange={(e) => setPropertyName(e.target.value)}
                         placeholder="Name"
-                      />
-                    </S.InputWrapper>
-                    <S.InputWrapper>
-                      <S.InputLabel>Update MPESA Paybill Number</S.InputLabel>
-                      <S.InputField
-                        type="text"
-                        value={mpesaPaybillNumber}
-                        onChange={(e) => setMpesaPaybillNumber(e.target.value)}
-                        placeholder="Paybill Number"
                       />
                     </S.InputWrapper>
                     <S.InputWrapper>

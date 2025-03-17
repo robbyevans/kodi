@@ -8,7 +8,7 @@ class PropertiesController < ApplicationController
     # Use the virtual attribute "number_of_units" to prefill nested house records.
     if params[:property][:number_of_units].present? && params[:property][:number_of_units].to_i > 0
       units = params[:property][:number_of_units].to_i
-      # At creation, property.unique_id is not available yet; it will be set in the after_create callback.
+ # At creation, property.unique_id is not available yet; it will be set in the after_create callback.
       @property.houses_attributes = generate_houses(units)
     end
 
@@ -78,20 +78,21 @@ class PropertiesController < ApplicationController
   end
 
   # Build an array of nested attributes for houses.
-  # The property_unique_id parameter is optional. When creating a new property, it will be nil.
-  def generate_houses(units, property_unique_id = nil)
-    houses = []
-    allowed_letters = %w[A B C D E F G H K M N P R S T U V W X Y Z]
-    units.times do |i|
-      group = i / 10                          # Each letter group represents 10 houses.
-      letter = allowed_letters[group] || "X"    # Fallback if units exceed allowed groups.
-      num = 101 + group * 10 + (i % 10)
-      # Build the account number if property_unique_id is provided; otherwise, leave as empty string.
-      account_num = property_unique_id.present? ? "#{property_unique_id}##{letter}#{num}" : ""
-      houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0", account_number: account_num }
-    end
-    houses
+ # The property_unique_id parameter is optional. When creating a new property, it will be nil.
+def generate_houses(units, property_unique_id = nil)
+  houses = []
+  allowed_letters = %w[A B C D E F G H K M N P R S T U V W X Y Z]
+  units.times do |i|
+    group = i / 10                          # Each letter group represents 10 houses.
+    letter = allowed_letters[group] || "X"    # Fallback if units exceed allowed groups.
+    num = 101 + group * 10 + (i % 10)
+     # Build the account number if property_unique_id is provided; otherwise, leave as empty string.
+     account_num = property_unique_id.present? ? "#{property_unique_id}##{letter}#{num}" : "#{letter}#{num}"
+     houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0", account_number: account_num }
   end
+  houses
+end
+
 
   def authorize_admin
     return if action_name == 'create'
