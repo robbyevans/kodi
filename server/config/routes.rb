@@ -15,6 +15,22 @@ Rails.application.routes.draw do
     resources :tenants, except: [:new, :edit]
   end
 
+    # Ledger entries API endpoints
+    resources :ledger_entries, only: [:index] do
+      collection do
+        get 'download_statement'
+      end
+    end
+
+    resources :wallets, only: [] do
+      collection do
+        get 'current'
+      end
+    end
+
+    # Withdrawal route
+    resources :withdrawals, only: [:create]
+
   # Admin-related routes (for management and authentication)
   resources :admins, only: [:index, :create, :update, :destroy]
  

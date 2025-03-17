@@ -1,16 +1,35 @@
 class Payment < ApplicationRecord
   # Validations to ensure data integrity
   validates :transaction_id, presence: true, uniqueness: true
-  validates :bill_ref_number, presence: true
-  validates :msisdn, presence: true
   validates :transaction_amount, presence: true, numericality: { greater_than: 0 }
-  validates :transaction_type, presence: true
-  validates :payment_date, presence: true
-  validates :short_code, presence: true
-  validates :status, presence: true
+  validates :bill_ref_number, :msisdn, :transaction_type, :payment_date, :short_code, :status, presence: true
 
-  # Optionally, if you want to define any scopes or associations in the future, you can do so here.
-  # For example, if you later add associations with properties or houses:
-  # belongs_to :property, primary_key: :unique_id, foreign_key: :property_id, optional: true
-  # (Note: Make sure such associations match your schema and requirements.)
+  # After a payment record is created, update the landlord's wallet
+  after_create :credit_landlord_wallet
+
+  private
+
+  def credit_landlord_wallet
+    property = Property.find_by(unique_id: property_id)
+    return unless property && property.admin && property.admin.wallet
+
+    wallet = property.admin.wallet
+
+    wallet.with_lock do
+      # Credit the wallet with the transaction amount
+      wallet.credit!(transaction_amount)
+      
+      # Create a ledger entry for the deposit
+      LedgerEntry.create!(
+        admin: property.admin,
+        wallet: wallet,
+        transaction_type: "deposit",
+        amount: transaction_amount,
+        balance_after: wallet.balance,
+        description: "Rent payment received (Payment ID: #{transaction_id})"
+      )
+    end
+  rescue => e
+    Rails.logger.error "Failed to credit wallet: #{e.message}"
+  end
 end

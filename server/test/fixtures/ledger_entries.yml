@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  admin: one
+  wallet: one
+  transaction_type: MyString
+  amount: 9.99
+  balance_after: 9.99
+  description: MyText
+
+two:
+  admin: two
+  wallet: two
+  transaction_type: MyString
+  amount: 9.99
+  balance_after: 9.99
+  description: MyText

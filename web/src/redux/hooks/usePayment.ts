@@ -4,11 +4,15 @@ import {
   fetchMonthlyPropertyPayments,
   fetchYearlyPropertyPayments,
   fetchAllPaymentData,
+  fetchWalletBalance,
+  initiateWithdrawal,
 } from "../slices/paymentSlice";
 
 export const usePayments = () => {
   const dispatch = useAppDispatch();
-  const { data, loading, error } = useAppSelector((state) => state.payments);
+  const { data, wallet, loading, error } = useAppSelector(
+    (state) => state.payments
+  );
 
   const getPaymentsByProperty = (propertyId: string) => {
     dispatch(fetchPaymentsByProperty(propertyId));
@@ -30,13 +34,24 @@ export const usePayments = () => {
     dispatch(fetchAllPaymentData({ year, month }));
   };
 
+  const getWalletBalance = () => {
+    dispatch(fetchWalletBalance());
+  };
+
+  const initiateWithdrawalRequest = (amount: number) => {
+    dispatch(initiateWithdrawal(amount));
+  };
+
   return {
     data,
+    wallet,
     loading,
     error,
     getPaymentsByProperty,
     getMonthlyPayments,
     getYearlyPayments,
     getAllPayments,
+    getWalletBalance,
+    initiateWithdrawalRequest,
   };
 };

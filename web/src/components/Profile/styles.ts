@@ -1,5 +1,11 @@
 import styled from "styled-components";
-import { colors, fonts, fontSizes, spacing } from "../../styles/foundation";
+import {
+  colors,
+  fonts,
+  fontSizes,
+  spacing,
+  borderRadius,
+} from "../../styles/foundation";
 
 export const ProfilePageContainer = styled.div`
   background: ${colors.background};
@@ -35,5 +41,20 @@ export const ProfileHeader = styled.header`
     @media (max-width: 768px) {
       font-size: ${fontSizes.base};
     }
+  }
+`;
+
+export const LedgerButton = styled.button`
+  padding: ${spacing.sm} ${spacing.md};
+  background-color: ${colors.primary};
+  color: #fff;
+  border: none;
+  border-radius: ${borderRadius.sm};
+  cursor: pointer;
+  margin: ${spacing.md} auto;
+  display: block;
+
+  &:hover {
+    background-color: ${colors.secondary};
   }
 `;

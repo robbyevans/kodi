@@ -3,6 +3,8 @@ class Admin < ApplicationRecord
   has_secure_password
   has_one_attached :profile_image
   has_many :properties, foreign_key: 'admin_id', dependent: :destroy
+  has_one :wallet, dependent: :destroy
+  after_create :initialize_wallet
 
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true, on: :create
@@ -22,5 +24,11 @@ class Admin < ApplicationRecord
           port: Rails.application.routes.default_url_options[:port]
         ) : nil
     )
+  end
+
+  private
+
+  def initialize_wallet
+    create_wallet!(balance: 0.0)
   end
 end

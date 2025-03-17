@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_16_125144) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_17_145714) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_16_125144) do
     t.index ["tenant_id"], name: "index_houses_on_tenant_id"
   end
 
+  create_table "ledger_entries", force: :cascade do |t|
+    t.bigint "admin_id", null: false
+    t.bigint "wallet_id", null: false
+    t.string "transaction_type", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "balance_after", precision: 10, scale: 2, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_ledger_entries_on_admin_id"
+    t.index ["wallet_id"], name: "index_ledger_entries_on_wallet_id"
+  end
+
   create_table "payments", force: :cascade do |t|
     t.string "transaction_id", null: false
     t.string "bill_ref_number", null: false
@@ -107,9 +120,31 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_16_125144) do
     t.decimal "house_deposit_paid", precision: 10, scale: 2
   end
 
+  create_table "wallets", force: :cascade do |t|
+    t.bigint "admin_id", null: false
+    t.decimal "balance", precision: 10, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_wallets_on_admin_id"
+  end
+
+  create_table "withdrawals", force: :cascade do |t|
+    t.bigint "admin_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "status", default: "pending", null: false
+    t.text "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_withdrawals_on_admin_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "houses", "properties"
   add_foreign_key "houses", "tenants"
+  add_foreign_key "ledger_entries", "admins"
+  add_foreign_key "ledger_entries", "wallets"
   add_foreign_key "properties", "admins"
+  add_foreign_key "wallets", "admins"
+  add_foreign_key "withdrawals", "admins"
 end

@@ -15,15 +15,21 @@ export interface IPayment {
   house_number: string;
   settled: boolean;
 }
+interface Wallet {
+  balance: number;
+  // Add more wallet fields if needed
+}
 
 interface PaymentState {
   data: IPayment[];
+  wallet: Wallet | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: PaymentState = {
   data: [],
+  wallet: null,
   loading: false,
   error: null,
 };
@@ -103,6 +109,32 @@ export const fetchAllPaymentData = createAsyncThunk(
   }
 );
 
+// --- NEW: Fetch Wallet Balance Thunk ---
+export const fetchWalletBalance = createAsyncThunk(
+  "payments/fetchWalletBalance",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/wallets/current");
+      return response.data; // Expected to return a wallet object with at least a 'balance' field
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+// --- withdrawal Thunk ---
+export const initiateWithdrawal = createAsyncThunk(
+  "payments/initiateWithdrawal",
+  async (amount: number, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/withdrawals", { amount });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const paymentSlice = createSlice({
   name: "payments",
   initialState,
@@ -172,6 +204,44 @@ const paymentSlice = createSlice({
       state.error = action.payload as string;
       showToast({
         message: "Failed to fetch all payments",
+        type: "error",
+      });
+    });
+
+    // New cases for wallet balance
+    builder.addCase(fetchWalletBalance.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchWalletBalance.fulfilled, (state, action) => {
+      state.loading = false;
+      state.wallet = action.payload; // e.g., { balance: 0.0, ... }
+    });
+    builder.addCase(fetchWalletBalance.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+      showToast({
+        message: "Failed to fetch wallet balance",
+        type: "error",
+      });
+    });
+
+    builder.addCase(initiateWithdrawal.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(initiateWithdrawal.fulfilled, (state, action) => {
+      state.loading = false;
+      // Optionally, you might want to refetch the wallet balance after a successful withdrawal.
+
+      showToast({
+        message: "Withdrawal success",
+        type: "success",
+      });
+    });
+    builder.addCase(initiateWithdrawal.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+      showToast({
+        message: "Withdrawal request failed",
         type: "error",
       });
     });
