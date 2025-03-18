@@ -125,9 +125,11 @@ export const fetchWalletBalance = createAsyncThunk(
 // --- withdrawal Thunk ---
 export const initiateWithdrawal = createAsyncThunk(
   "payments/initiateWithdrawal",
-  async (amount: number, { rejectWithValue }) => {
+  async (amount: number, { dispatch, rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/withdrawals", { amount });
+      // Dispatch fetchWalletBalance here to update the wallet after withdrawal
+      dispatch(fetchWalletBalance());
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -228,9 +230,8 @@ const paymentSlice = createSlice({
     builder.addCase(initiateWithdrawal.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(initiateWithdrawal.fulfilled, (state, action) => {
+    builder.addCase(initiateWithdrawal.fulfilled, (state) => {
       state.loading = false;
-      // Optionally, you might want to refetch the wallet balance after a successful withdrawal.
 
       showToast({
         message: "Withdrawal success",

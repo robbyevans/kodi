@@ -34,8 +34,8 @@ const LedgerHistoryModal: React.FC<LedgerHistoryModalProps> = ({
           setLedgerEntries(response.data);
           setLoading(false);
         })
-        .catch((err) => {
-          setError("Failed to fetch ledger entries.");
+        .catch((err: any) => {
+          setError(`Failed to fetch ledger entries.${err}`);
           setLoading(false);
         });
     }

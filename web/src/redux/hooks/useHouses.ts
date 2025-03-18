@@ -34,7 +34,7 @@ export const useHouses = () => {
 
   const addHouseToProperty = (
     propertyId: number,
-    houseData: Omit<IHouse, "id" | "property_id">
+    houseData: Omit<IHouse, "id" | "property_id" | "account_number">
   ) => {
     dispatch(
       addHouse({

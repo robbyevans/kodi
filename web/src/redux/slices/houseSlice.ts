@@ -58,7 +58,7 @@ export const addHouse = createAsyncThunk(
       houseData,
     }: {
       propertyId: number;
-      houseData: Omit<IHouse, "id" | "property_id">;
+      houseData: Omit<IHouse, "id" | "property_id" | "account_number">;
     },
     { dispatch, rejectWithValue }
   ) => {
