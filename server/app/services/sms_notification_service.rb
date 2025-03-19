@@ -15,10 +15,10 @@ class SmsNotificationService
     at = AfricasTalking::Initialize.new(@username, @api_key)
     sms = at.sms
     
-    # Initialize options as an empty hash
-    options = {}
-    # Only set the sender ID if you're not in sandbox mode (optional)
-    options["from"] = "Kodi Property Management" unless @username == "sandbox"
+     # Set sender ID based on environment – always set for production
+     sender_id = Rails.env.production? ? "KODI_PMS" : nil
+     options = {}
+     options["from"] = sender_id if sender_id.present?
     
     response = sms.send({
       "message" => @message,

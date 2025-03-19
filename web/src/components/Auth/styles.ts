@@ -194,6 +194,7 @@ export const GetStartedButton = styled.button`
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
 
   &:hover {
     transform: scale(1.03);
@@ -240,7 +241,7 @@ export const InfoFeatures = styled.ul`
 
 export const InfoImage = styled.img`
   position: relative;
-  right: 78px;
+  right: 27px;
   top: -36px;
   width: 114%;
   border-radius: ${borderRadius.md};
