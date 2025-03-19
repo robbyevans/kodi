@@ -123,12 +123,23 @@ export const fetchWalletBalance = createAsyncThunk(
 );
 
 // --- withdrawal Thunk ---
+// File: /web/src/redux/slices/paymentSlice.ts
 export const initiateWithdrawal = createAsyncThunk(
   "payments/initiateWithdrawal",
-  async (amount: number, { dispatch, rejectWithValue }) => {
+  async (
+    {
+      amount,
+      withdrawal_type,
+      recipient_details,
+    }: { amount: number; withdrawal_type: string; recipient_details: any },
+    { dispatch, rejectWithValue }
+  ) => {
     try {
-      const response = await axiosInstance.post("/withdrawals", { amount });
-      // Dispatch fetchWalletBalance here to update the wallet after withdrawal
+      const response = await axiosInstance.post("/withdrawals", {
+        amount,
+        withdrawal_type,
+        recipient_details,
+      });
       dispatch(fetchWalletBalance());
       return response.data;
     } catch (error: any) {
@@ -153,10 +164,7 @@ const paymentSlice = createSlice({
     builder.addCase(fetchPaymentsByProperty.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Failed to fetch payments by property",
-        type: "error",
-      });
+      showToast({ message: "Failed to fetch payments by property",type: "error"});
     });
 
     // fetchMonthlyPropertyPayments
@@ -170,10 +178,7 @@ const paymentSlice = createSlice({
     builder.addCase(fetchMonthlyPropertyPayments.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Failed to fetch monthly payments",
-        type: "error",
-      });
+      showToast({ message: "Failed to fetch monthly payments", type: "error" });
     });
 
     // fetchYearlyPropertyPayments
@@ -187,10 +192,7 @@ const paymentSlice = createSlice({
     builder.addCase(fetchYearlyPropertyPayments.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Failed to fetch yearly payments",
-        type: "error",
-      });
+      showToast({ message: "Failed to fetch yearly payments", type: "error" });
     });
 
     // fetchAllPaymentData
@@ -204,10 +206,7 @@ const paymentSlice = createSlice({
     builder.addCase(fetchAllPaymentData.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Failed to fetch all payments",
-        type: "error",
-      });
+      showToast({ message: "Failed to fetch all payments", type: "error" });
     });
 
     // New cases for wallet balance
@@ -221,30 +220,22 @@ const paymentSlice = createSlice({
     builder.addCase(fetchWalletBalance.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Failed to fetch wallet balance",
-        type: "error",
-      });
+      showToast({ message: "Failed to fetch wallet balance", type: "error" });
     });
 
+    // New case for withdrawal requests
     builder.addCase(initiateWithdrawal.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(initiateWithdrawal.fulfilled, (state) => {
       state.loading = false;
 
-      showToast({
-        message: "Withdrawal success",
-        type: "success",
-      });
+      showToast({ message: "Withdrawal success", type: "success" });
     });
     builder.addCase(initiateWithdrawal.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({
-        message: "Withdrawal request failed",
-        type: "error",
-      });
+      showToast({ message: "Withdrawal request failed", type: "error" });
     });
   },
 });

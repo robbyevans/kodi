@@ -4,7 +4,7 @@ import { IHouse } from "../../redux/slices/houseSlice";
 import HouseModal from "../Modals/HouseModal/HouseModal";
 import AddTenantModal from "../Modals/AddTenantModal/AddTenantModal";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { TbSquareChevronRightFilled } from "react-icons/tb";
+import { FaHouseChimney } from "react-icons/fa6";
 import { MdSimCardDownload } from "react-icons/md";
 import PropertyPageSkeleton from "./PropertyPageSkeleton";
 import { colors } from "../../styles/foundation";
@@ -72,6 +72,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
             <thead>
               <tr>
                 <S.TableHeader>House Number</S.TableHeader>
+                <S.TableHeader>Status</S.TableHeader>
                 <S.TableHeader>Tenant Name</S.TableHeader>
                 <S.TableHeader>Tenant Contact</S.TableHeader>
                 <S.TableHeader>Payable Deposit</S.TableHeader>
@@ -98,10 +99,11 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
                         size="25px"
                         onClick={(e) => handleClickEdit(e, house)}
                       />
-                      <TbSquareChevronRightFilled color={colors.primary} />
+                      <FaHouseChimney color={colors.primary} />
                       {house.house_number}
                     </S.IconTableData>
                   </S.TableData>
+                  <S.TableData>{house.paymentStatus || "N/A"}</S.TableData>
                   <S.TableData>{house.tenant?.name || "Vacant"}</S.TableData>
                   <S.TableData>
                     {house.tenant?.phone_number || "N/A"}

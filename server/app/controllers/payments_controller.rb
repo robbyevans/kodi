@@ -53,4 +53,15 @@ class PaymentsController < ApplicationController
 
     render json: payments
   end
+
+  # Allow editing only the 'settled' field
+  def update
+    payment = Payment.find(params[:id])
+    if payment.update(settled: params.require(:payment).permit(:settled)[:settled])
+      render json: payment, status: :ok
+    else
+      render json: payment.errors, status: :unprocessable_entity
+    end
+  end
+
 end

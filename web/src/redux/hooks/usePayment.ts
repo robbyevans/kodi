@@ -38,8 +38,14 @@ export const usePayments = () => {
     dispatch(fetchWalletBalance());
   };
 
-  const initiateWithdrawalRequest = (amount: number) => {
-    dispatch(initiateWithdrawal(amount));
+  const initiateWithdrawalRequest = (
+    amount: number,
+    withdrawal_type: string,
+    recipient_details: any
+  ) => {
+    dispatch(
+      initiateWithdrawal({ amount, withdrawal_type, recipient_details })
+    );
   };
 
   return {

@@ -7,12 +7,16 @@ import { fetchAllProperties } from "../redux/slices/propertiesSlice";
 import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
 import ToastMessage from "./Toast/ToastMessage";
+import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
 const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
   const dispatch = useAppDispatch();
+
+  // Activate payment notifications
+  usePaymentNotifications();
 
   useEffect(() => {
     if (isAuthenticated) {

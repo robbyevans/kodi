@@ -1,28 +1,38 @@
-# app/services/flutterwave_payout_service.rb
-require 'faraday'
-require 'json'
-
+# File: /server/app/services/flutterwave_payout_service.rb
 class FlutterwavePayoutService
-  FLW_BASE_URL = "https://api.flutterwave.com/v3"  # Use test or live endpoint as needed
+  FLW_BASE_URL = "https://api.flutterwave.com/v3"  # Adjust as needed
 
-  def initialize(admin, amount)
+  def initialize(admin, amount, withdrawal_type, recipient_details)
     @admin = admin
     @amount = amount.to_d
+    @withdrawal_type = withdrawal_type  # "mpesa" or "bank"
+    @recipient_details = recipient_details
     @secret_key = Rails.application.credentials.flutterwave[:secret_key] || ENV['FLUTTERWAVE_SECRET_KEY']
   end
 
   def perform
-    # Build the payout payload
     payload = {
-      account_bank: "KE",  # For Kenyan banks; adjust accordingly or pass bank code dynamically
-      account_number: @admin.phone_number,  # or use a dedicated bank account number stored in admin/wallet
       amount: @amount.to_f,
       currency: "KES",
       narration: "Withdrawal for #{@admin.name}",
       reference: SecureRandom.hex(10)
     }
 
-    # Create a connection
+    if @withdrawal_type == "mpesa"
+      payload.merge!({
+        account_bank: "MPESA",  # Use a designated code or value for MPesa
+        account_number: @recipient_details["mobile_number"]
+      })
+    elsif @withdrawal_type == "bank"
+      payload.merge!({
+        account_bank: @recipient_details["bank_code"],
+        account_number: @recipient_details["account_number"],
+        beneficiary_name: @recipient_details["account_name"]
+      })
+    else
+      return { success: false, error: "Invalid withdrawal type" }
+    end
+
     conn = Faraday.new(url: FLW_BASE_URL) do |faraday|
       faraday.request :json
       faraday.response :json, parser_options: { symbolize_names: true }
@@ -35,12 +45,11 @@ class FlutterwavePayoutService
       req.body = payload.to_json
     end
 
-    # Check for success
     if response.success? && response.body[:status] == "success"
-      return { success: true, data: response.body[:data] }
+      { success: true, data: response.body[:data] }
     else
       error_message = response.body[:message] || "Unknown error"
-      return { success: false, error: error_message }
+      { success: false, error: error_message }
     end
   rescue => e
     Rails.logger.error "Flutterwave Payout Error: #{e.message}"

@@ -6,6 +6,8 @@ class Payment < ApplicationRecord
 
   # After a payment record is created, update the landlord's wallet
   after_create :credit_landlord_wallet
+  # After a payment is received broadcast this payment
+  after_create_commit :broadcast_payment
 
   private
 
@@ -31,5 +33,14 @@ class Payment < ApplicationRecord
     end
   rescue => e
     Rails.logger.error "Failed to credit wallet: #{e.message}"
+  end
+
+  def broadcast_payment
+    if (property = Property.find_by(unique_id: property_id)) && property.admin
+      # Broadcast to the PaymentsChannel for this admin
+      PaymentsChannel.broadcast_to(property.admin, payment: self.as_json)
+    end
+  rescue => e
+    Rails.logger.error "Failed to broadcast payment: #{e.message}"
   end
 end
