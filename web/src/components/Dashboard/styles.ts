@@ -183,13 +183,13 @@ export const Skeleton = styled.div`
 `;
 
 export const SkeletonText = styled(Skeleton)<{
-  width: string;
-  height: string;
-  marginBottom?: string;
+  $width: string;
+  $height: string;
+  $marginBottom?: string;
 }>`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
-  margin-bottom: ${(props) => props.marginBottom || "0"};
+  width: ${(props) => props.$width};
+  height: ${(props) => props.$height};
+  margin-bottom: ${(props) => props.$marginBottom || "0"};
 `;
 
 export const ProfileImageSkeleton = styled(Skeleton)`
