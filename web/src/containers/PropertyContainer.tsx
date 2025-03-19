@@ -18,7 +18,6 @@ const PropertyContainer: React.FC = () => {
   } = useProperties();
 
   const { data: payments, getPaymentsByProperty } = usePayments();
-  console.log("payments", payments);
 
   // First, fetch the property using its id from the URL.
   useEffect(() => {
