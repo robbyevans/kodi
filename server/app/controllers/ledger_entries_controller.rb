@@ -1,4 +1,3 @@
-# app/controllers/ledger_entries_controller.rb
 class LedgerEntriesController < ApplicationController
   before_action :authenticate_admin
 

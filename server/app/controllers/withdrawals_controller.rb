@@ -19,7 +19,7 @@ class WithdrawalsController < ApplicationController
   private
 
   def authenticate_admin
-    # Your authentication logic here. For example, if you use JWT, verify token and set current_admin.
+  
     render json: { error: "Unauthorized" }, status: :unauthorized unless current_admin
   end
 end

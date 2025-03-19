@@ -1,4 +1,3 @@
-# In your WalletsController
 class WalletsController < ApplicationController
   before_action :authenticate_admin
 

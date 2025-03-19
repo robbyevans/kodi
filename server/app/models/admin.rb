@@ -1,4 +1,3 @@
-# File: /server/app/models/admin.rb
 class Admin < ApplicationRecord
   has_secure_password
   has_one_attached :profile_image

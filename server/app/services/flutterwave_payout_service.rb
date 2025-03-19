@@ -1,4 +1,3 @@
-# File: /server/app/services/flutterwave_payout_service.rb
 class FlutterwavePayoutService
   FLW_BASE_URL = "https://api.flutterwave.com/v3"  # Adjust as needed
 

@@ -1,4 +1,3 @@
-# File: app/jobs/payment_sms_job.rb
 class PaymentSmsJob < ApplicationJob
   queue_as :default
 
