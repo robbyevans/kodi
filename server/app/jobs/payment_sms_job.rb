@@ -13,15 +13,30 @@ class PaymentSmsJob < ApplicationJob
     tenant_phone = house&.tenant&.phone_number
     msisdn = payment.msisdn
 
+      # Normalize the numbers if present
+      normalized_tenant = tenant_phone.present? ? normalize_phone(tenant_phone) : nil
+      normalized_msisdn = msisdn.present? ? normalize_phone(msisdn) : nil
+  
+
     message = "Dear Tenant, we confirm receipt of your rent payment for House #{payment.house_number} of KES #{payment.transaction_amount} (Transaction ID: #{payment.transaction_id}). Thank you for your prompt payment. Regards, Kodi Property Management."
 
     # Create a list of unique phone numbers (avoid duplicates if tenant_phone equals msisdn)
     numbers = []
-    numbers << tenant_phone if tenant_phone.present?
-    numbers << msisdn if msisdn.present? && msisdn != tenant_phone
+    numbers << normalized_tenant if normalized_tenant.present?
+    # Only add msisdn if it's not the same as the tenant's number
+    numbers << normalized_msisdn if normalized_msisdn.present? && normalized_msisdn != normalized_tenant
 
     numbers.each do |number|
       SmsNotificationService.new(number, message).perform
+    end
+  end
+
+  def normalize_phone(number)
+    digits = number.gsub(/\D/, "")
+    if digits.start_with?("0")
+      "+254" + digits[1..-1]
+    else
+      number.start_with?("+") ? number : "+#{digits}"
     end
   end
 end
