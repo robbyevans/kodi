@@ -31,6 +31,10 @@ class HousesController < ApplicationController
 
   # POST /properties/:property_id/houses
   def create
+
+        # Log Africa's Talking credentials to ensure they're loaded correctly (for testing only)
+        Rails.logger.info "AFRICASTALKING_USERNAME: #{ENV['AFRICASTALKING_USERNAME']}, AFRICASTALKING_API_KEY: #{ENV['AFRICASTALKING_API_KEY']}"
+
     @house = @property.houses.new(house_params)
     if @house.save
       render json: @house.as_json(

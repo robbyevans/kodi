@@ -6,8 +6,12 @@ class Payment < ApplicationRecord
 
   # After a payment record is created, update the landlord's wallet
   after_create :credit_landlord_wallet
+
   # After a payment is received broadcast this payment
   after_create_commit :broadcast_payment
+
+  # After a successful payment, trigger sms notification to both the tenant and msisdn
+  after_create_commit :enqueue_sms_notification
 
   private
 
@@ -18,6 +22,7 @@ class Payment < ApplicationRecord
     wallet = property.admin.wallet
 
     wallet.with_lock do
+      
       # Credit the wallet with the transaction amount
       wallet.credit!(transaction_amount)
       
@@ -42,5 +47,9 @@ class Payment < ApplicationRecord
     end
   rescue => e
     Rails.logger.error "Failed to broadcast payment: #{e.message}"
+  end
+
+  def enqueue_sms_notification
+    PaymentSmsJob.perform_later(self.id)
   end
 end
