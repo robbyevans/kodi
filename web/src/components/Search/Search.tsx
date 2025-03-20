@@ -90,7 +90,7 @@ const Search: React.FC<SearchProps> = ({ isVisible }) => {
   };
 
   return (
-    <S.SearchContainer isVisible={isVisible}>
+    <S.SearchContainer $isVisible={isVisible}>
       <S.SearchInput
         type="text"
         placeholder="Search estates, houses, tenants..."

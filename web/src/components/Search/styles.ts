@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { colors } from "../../styles/foundation";
 
-export const SearchContainer = styled.div<{ isVisible: boolean }>`
-  width: ${(props) => (props.isVisible ? "50%" : "0px")};
+export const SearchContainer = styled.div<{ $isVisible: boolean }>`
+  width: ${(props) => (props.$isVisible ? "50%" : "0px")};
   transition: width 0.3s ease-in-out;
   overflow: hidden;
 `;
