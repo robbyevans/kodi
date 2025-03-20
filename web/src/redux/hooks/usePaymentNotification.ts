@@ -2,7 +2,11 @@ import { createConsumer } from "@rails/actioncable";
 import { useEffect } from "react";
 import { useAppDispatch } from "../utils";
 import { showToast } from "../slices/toastSlice";
-import { fetchPaymentsByProperty } from "../slices/paymentSlice";
+import {
+  fetchPaymentsByProperty,
+  fetchLedgerEntries,
+  fetchWalletBalance,
+} from "../slices/paymentSlice";
 import { useProperties } from "./useProperties";
 
 const usePaymentNotifications = () => {
@@ -27,6 +31,8 @@ const usePaymentNotifications = () => {
             );
             if (propertyId) {
               dispatch(fetchPaymentsByProperty(propertyId.toString()));
+              dispatch(fetchLedgerEntries());
+              dispatch(fetchWalletBalance());
             }
           }
         },

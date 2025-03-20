@@ -16,6 +16,8 @@ const AnalyticsContainer: React.FC = () => {
     // ^ or pass month/year as needed
   }, []);
 
+  console.log("edger", ledger);
+
   return (
     <AnalyticsPage
       user={user}

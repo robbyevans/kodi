@@ -18,8 +18,4 @@ class WithdrawalsController < ApplicationController
 
   private
 
-  def authenticate_admin
-  
-    render json: { error: "Unauthorized" }, status: :unauthorized unless current_admin
-  end
 end
