@@ -1,18 +1,17 @@
-// File: /web/src/components/WithdrawalForm/WithdrawalForm.tsx
 import React, { useState } from "react";
 import { usePayments } from "../../redux/hooks/usePayment";
+import { useAdmins } from "../../redux/hooks/useAdmin";
 
 const WithdrawalForm: React.FC = () => {
   const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-  const [withdrawalType, setWithdrawalType] = useState<"mpesa" | "bank">(
-    "mpesa"
-  );
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [withdrawalType, setWithdrawalType] = useState<"mpesa" | "bank">("mpesa");
+
   const [bankAccountNumber, setBankAccountNumber] = useState("");
   const [bankCode, setBankCode] = useState("");
   const [accountName, setAccountName] = useState("");
 
   const { wallet, initiateWithdrawalRequest, loading } = usePayments();
+  const { user } = useAdmins();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,20 +23,12 @@ const WithdrawalForm: React.FC = () => {
       alert("Insufficient wallet balance.");
       return;
     }
+
     // Build recipient details based on withdrawal type
     let recipient_details = {};
-    if (withdrawalType === "mpesa") {
-      if (!mobileNumber.trim()) {
-        alert("Please enter a valid mobile number for MPesa withdrawal.");
-        return;
-      }
-      recipient_details = { mobile_number: mobileNumber };
-    } else if (withdrawalType === "bank") {
-      if (
-        !bankAccountNumber.trim() ||
-        !bankCode.trim() ||
-        !accountName.trim()
-      ) {
+
+    if (withdrawalType === "bank") {
+      if (!bankAccountNumber.trim() || !bankCode.trim() || !accountName.trim()) {
         alert("Please fill in all bank account details.");
         return;
       }
@@ -48,11 +39,7 @@ const WithdrawalForm: React.FC = () => {
       };
     }
 
-    initiateWithdrawalRequest(
-      withdrawAmount,
-      withdrawalType,
-      recipient_details
-    );
+    initiateWithdrawalRequest(withdrawAmount, withdrawalType, recipient_details);
   };
 
   return (
@@ -66,8 +53,7 @@ const WithdrawalForm: React.FC = () => {
     >
       <h3>Withdraw Funds</h3>
       <p>
-        Current Balance: KES{" "}
-        {wallet ? Number(wallet.balance).toFixed(2) : "0.00"}
+        Current Balance: KES {wallet ? Number(wallet.balance).toFixed(2) : "0.00"}
       </p>
       <form onSubmit={handleSubmit}>
         <div>
@@ -95,9 +81,17 @@ const WithdrawalForm: React.FC = () => {
             <input
               type="text"
               placeholder="Mobile number for MPesa"
-              value={mobileNumber}
-              onChange={(e) => setMobileNumber(e.target.value)}
-              style={{ padding: "0.5rem", width: "100%", margin: "0.5rem 0" }}
+              value={
+                user.phone_number ||
+                "Update and verify your phone number in your profile"
+              }
+              disabled
+              style={{
+                padding: "0.5rem",
+                width: "100%",
+                margin: "0.5rem 0",
+                backgroundColor: "#eee",
+              }}
             />
           </div>
         ) : (
@@ -132,11 +126,7 @@ const WithdrawalForm: React.FC = () => {
           onChange={(e) => setWithdrawAmount(Number(e.target.value))}
           style={{ padding: "0.5rem", width: "100%", marginBottom: "0.5rem" }}
         />
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ padding: "0.5rem 1rem" }}
-        >
+        <button type="submit" disabled={loading} style={{ padding: "0.5rem 1rem" }}>
           {loading ? "Processing..." : "Withdraw"}
         </button>
       </form>
