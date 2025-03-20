@@ -22,6 +22,10 @@ export const SplitContainer = styled.div`
     flex-direction: column;
     height: auto;
   }
+
+  @media (max-width: 400px) {
+    margin-top: -50px;
+  }
 `;
 
 // Left pane for auth form

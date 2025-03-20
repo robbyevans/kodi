@@ -63,6 +63,9 @@ export const QuizSection = styled.div`
     padding: ${spacing.md};
     margin-bottom: ${spacing.md};
   }
+  @media (max-width: 400px) {
+    margin-top: -60px;
+  }
 `;
 
 export const QuizTitle = styled.h2`
