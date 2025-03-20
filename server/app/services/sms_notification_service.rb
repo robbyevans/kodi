@@ -15,10 +15,8 @@ class SmsNotificationService
     at = AfricasTalking::Initialize.new(@username, @api_key)
     sms = at.sms
     
-     # Set sender ID based on environment – always set for production
-     sender_id = Rails.env.production? ? "KODI_PMS" : nil
-     options = {}
-     options["from"] = sender_id if sender_id.present?
+    # Always set the sender ID (ensure this sender is registered with Africa's Talking)
+    options = { "from" => ENV.fetch("AFRICASTALKING_SENDER_ID", "KODI_PMS") }
     
     response = sms.send({
       "message" => @message,

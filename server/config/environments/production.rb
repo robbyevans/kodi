@@ -51,6 +51,14 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
+
+  # Configure Action Cable URL and allowed request origins.
+  config.action_cable.url = "wss://kodi-rails-server.onrender.com/cable"
+  config.action_cable.allowed_request_origins = [
+      "https://kodi-2ti.pages.dev",
+      "https://kodi-rails-server.onrender.com"
+    ]
+
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
@@ -95,10 +103,6 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-
-  config.action_cable.allowed_request_origins = [
-  'https://kodi-2ti.pages.dev'
-]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
