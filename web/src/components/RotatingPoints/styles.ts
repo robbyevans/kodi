@@ -32,7 +32,7 @@ export const InfoFeatures = styled.ul`
   overflow: hidden;
 `;
 
-export const InfoPoint = styled.li<{ active: boolean }>`
+export const InfoPoint = styled.li<{ $active: boolean }>`
   font-family: sans-serif;
   margin: 0;
   position: absolute;
@@ -40,7 +40,7 @@ export const InfoPoint = styled.li<{ active: boolean }>`
   text-align: center;
   font-size: ${fontSizes.lg};
   /* Only the active point is visible and animates */
-  opacity: ${(props) => (props.active ? 1 : 0)};
-  animation: ${(props) => (props.active ? scrollAnimation : "none")} 2s linear
+  opacity: ${(props) => (props.$active ? 1 : 0)};
+  animation: ${(props) => (props.$active ? scrollAnimation : "none")} 2s linear
     forwards;
 `;

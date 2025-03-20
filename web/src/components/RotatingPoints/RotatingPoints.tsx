@@ -33,7 +33,7 @@ const RotatingPoints: React.FC = () => {
   return (
     <S.InfoFeatures>
       {points.map((point, index) => (
-        <S.InfoPoint key={index} active={index === activeIndex}>
+        <S.InfoPoint key={index} $active={index === activeIndex}>
           {point}
         </S.InfoPoint>
       ))}

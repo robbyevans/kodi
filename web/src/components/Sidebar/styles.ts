@@ -42,8 +42,8 @@ export const Menu = styled.div`
 `;
 
 // Updated MenuItem with active styling
-export const MenuItem = styled.button<{ active?: boolean }>`
-  background: ${(props) => (props.active ? "#265d50" : "none")};
+export const MenuItem = styled.button<{ $active?: boolean }>`
+  background: ${(props) => (props.$active ? "#265d50" : "none")};
   border: none;
   color: ${colors.text.inverted};
   width: 100%;
@@ -56,7 +56,7 @@ export const MenuItem = styled.button<{ active?: boolean }>`
   border-radius: ${borderRadius.sm};
 
   &:hover {
-    background: ${(props) => (props.active ? "#265d50" : colors.secondary)};
+    background: ${(props) => (props.$active ? "#265d50" : colors.secondary)};
     transform: translateX(-5px);
   }
 

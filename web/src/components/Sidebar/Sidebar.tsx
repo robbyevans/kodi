@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
         <S.MenuItem
           key={path}
           onClick={() => handleNavigation(path)}
-          active={activePath === path}
+          $active={activePath === path}
         >
           {icon}
           <S.MenuText>{label}</S.MenuText>
