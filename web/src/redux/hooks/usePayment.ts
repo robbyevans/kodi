@@ -6,11 +6,12 @@ import {
   fetchAllPaymentData,
   fetchWalletBalance,
   initiateWithdrawal,
+  fetchLedgerEntries,
 } from "../slices/paymentSlice";
 
 export const usePayments = () => {
   const dispatch = useAppDispatch();
-  const { data, wallet, loading, error } = useAppSelector(
+  const { data, ledger, wallet, loading, error } = useAppSelector(
     (state) => state.payments
   );
 
@@ -48,8 +49,13 @@ export const usePayments = () => {
     );
   };
 
+  const getLedgerEntries = () => {
+    dispatch(fetchLedgerEntries());
+  };
+
   return {
     data,
+    ledger,
     wallet,
     loading,
     error,
@@ -59,5 +65,6 @@ export const usePayments = () => {
     getAllPayments,
     getWalletBalance,
     initiateWithdrawalRequest,
+    getLedgerEntries,
   };
 };

@@ -2,6 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
 
+export interface ILedger {
+  id: number;
+  admin_id: number;
+  wallet_id: number;
+  transaction_type: "deposit" | "withdrawal";
+  amount: number;
+  balance_after: number;
+  description: string;
+  created_at: string; // or Date
+  updated_at: string; // or Date
+}
+
 export interface IPayment {
   transaction_id: string;
   bill_ref_number: string;
@@ -21,6 +33,7 @@ interface Wallet {
 }
 
 interface PaymentState {
+  ledger: ILedger[];
   data: IPayment[];
   wallet: Wallet | null;
   loading: boolean;
@@ -29,6 +42,7 @@ interface PaymentState {
 
 const initialState: PaymentState = {
   data: [],
+  ledger: [],
   wallet: null,
   loading: false,
   error: null,
@@ -148,6 +162,18 @@ export const initiateWithdrawal = createAsyncThunk(
   }
 );
 
+export const fetchLedgerEntries = createAsyncThunk(
+  "payments/fetchLedgerEntries",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/ledger_entries");
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 const paymentSlice = createSlice({
   name: "payments",
   initialState,
@@ -164,7 +190,10 @@ const paymentSlice = createSlice({
     builder.addCase(fetchPaymentsByProperty.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-      showToast({ message: "Failed to fetch payments by property",type: "error"});
+      showToast({
+        message: "Failed to fetch payments by property",
+        type: "error",
+      });
     });
 
     // fetchMonthlyPropertyPayments
@@ -236,6 +265,19 @@ const paymentSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
       showToast({ message: "Withdrawal request failed", type: "error" });
+    });
+
+    builder.addCase(fetchLedgerEntries.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchLedgerEntries.fulfilled, (state, action) => {
+      state.loading = false;
+      state.ledger = action.payload; // <--- store them in ledger
+    });
+    builder.addCase(fetchLedgerEntries.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+      showToast({ message: "Failed to fetch ledger entries", type: "error" });
     });
   },
 });

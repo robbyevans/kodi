@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
 
+// -------------------------------------
+// TYPES
+// -------------------------------------
 export interface IUser {
   name: string;
   email: string;
@@ -26,6 +29,9 @@ interface AdminState {
   error: string | null;
 }
 
+// -------------------------------------
+// HELPERS
+// -------------------------------------
 const storeAuthData = (
   token: string,
   admin: {
@@ -68,13 +74,20 @@ const getStoredAuthData = () => {
   };
 };
 
+// -------------------------------------
+// INITIAL STATE
+// -------------------------------------
 const initialState: AdminState = {
   ...getStoredAuthData(),
   loading: false,
   error: null,
 };
 
-// Async thunk for login
+// -------------------------------------
+// ASYNC THUNKS
+// -------------------------------------
+
+// loginAdmin
 export const loginAdmin = createAsyncThunk(
   "admin/loginAdmin",
   async (
@@ -96,7 +109,7 @@ export const loginAdmin = createAsyncThunk(
   }
 );
 
-// Async thunk for signup
+// signupAdmin
 export const signupAdmin = createAsyncThunk(
   "admin/signup",
   async (
@@ -120,7 +133,7 @@ export const signupAdmin = createAsyncThunk(
   }
 );
 
-// Async thunk for Google Authentication (for both login and signup)
+// googleAuthAdmin
 export const googleAuthAdmin = createAsyncThunk(
   "admin/googleAuthAdmin",
   async (
@@ -134,10 +147,7 @@ export const googleAuthAdmin = createAsyncThunk(
       });
       dispatch(
         showToast({
-          message:
-            mode === "login"
-              ? "Logged in successfully!"
-              : "Signed up successfully!",
+          message: `Successfully ${mode} via Google!`,
           type: "success",
         })
       );
@@ -151,6 +161,7 @@ export const googleAuthAdmin = createAsyncThunk(
   }
 );
 
+//  editAdmin
 export const editAdmin = createAsyncThunk(
   "admin/editAdmin",
   async (
@@ -193,6 +204,9 @@ export const editAdmin = createAsyncThunk(
   }
 );
 
+// -------------------------------------
+// SLICE
+// -------------------------------------
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -220,6 +234,8 @@ const adminSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // loginAdmin
       .addCase(loginAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -234,6 +250,8 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+
+      // signupAdmin
       .addCase(signupAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -248,7 +266,8 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Extra reducers for Google Auth
+
+      //googleAuthAdmin
       .addCase(googleAuthAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -263,13 +282,15 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Extra reducers for editAdmin
+
+      // editAdmin
       .addCase(editAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(editAdmin.fulfilled, (state, action) => {
         state.loading = false;
+        // Merge the updated fields into admin
         state.admin = {
           ...state.admin,
           ...action.payload,
@@ -285,6 +306,6 @@ const adminSlice = createSlice({
   },
 });
 
+// Export your logout action if needed
 export const { logout } = adminSlice.actions;
-
 export default adminSlice.reducer;

@@ -1,5 +1,6 @@
 class Wallet < ApplicationRecord
   belongs_to :admin
+  has_many :ledger_entries
 
   # Safely add funds
   def credit!(amount)

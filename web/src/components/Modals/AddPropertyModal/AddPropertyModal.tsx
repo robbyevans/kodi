@@ -124,9 +124,10 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                 id="numberOfUnits"
                 min="0"
                 max="100"
+                placeholder="number of houses in this property"
                 value={numberOfUnits}
                 onChange={(e) =>
-                  setNumberOfUnits(Math.min(100, parseInt(e.target.value) || 0))
+                  setNumberOfUnits(Math.min(100, parseInt(e.target.value)))
                 }
               />
             </S.FormGroup>

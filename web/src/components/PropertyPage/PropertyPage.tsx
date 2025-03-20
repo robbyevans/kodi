@@ -55,6 +55,9 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
     setIsEditHouseModalOpen(true);
   };
 
+  // Sort houses in ascending order by house.id
+  const sortedHouses = [...houses].sort((a, b) => a.id - b.id);
+
   return (
     <>
       {isPropertyLoading && <PropertyPageSkeleton />}
@@ -88,7 +91,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
               </tr>
             </thead>
             <tbody>
-              {houses.map((house) => (
+              {sortedHouses.map((house) => (
                 <S.TableRow
                   key={house.id}
                   onClick={() => openTenantModal(house)}

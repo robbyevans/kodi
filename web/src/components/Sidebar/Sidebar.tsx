@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
-import {
-  FiHome,
-  FiSettings,
-  FiUser,
-  FiLogOut,
-  FiMenu,
-  FiX,
-} from "react-icons/fi";
+import { FiHome, FiSettings, FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { IoAnalytics } from "react-icons/io5";
 import * as S from "./styles";
 
 const menuItems = [
   { path: "/dashboard", icon: <FiHome />, label: "Dashboard" },
+  { path: "/analytics", icon: <IoAnalytics />, label: "Analytics" },
   { path: "/settings", icon: <FiSettings />, label: "Settings" },
-  { path: "/profile", icon: <FiUser />, label: "Profile" },
 ];
 
 const Sidebar: React.FC = () => {

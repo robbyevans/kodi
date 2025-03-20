@@ -8,7 +8,7 @@ import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "../components/Utils/AccessRouter";
 import DashboardContainer from "../containers/dashboardContainer";
 import SettingsPageContainer from "../containers/settingsContainer";
-import ProfileContainer from "../containers/profileContainer";
+import AnalyticsContainer from "../containers/AnalyticsContainer";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
@@ -84,10 +84,10 @@ const AppRouter = () => {
             />
 
             <Route
-              path="/profile"
+              path="/analytics"
               element={
                 <AccessRouter>
-                  <ProfileContainer />
+                  <AnalyticsContainer />
                 </AccessRouter>
               }
             />

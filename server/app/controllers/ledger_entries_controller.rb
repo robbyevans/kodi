@@ -30,9 +30,4 @@ class LedgerEntriesController < ApplicationController
 
   private
 
-  def authenticate_admin
-    # Implement your authentication logic; e.g., using Devise or JWT
-    # For now, assume current_admin is set.
-    render json: { error: "Unauthorized" }, status: :unauthorized unless current_admin
-  end
 end
