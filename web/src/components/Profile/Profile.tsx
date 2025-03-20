@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import * as S from "./styles";
-import ProfileSection from "../ProfileSection/ProfileSection";
 import WithdrawalForm from "../WithdrawalForm/WithdrawalForm";
 import WalletInfo from "../WalletInfo/WalletInfo";
 import LedgerHistoryModal from "../LedgerHistoryModal/LedgerHistoryModal";
@@ -13,6 +12,8 @@ interface IProfileProps {
 
 const ProfilePage: React.FC<IProfileProps> = ({ user, onEditUser }) => {
   const [isLedgerModalOpen, setIsLedgerModalOpen] = useState(false);
+  console.log("user", user);
+  console.log("onEditUser", onEditUser);
 
   return (
     <S.ProfilePageContainer data-testid="profile-page-container">
@@ -34,8 +35,6 @@ const ProfilePage: React.FC<IProfileProps> = ({ user, onEditUser }) => {
           onClose={() => setIsLedgerModalOpen(false)}
         />
       )}
-
-      <ProfileSection user={user} onEditUser={onEditUser} />
     </S.ProfilePageContainer>
   );
 };

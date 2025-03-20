@@ -1,8 +1,10 @@
 import React from "react";
 import { useProperties } from "../redux/hooks/useProperties";
 import SettingsPage from "../components/SettingsPage/SettingsPage";
+import { useAdmins } from "../redux/hooks/useAdmin";
 
 const SettingsContainer: React.FC = () => {
+  const { user, handleEditUser } = useAdmins();
   const {
     data: propertiesData,
     handleEditProperty,
@@ -12,6 +14,8 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <SettingsPage
+      user={user}
+      onEditUser={handleEditUser}
       isPropertyLoading={loading}
       propertiesData={propertiesData}
       onEditProperty={handleEditProperty}
