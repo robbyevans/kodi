@@ -15,6 +15,7 @@ export interface ILedger {
 }
 
 export interface IPayment {
+  id: number;
   transaction_id: string;
   bill_ref_number: string;
   msisdn: string;
@@ -119,6 +120,27 @@ export const fetchAllPaymentData = createAsyncThunk(
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+// New: Update a payment (e.g., mark it as settled)
+// Payment slice partial
+export const updatePayment = createAsyncThunk(
+  "payments/updatePayment",
+  async (
+    { paymentId, updates }: { paymentId: number; updates: Partial<IPayment> },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(`/payments/${paymentId}`, {
+        payment: updates,
+      });
+      return response.data; // updated Payment from the server
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || "Failed to update payment"
+      );
     }
   }
 );
@@ -236,6 +258,23 @@ const paymentSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
       showToast({ message: "Failed to fetch all payments", type: "error" });
+    });
+
+    // update payment info(settled only)
+    builder.addCase(updatePayment.fulfilled, (state, action) => {
+      state.loading = false;
+      const updatedPayment = action.payload as IPayment;
+      // Find the index in `state.data` and update it
+      const index = state.data.findIndex((p) => p.id === updatedPayment.id);
+      if (index !== -1) {
+        state.data[index] = updatedPayment;
+      }
+      showToast({ message: "Payment updated successfully", type: "success" });
+    });
+    builder.addCase(updatePayment.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+      showToast({ message: state.error, type: "error" });
     });
 
     // New cases for wallet balance

@@ -5,6 +5,7 @@ import tenantsReducer from "./slices/tenantsSlice";
 import adminsReducer from "./slices/adminSlice";
 import toastReducer from "./slices/toastSlice";
 import paymentReducer from "./slices/paymentSlice";
+import notificationReducer from "./slices/notificationSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     admins: adminsReducer,
     payments: paymentReducer,
     toast: toastReducer,
+    notifications: notificationReducer,
   },
 });
 
