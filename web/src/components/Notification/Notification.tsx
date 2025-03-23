@@ -41,7 +41,6 @@ const Notification: React.FC<NotificationProps> = ({
             <S.NotificationItem key={notif.id}>
               <S.NotificationHeader>
                 <S.NotificationTitle>{notif.title}</S.NotificationTitle>
-              
 
                 {notif.type === "unsettledPayment" && notif.paymentId && (
                   <S.ViewButton

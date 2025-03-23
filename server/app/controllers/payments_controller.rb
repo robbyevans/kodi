@@ -54,14 +54,18 @@ class PaymentsController < ApplicationController
     render json: payments
   end
 
-  # Allow editing only the 'settled' field
+    # Permit both :settled and :bill_ref_number from the `payment` hash
   def update
     payment = Payment.find(params[:id])
-    if payment.update(settled: params.require(:payment).permit(:settled)[:settled])
+  
+    update_params = params.require(:payment).permit(:settled, :bill_ref_number, :house_number)
+  
+    if payment.update(update_params)
       render json: payment, status: :ok
     else
       render json: payment.errors, status: :unprocessable_entity
     end
   end
+  
 
 end

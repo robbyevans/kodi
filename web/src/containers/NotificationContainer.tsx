@@ -1,4 +1,3 @@
-// File: /web/src/containers/NotificationContainer.tsx
 import React, { useEffect, useState } from "react";
 import Notification from "../components/Notification/Notification";
 import SettlePaymentModal from "../components/Modals/SettledPaymentModal/SettledPaymentModal";
@@ -30,9 +29,12 @@ const NotificationContainer: React.FC = () => {
     setShowSettleModal(true);
   };
 
-  // After user settles the payment in the modal
-  const handlePaymentSettled = (paymentId: number) => {
-    updatePaymentInfo(paymentId, { settled: true });
+  // After user settles the payment in the modal, update settled to true along with house number and bill ref number.
+  const handlePaymentSettled = (
+    paymentId: number,
+    updates: { house_number: string; bill_ref_number: string }
+  ) => {
+    updatePaymentInfo(paymentId, { settled: true, ...updates });
     setShowSettleModal(false);
   };
 
