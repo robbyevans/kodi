@@ -22,38 +22,45 @@ const SettlePaymentModal: React.FC<SettlePaymentModalProps> = ({
   const { houses, getHousesByProperty } = useHouses();
 
   const [paymentData, setPaymentData] = useState<IPayment | null>(null);
+  // Initially keep selectedHouse empty so the placeholder is visible.
   const [selectedHouse, setSelectedHouse] = useState<string>("");
   const [billRefNumber, setBillRefNumber] = useState<string>("");
+  // Store the bill reference prefix (the part before "#")
+  const [billRefPrefix, setBillRefPrefix] = useState<string>("");
 
   useEffect(() => {
-    // Find the payment in the store
+    // Find the payment in the store.
     const found = allPayments.find((p) => p.id === paymentId);
     if (found) {
       setPaymentData(found);
-      setSelectedHouse(found.house_number);
+      // Do not set selectedHouse here so that the placeholder remains visible.
       setBillRefNumber(found.bill_ref_number);
-      // Compute correct property id: paymentData.property_id minus 1000
+      const parts = found.bill_ref_number.split("#");
+      setBillRefPrefix(parts[0]);
+      // Compute correct property id: paymentData.property_id minus 1000.
       const numericPropertyId = parseInt(found.property_id) - 1000;
       getHousesByProperty(numericPropertyId);
     }
   }, [allPayments, paymentId]);
 
-  // When the dropdown selection changes, update both the selected house and the bill ref number.
-  const handleHouseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  // When the input changes, update the selected house and update the bill reference number.
+  const handleHouseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newHouse = e.target.value;
     setSelectedHouse(newHouse);
-    // Update bill_ref_number: use the part before '#' and replace what comes after with newHouse
-    const parts = billRefNumber.split("#");
-    const prefix = parts[0];
-    const newBillRef = `${prefix}#${newHouse}`;
+    const newBillRef = `${billRefPrefix}#${newHouse}`;
     setBillRefNumber(newBillRef);
   };
 
   const handleMarkAsSettled = () => {
     if (!paymentData) return;
+    // If no new house was entered, fall back to the original house number.
+    const houseToUse = selectedHouse || paymentData.house_number;
+    const finalBillRef = selectedHouse
+      ? billRefNumber
+      : paymentData.bill_ref_number;
     onSettled(paymentData.id, {
-      house_number: selectedHouse,
-      bill_ref_number: billRefNumber,
+      house_number: houseToUse,
+      bill_ref_number: finalBillRef,
     });
   };
 
@@ -69,22 +76,19 @@ const SettlePaymentModal: React.FC<SettlePaymentModalProps> = ({
           <p>Amount: KES {paymentData.transaction_amount}</p>
           <p>Status: {paymentData.settled ? "Settled" : "Unsettled"}</p>
           <div>
-            <label htmlFor="houseSelect">House Number: </label>
-            <select
-              id="houseSelect"
-              // placeHolder={paymentData.house_number}
+            <label htmlFor="houseInput">House Number: </label>
+            <input
+              id="houseInput"
+              list="houseNumbers"
+              placeholder={paymentData.house_number}
               value={selectedHouse}
               onChange={handleHouseChange}
-            >
-              <option value="" disabled>
-                Select house number
-              </option>
+            />
+            <datalist id="houseNumbers">
               {houses.map((house) => (
-                <option key={house.house_number} value={house.house_number}>
-                  {house.house_number}
-                </option>
+                <option key={house.house_number} value={house.house_number} />
               ))}
-            </select>
+            </datalist>
           </div>
           <div>
             <p>
