@@ -55,17 +55,50 @@ class PaymentsController < ApplicationController
   end
 
     # Permit both :settled and :bill_ref_number from the `payment` hash
-  def update
-    payment = Payment.find(params[:id])
-  
-    update_params = params.require(:payment).permit(:settled, :bill_ref_number, :house_number)
-  
-    if payment.update(update_params)
-      render json: payment, status: :ok
-    else
-      render json: payment.errors, status: :unprocessable_entity
+    def update
+      payment = Payment.find(params[:id])
+      was_unsettled = !payment.settled?
+    
+      update_params = params.require(:payment).permit(:settled, :bill_ref_number, :house_number)
+    
+      if payment.update(update_params)
+        # 👇🏽 If this payment was previously unsettled, and now it's settled, credit wallet + agreement
+        if was_unsettled && payment.settled?
+          property = Property.find_by(unique_id: payment.property_id)
+          house = property&.houses&.find_by(house_number: payment.house_number)
+    
+          if property && house
+            # 1. Credit tenant agreement
+            agreement = TenantHouseAgreement.find_by(
+              house_id: house.id,
+              property_id: house.property_id,
+              status: "active"
+            )
+            agreement&.credit!(payment.transaction_amount)
+    
+            # 2. Credit wallet & ledger
+            wallet = property.admin.wallet
+            wallet.with_lock do
+              wallet.credit!(payment.transaction_amount)
+    
+              LedgerEntry.create!(
+                admin: property.admin,
+                wallet: wallet,
+                transaction_type: "deposit",
+                amount: payment.transaction_amount,
+                balance_after: wallet.balance,
+                description: "Settled payment (Payment ID: #{payment.transaction_id})"
+              )
+            end
+          end
+        end
+    
+        render json: payment, status: :ok
+      else
+        render json: payment.errors, status: :unprocessable_entity
+      end
     end
-  end
+    
   
 
 end

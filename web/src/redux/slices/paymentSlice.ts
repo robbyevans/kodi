@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
+import { fetchPropertyById } from "../slices/propertiesSlice";
 
 export interface ILedger {
   id: number;
@@ -130,13 +131,28 @@ export const updatePayment = createAsyncThunk(
   "payments/updatePayment",
   async (
     { paymentId, updates }: { paymentId: number; updates: Partial<IPayment> },
-    { rejectWithValue }
+    { dispatch, rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.put(`/payments/${paymentId}`, {
         payment: updates,
       });
-      return response.data; // updated Payment from the server
+
+      const updatedPayment = response.data as IPayment;
+
+      // Only dispatch if this payment has now been settled
+      if (updatedPayment.settled) {
+        dispatch(fetchWalletBalance());
+        dispatch(fetchLedgerEntries());
+
+        // property_id in DB is a string; ensure it's a number for fetchPropertyById
+        const numericPropertyId = parseInt(updatedPayment.property_id, 10);
+        if (!isNaN(numericPropertyId)) {
+          dispatch(fetchPropertyById(numericPropertyId));
+        }
+      }
+
+      return updatedPayment;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data || "Failed to update payment"

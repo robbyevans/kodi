@@ -5,7 +5,7 @@ class Payment < ApplicationRecord
   validates :bill_ref_number, :msisdn, :transaction_type, :payment_date, :short_code, :status, presence: true
 
   # After a payment record is created, update the landlord's wallet
-  after_create :credit_landlord_wallet
+  after_create :credit_landlord_wallet,  if: :settled?
 
   # After a payment is received broadcast this payment
   after_create_commit :broadcast_payment
