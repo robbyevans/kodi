@@ -4,6 +4,14 @@ import { ITenant } from "./tenantsSlice";
 import { showToast } from "./toastSlice";
 import { fetchAllProperties } from "./propertiesSlice";
 
+export interface ITenantHouseAgreement {
+  id: number;
+  balance: number;
+  start_date: string | null;
+  status: "active" | "ended" | "evicted";
+  status_label?: "Owing" | "Credit" | "Settled";
+}
+
 export interface IHouse {
   id: number;
   house_number: string;
@@ -12,6 +20,7 @@ export interface IHouse {
   property_id: number;
   payable_deposit?: number | null;
   account_number: string;
+  active_tenant_house_agreements: ITenantHouseAgreement | null;
 }
 
 interface HousesState {

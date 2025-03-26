@@ -22,13 +22,18 @@ class PropertiesController < ApplicationController
   end
 
   def index
-    @properties = current_admin.properties.includes(houses: :tenant)
+    @properties = current_admin.properties.includes(houses: [:tenant, :active_tenant_house_agreements])
+
     render json: @properties.as_json(
       include: {
         houses: {
           only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
           include: {
-            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
+            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] },
+            active_tenant_house_agreements: {
+              only: [:id, :balance, :status, :start_date],
+              methods: [:status_label]
+        }
           }
         }
       }

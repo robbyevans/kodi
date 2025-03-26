@@ -16,15 +16,34 @@ class Payment < ApplicationRecord
   private
 
   def credit_landlord_wallet
+
+     # 1) Find the property from property_id (the unique_id)
+
     property = Property.find_by(unique_id: property_id)
     return unless property && property.admin && property.admin.wallet
 
-    wallet = property.admin.wallet
+  # credit the tenantHouseAgreement balance
 
+ # 2) Find the correct house by house_number
+  house_obj = property.houses.find_by(house_number: house_number)
+  if house_obj
+    agreement = TenantHouseAgreement.where(
+      house_id: house_obj.id,
+      property_id: house_obj.property_id,
+      status: "active"
+    ).first
+
+     # 4) Credit the agreement if found
+       if agreement
+        agreement.credit!(transaction_amount)
+      end
+  end
+
+     # 5) Also credit the Admin’s wallet + ledger
+
+    wallet = property.admin.wallet
     wallet.with_lock do
-      
-      # Credit the wallet with the transaction amount
-      wallet.credit!(transaction_amount)
+    wallet.credit!(transaction_amount)
       
       # Create a ledger entry for the deposit
       LedgerEntry.create!(
@@ -40,6 +59,7 @@ class Payment < ApplicationRecord
     Rails.logger.error "Failed to credit wallet: #{e.message}"
   end
 
+
   def broadcast_payment
     if (property = Property.find_by(unique_id: property_id)) && property.admin
       # Broadcast to the PaymentsChannel for this admin
@@ -49,7 +69,9 @@ class Payment < ApplicationRecord
     Rails.logger.error "Failed to broadcast payment: #{e.message}"
   end
 
+
   def enqueue_sms_notification
     PaymentSmsJob.perform_later(self.id)
   end
+
 end

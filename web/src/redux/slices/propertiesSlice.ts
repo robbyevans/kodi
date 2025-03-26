@@ -15,7 +15,6 @@ export interface IProperty {
   number_of_units?: number;
   houses?: IHouse[] | null;
 }
-
 interface PropertiesState {
   data: IProperty[];
   loading: boolean;

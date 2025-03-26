@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_17_145714) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_26_081340) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -110,6 +110,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_17_145714) do
     t.index ["unique_id"], name: "index_properties_on_unique_id", unique: true
   end
 
+  create_table "tenant_house_agreements", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "house_id", null: false
+    t.decimal "deposit", precision: 10, scale: 2, default: "0.0"
+    t.decimal "monthly_rent", precision: 10, scale: 2, default: "0.0"
+    t.decimal "balance", precision: 10, scale: 2, default: "0.0"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "property_id", null: false
+    t.index ["house_id"], name: "index_tenant_house_agreements_on_house_id"
+    t.index ["property_id"], name: "index_tenant_house_agreements_on_property_id"
+    t.index ["tenant_id"], name: "index_tenant_house_agreements_on_tenant_id"
+  end
+
   create_table "tenants", force: :cascade do |t|
     t.string "name"
     t.string "phone_number"
@@ -145,6 +162,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_17_145714) do
   add_foreign_key "ledger_entries", "admins"
   add_foreign_key "ledger_entries", "wallets"
   add_foreign_key "properties", "admins"
+  add_foreign_key "tenant_house_agreements", "houses"
+  add_foreign_key "tenant_house_agreements", "properties"
+  add_foreign_key "tenant_house_agreements", "tenants"
   add_foreign_key "wallets", "admins"
   add_foreign_key "withdrawals", "admins"
 end
