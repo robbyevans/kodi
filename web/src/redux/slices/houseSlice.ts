@@ -20,7 +20,7 @@ export interface IHouse {
   property_id: number;
   payable_deposit?: number | null;
   account_number: string;
-  active_tenant_house_agreements: ITenantHouseAgreement[] | null;
+  active_tenant_house_agreements?: ITenantHouseAgreement[] | null;
 }
 
 interface HousesState {
