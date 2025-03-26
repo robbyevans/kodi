@@ -1,20 +1,12 @@
 import { createConsumer } from "@rails/actioncable";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../utils";
 import { showToast } from "../slices/toastSlice";
-import { fetchLedgerEntries, fetchWalletBalance } from "../slices/paymentSlice";
 import { fetchPropertyById } from "../slices/propertiesSlice";
-import { useProperties } from "./useProperties";
+import { fetchLedgerEntries, fetchWalletBalance } from "../slices/paymentSlice";
 
 const usePaymentNotifications = () => {
   const dispatch = useAppDispatch();
-  const { data } = useProperties();
-  const { propertyId } = useParams<{ propertyId: string }>();
-
-  console.log("propertyId", propertyId);
-
-  console.log("data", data);
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -26,17 +18,22 @@ const usePaymentNotifications = () => {
       {
         received(data) {
           if (data.payment) {
-            console.log("Received broadcast data:", data);
             dispatch(
               showToast({
-                message: "Property updated with new payment!",
+                message: "New payment received!",
                 type: "info",
               })
             );
 
             dispatch(fetchLedgerEntries());
             dispatch(fetchWalletBalance());
-            dispatch(fetchPropertyById(Number(propertyId)));
+
+            const { property_id } = data.payment;
+            const correctedPropertyId = Number(property_id - 1000);
+
+            if (property_id) {
+              dispatch(fetchPropertyById(correctedPropertyId));
+            }
           }
         },
       }
@@ -45,7 +42,7 @@ const usePaymentNotifications = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [dispatch, propertyId]);
+  }, [dispatch]);
 
   return null;
 };

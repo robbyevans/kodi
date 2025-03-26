@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { useProperties } from "../redux/hooks/useProperties";
-import { usePayments } from "../redux/hooks/usePayment";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
 import * as S from "../components/PropertyPage/styles";
 import { IHouse } from "../redux/slices/houseSlice";
@@ -19,15 +18,13 @@ const PropertyContainer: React.FC = () => {
     error,
   } = useProperties();
 
-  const { data: paymentData } = usePayments();
-
   console.log("propertyData", propertyData);
 
   useEffect(() => {
     if (propertyId) {
       getPropertyById(Number(propertyId));
     }
-  }, [propertyId, paymentData]);
+  }, [propertyId]);
 
   const selectedProperty = useMemo(
     () => propertyData.find((p) => p.id === Number(propertyId)),
