@@ -16,7 +16,10 @@ const toastSlice = createSlice({
   reducers: {
     showToast: (
       state,
-      action: PayloadAction<{ message: string; type: "success" | "error" }>
+      action: PayloadAction<{
+        message: string;
+        type: "success" | "error" | "info" | null;
+      }>
     ) => {
       state.message = action.payload.message;
       state.type = action.payload.type;

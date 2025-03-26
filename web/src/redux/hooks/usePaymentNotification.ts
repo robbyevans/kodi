@@ -1,19 +1,20 @@
 import { createConsumer } from "@rails/actioncable";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../utils";
 import { showToast } from "../slices/toastSlice";
-import {
-  fetchPaymentsByProperty,
-  fetchLedgerEntries,
-  fetchWalletBalance,
-} from "../slices/paymentSlice";
+import { fetchLedgerEntries, fetchWalletBalance } from "../slices/paymentSlice";
+import { fetchPropertyById } from "../slices/propertiesSlice";
 import { useProperties } from "./useProperties";
 
 const usePaymentNotifications = () => {
-  const dispatch = useAppDispatch(); // Use your typed dispatch
+  const dispatch = useAppDispatch();
   const { data } = useProperties();
-  // Make sure data has a propertyId. Adjust as necessary.
-  const propertyId = data?.[0]?.unique_id;
+  const { propertyId } = useParams<{ propertyId: string }>();
+
+  console.log("propertyId", propertyId);
+
+  console.log("data", data);
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -27,13 +28,15 @@ const usePaymentNotifications = () => {
           if (data.payment) {
             console.log("Received broadcast data:", data);
             dispatch(
-              showToast({ message: "New payment received!", type: "success" })
+              showToast({
+                message: "Property updated with new payment!",
+                type: "info",
+              })
             );
-            if (propertyId) {
-              dispatch(fetchPaymentsByProperty(propertyId.toString()));
-              dispatch(fetchLedgerEntries());
-              dispatch(fetchWalletBalance());
-            }
+
+            dispatch(fetchLedgerEntries());
+            dispatch(fetchWalletBalance());
+            dispatch(fetchPropertyById(Number(propertyId)));
           }
         },
       }

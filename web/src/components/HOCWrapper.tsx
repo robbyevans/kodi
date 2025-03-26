@@ -1,35 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LandingPage from "./LoadingPage/LandingPage";
+import ToastMessage from "./Toast/ToastMessage";
+
 import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import { useToast } from "../redux/hooks/useToast";
 import { fetchAllProperties } from "../redux/slices/propertiesSlice";
 import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
-import ToastMessage from "./Toast/ToastMessage";
 import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
-const HOCWrapper = ({ children }: { children: React.ReactNode }) => {
+interface HOCWrapperProps {
+  children: React.ReactNode;
+}
+
+const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
-  const dispatch = useAppDispatch();
 
-  // Activate payment notifications
   usePaymentNotifications();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(fetchAllProperties());
-      dispatch(fetchAllHouses());
-      dispatch(fetchAllTenants());
-    }
-  }, [dispatch, isAuthenticated]);
+    const initializeApp = async () => {
+      if (!isAuthenticated) return;
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 8000);
-    return () => clearTimeout(timer);
-  }, []);
+      try {
+        await Promise.all([
+          dispatch(fetchAllProperties()).unwrap(),
+          dispatch(fetchAllHouses()).unwrap(),
+          dispatch(fetchAllTenants()).unwrap(),
+        ]);
+      } catch (err) {
+        console.error("App initialization error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeApp();
+  }, [dispatch, isAuthenticated]);
 
   if (loading) {
     return <LandingPage />;
