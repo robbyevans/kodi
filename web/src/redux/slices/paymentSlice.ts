@@ -146,7 +146,9 @@ export const updatePayment = createAsyncThunk(
         dispatch(fetchLedgerEntries());
 
         // property_id in DB is a string; ensure it's a number for fetchPropertyById
-        const numericPropertyId = parseInt(updatedPayment.property_id, 10);
+        const numericPropertyId =
+          parseInt(updatedPayment.property_id, 10) - 1000;
+
         if (!isNaN(numericPropertyId)) {
           dispatch(fetchPropertyById(numericPropertyId));
         }
