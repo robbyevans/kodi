@@ -12,7 +12,11 @@ class HousesController < ApplicationController
     render json: @houses.as_json(
       only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
       include: {
-        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] },
+        active_tenant_house_agreements: {
+        only: [:id, :balance, :status, :start_date],
+        methods: [:status_label]
+        }
       }
     )
   end
@@ -24,7 +28,11 @@ class HousesController < ApplicationController
     render json: @houses.as_json(
       only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
       include: {
-        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+        tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] },
+        active_tenant_house_agreements: {
+        only: [:id, :balance, :status, :start_date],
+        methods: [:status_label]
+        }
       }
     )
   end
@@ -40,7 +48,11 @@ class HousesController < ApplicationController
       render json: @house.as_json(
         only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
         include: {
-          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] },
+          active_tenant_house_agreements: {
+           only: [:id, :balance, :status, :start_date],
+             methods: [:status_label]
+            }
         }
       ), status: :created
     else
@@ -54,7 +66,11 @@ class HousesController < ApplicationController
       render json: @house.as_json(
         only: [:id, :house_number, :account_number, :payable_rent, :payable_deposit],
         include: {
-          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] }
+          tenant: { only: [:id, :name, :email, :phone_number, :national_id, :house_deposit_paid] },
+          active_tenant_house_agreements: {
+            only: [:id, :balance, :status, :start_date],
+              methods: [:status_label]
+             }
         }
       ), status: :ok
     else

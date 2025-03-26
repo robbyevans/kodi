@@ -46,7 +46,11 @@ class PropertiesController < ApplicationController
         houses: {
           only: [:id, :house_number, :payable_rent, :payable_deposit, :account_number],
           include: {
-            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] }
+            tenant: { only: [:id, :name, :email, :phone_number, :house_deposit_paid] },
+            active_tenant_house_agreements: {
+              only: [:id, :balance, :status, :start_date],
+              methods: [:status_label]
+            }
           }
         }
       }
