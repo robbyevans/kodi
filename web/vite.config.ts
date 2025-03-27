@@ -2,6 +2,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { colors } from "./src/styles/foundation";
 
 export default defineConfig({
   plugins: [
@@ -15,7 +16,7 @@ export default defineConfig({
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
-        theme_color: "#2196f3",
+        theme_color: colors.primary,
         icons: [
           {
             src: "kodi-old-logo.png",
