@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "kodi-old-logo.png"],
+      includeAssets: ["favicon.ico", "kodi-logo192px.png"],
       manifest: {
         name: "Kodi Property Manager",
         short_name: "Kodi",
@@ -19,12 +19,12 @@ export default defineConfig({
         theme_color: colors.primary,
         icons: [
           {
-            src: "kodi-old-logo.png",
+            src: "kodi-logo192px.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "kodi-old-logo.png",
+            src: "kodi-logo192px.png",
             sizes: "512x512",
             type: "image/png",
           },
