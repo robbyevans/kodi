@@ -3,12 +3,12 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAxW3Wpgp-nnEarEpZSZ8XoxrbQmEr347k",
-  authDomain: "kodiapp-ef355.firebaseapp.com",
-  projectId: "kodiapp-ef355",
-  storageBucket: "kodiapp-ef355.appspot.com",
-  messagingSenderId: "218224739646",
-  appId: "1:218224739646:web:b8987cb4727398c5b5186f",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,8 +18,7 @@ const messaging = getMessaging(app);
 export const requestFirebaseNotificationPermission = async () => {
   try {
     const token = await getToken(messaging, {
-      vapidKey:
-        "BDHL0IcoIsPkwGOJ5IvvW4hRdQRnsXIPvEoLFPW3lDbxNQJ6zHeQBhCkDTeluy1WEWrxnDgjGLzyYbzLzm4Np2U",
+      vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
 
     console.log("Firebase Token:", token);
