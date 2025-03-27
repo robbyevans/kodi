@@ -23,24 +23,17 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   usePaymentNotifications();
 
   useEffect(() => {
-    const initializeApp = async () => {
-      if (!isAuthenticated) return;
-
-      try {
-        await Promise.all([
-          dispatch(fetchAllProperties()).unwrap(),
-          dispatch(fetchAllHouses()).unwrap(),
-          dispatch(fetchAllTenants()).unwrap(),
-        ]);
-      } catch (err) {
-        console.error("App initialization error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeApp();
+    if (isAuthenticated) {
+      dispatch(fetchAllProperties());
+      dispatch(fetchAllHouses());
+      dispatch(fetchAllTenants());
+    }
   }, [dispatch, isAuthenticated]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (loading) {
     return <LandingPage />;
