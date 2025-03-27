@@ -13,6 +13,8 @@ export interface IUser {
   phone_number: string;
   admin_id: number | null;
   role: string;
+  is_notifications_allowed?: boolean;
+  is_terms_and_conditions_agreed?: boolean;
 }
 
 interface AdminState {
@@ -23,6 +25,8 @@ interface AdminState {
     name: string;
     profile_image: string;
     phone_number: string;
+    is_notifications_allowed?: boolean;
+    is_terms_and_conditions_agreed?: boolean;
   };
   token: string | null;
   loading: boolean;
@@ -41,6 +45,8 @@ const storeAuthData = (
     profile_image: string;
     role: string;
     admin_id: number;
+    is_notifications_allowed: boolean;
+    is_terms_and_conditions_agreed: boolean;
   }
 ) => {
   localStorage.setItem("auth_token", token);
@@ -50,6 +56,14 @@ const storeAuthData = (
   localStorage.setItem("admin_role", admin.role);
   localStorage.setItem("profile_image", admin.profile_image);
   localStorage.setItem("phone_number", admin.phone_number);
+  localStorage.setItem(
+    "is_notifications_allowed",
+    admin.is_notifications_allowed?.toString() || "false"
+  );
+  localStorage.setItem(
+    "is_terms_and_conditions_agreed",
+    admin.is_terms_and_conditions_agreed?.toString() || "false"
+  );
 };
 
 const getStoredAuthData = () => {
@@ -60,6 +74,10 @@ const getStoredAuthData = () => {
   const admin_id = localStorage.getItem("admin_id");
   const phone_number = localStorage.getItem("phone_number");
   const profile_image = localStorage.getItem("profile_image");
+  const is_notifications_allowed =
+    localStorage.getItem("is_notifications_allowed") === "true";
+  const is_terms_and_conditions_agreed =
+    localStorage.getItem("is_terms_and_conditions_agreed") === "true";
 
   return {
     token: token || null,
@@ -70,6 +88,8 @@ const getStoredAuthData = () => {
       phone_number: phone_number || "",
       profile_image: profile_image || "",
       admin_id: admin_id ? parseInt(admin_id) : null,
+      is_notifications_allowed: is_notifications_allowed || false,
+      is_terms_and_conditions_agreed: is_terms_and_conditions_agreed || false,
     },
   };
 };
@@ -230,6 +250,8 @@ const adminSlice = createSlice({
       localStorage.removeItem("admin_role");
       localStorage.removeItem("phone_number");
       localStorage.removeItem("profile_image");
+      localStorage.removeItem("is_notifications_allowed");
+      localStorage.removeItem("is_terms_and_conditions_agreed");
     },
   },
   extraReducers: (builder) => {

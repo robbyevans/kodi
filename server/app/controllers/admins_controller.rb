@@ -6,7 +6,10 @@ class AdminsController < ApplicationController
   def create
     Rails.logger.debug "Admin params: #{admin_params.inspect}"
     @admin = Admin.new(admin_params)
-    @admin.role = 'admin'  # Default role is admin
+    @admin.role = 'admin'
+    @admin.is_notifications_allowed = false
+    @admin.is_terms_and_conditions_agreed = false
+    
   
     if @admin.save
       token = encode_jwt(@admin.id)
@@ -109,13 +112,20 @@ class AdminsController < ApplicationController
 
   private
   
-def admin_params
-  # For create, require name, email, password, password_confirmation.
-  # For update, permit phone_number, name, profile_image, and optionally password fields.
-  if action_name == 'create'
-    params.require(:admin).permit(:name, :email, :password, :password_confirmation, :role)
-  else
-    params.require(:admin).permit(:name, :phone_number, :profile_image, :password, :password_confirmation)
+  def admin_params
+    if action_name == 'create'
+      params.require(:admin).permit(:name, :email, :password, :password_confirmation, :role)
+    else
+      params.require(:admin).permit(
+        :name,
+        :phone_number,
+        :profile_image,
+        :password,
+        :password_confirmation,
+        :is_notifications_allowed,
+        :is_terms_and_conditions_agreed
+      )
+    end
   end
-end
+  
 end

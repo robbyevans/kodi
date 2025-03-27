@@ -12,18 +12,20 @@ class Admin < ApplicationRecord
                        format: { with: /[A-Z]/, message: "must include at least one uppercase letter" },
                        allow_nil: true
 
-  def as_json(options = {})
-    # Exclude the default :profile_image key if present and merge your custom key.
-    super(options.merge(except: [:profile_image])).merge(
-      admin_id: id,
-      profile_image: profile_image.attached? ?
-        Rails.application.routes.url_helpers.rails_blob_url(
-          profile_image,
-          host: Rails.application.routes.default_url_options[:host],
-          port: Rails.application.routes.default_url_options[:port]
-        ) : nil
-    )
-  end
+    def as_json(options = {})
+      super(options.merge(except: [:profile_image])).merge(
+         admin_id: id,
+        is_notifications_allowed: is_notifications_allowed,
+         is_terms_and_conditions_agreed: is_terms_and_conditions_agreed,
+         profile_image: profile_image.attached? ?
+          Rails.application.routes.url_helpers.rails_blob_url(
+           profile_image,
+            host: Rails.application.routes.default_url_options[:host],
+             port: Rails.application.routes.default_url_options[:port]
+            ) : nil
+        )
+    end
+                     
 
   private
 

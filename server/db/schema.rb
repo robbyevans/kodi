@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_26_081340) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_27_201800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_26_081340) do
     t.string "auth_token"
     t.string "name"
     t.string "phone_number"
+    t.boolean "is_notifications_allowed", default: false
+    t.boolean "is_terms_and_conditions_agreed", default: false
   end
 
   create_table "houses", force: :cascade do |t|
