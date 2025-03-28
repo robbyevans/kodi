@@ -23,6 +23,11 @@ class TenantsController < ApplicationController
   # POST /houses/:house_id/tenants
   # Create a tenant and link them to the house, including a house agreement
   def create
+
+    if @house.payable_rent.nil? || @house.payable_rent <= 0
+      return render json: { error: "Cannot add tenant. House has no payable rent." }, status: :unprocessable_entity
+    end
+  
     
     @tenant = Tenant.new(tenant_params)
 
