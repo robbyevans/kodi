@@ -4,7 +4,7 @@ class PaymentsController < ApplicationController
 
   def ipn
     transaction_id     = params[:transaction_id]
-    bill_ref_number    = params[:bill_ref_number] # e.g., "9010#A101"
+    bill_ref_number    = params[:bill_ref_number]
     msisdn             = params[:msisdn]
     transaction_amount = params[:transaction_amount]
     short_code         = params[:short_code]
@@ -29,28 +29,9 @@ class PaymentsController < ApplicationController
       settled:            settled
     }
 
-    payment = Payment.new(payment_data)
-
-    if payment.save
-      if settled
-        # FCM Notification
-        admin_tokens = property.admins.pluck(:fcm_token).compact # Ensure you have fcm_token column
-
-        if admin_tokens.any?
-          FirebaseNotificationService.new.send_payment_notification(
-            admin_tokens,
-            property.name,
-            house.house_number
-          )
-        end
-      end
-
-      render json: payment, status: :ok
-    else
-      render json: payment.errors, status: :unprocessable_entity
-    end
+    Payment.create!(payment_data)
+    render json: payment_data, status: :ok
   rescue => e
-    Rails.logger.error("Payment IPN Error: #{e.message}")
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
