@@ -185,3 +185,10 @@ export const CloseButton = styled.button`
   background-color: transparent;
   border: none;
 `;
+
+export const ErrorMessage = styled.span`
+  color: ${colors.error};
+  font-size: ${fontSizes.sm};
+  margin-top: -8px;
+  margin-bottom: 8px;
+`;

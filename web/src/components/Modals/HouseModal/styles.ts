@@ -105,3 +105,15 @@ export const CloseButton = styled.button`
   background-color: transparent;
   border: none;
 `;
+
+export const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+  margin-top: ${spacing.xs};
+
+  span {
+    color: ${colors.text.secondary};
+    font-size: ${fontSizes.sm};
+  }
+`;

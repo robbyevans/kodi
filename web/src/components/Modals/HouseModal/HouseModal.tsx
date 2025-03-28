@@ -24,16 +24,10 @@ const HouseModal: React.FC<HouseModalProps> = ({
   const { addHouseToProperty, editHouseInProperty, deleteHouseFromProperty } =
     useHouses();
 
-  const [houseNumber, setHouseNumber] = useState<string>(
-    isVariantEditHouse && house ? house.house_number : ""
-  );
-  const [payableRent, setPayableRent] = useState<number | null>(
-    isVariantEditHouse && house ? house.payable_rent ?? null : null
-  );
-  const [payableDeposit, setPayableDeposit] = useState<number | null>(
-    isVariantEditHouse && house ? house.payable_deposit ?? null : null
-  );
-
+  const [houseNumber, setHouseNumber] = useState<string>("");
+  const [payableRent, setPayableRent] = useState<number | null>(null);
+  const [payableDeposit, setPayableDeposit] = useState<number | null>(null);
+  const [noDeposit, setNoDeposit] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
 
@@ -42,18 +36,43 @@ const HouseModal: React.FC<HouseModalProps> = ({
       setHouseNumber(house.house_number);
       setPayableRent(house.payable_rent ?? null);
       setPayableDeposit(house.payable_deposit ?? null);
+      setNoDeposit(
+        house.payable_deposit === null || house.payable_deposit === 0
+      );
+    } else {
+      setHouseNumber("");
+      setPayableRent(null);
+      setPayableDeposit(null);
+      setNoDeposit(false);
     }
-  }, [house, isVariantEditHouse]);
+  }, [house, isVariantEditHouse, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!houseNumber.trim()) {
+      alert("House number is required.");
+      return;
+    }
+
+    if (!payableRent || payableRent <= 0) {
+      alert("Payable rent is required and must be greater than 0.");
+      return;
+    }
+
+    if (!noDeposit && (payableDeposit === null || payableDeposit < 0)) {
+      alert("Please provide a valid deposit amount or check 'No deposit'.");
+      return;
+    }
+
+    const depositValue = noDeposit ? null : payableDeposit;
 
     if (isVariantEditHouse && house) {
       const updatedHouse: IHouse = {
         ...house,
         house_number: houseNumber,
         payable_rent: payableRent,
-        payable_deposit: payableDeposit,
+        payable_deposit: depositValue,
         property_id: propertyId,
       };
       await editHouseInProperty(updatedHouse);
@@ -61,7 +80,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
       await addHouseToProperty(propertyId, {
         house_number: houseNumber,
         payable_rent: payableRent,
-        payable_deposit: payableDeposit,
+        payable_deposit: depositValue,
         tenant: null,
       });
     }
@@ -90,21 +109,9 @@ const HouseModal: React.FC<HouseModalProps> = ({
                 required
               />
             </S.FormGroup>
+
             <S.FormGroup>
-              <label>House Deposit</label>
-              <S.InputField
-                type="number"
-                value={payableDeposit !== null ? payableDeposit : ""}
-                onChange={(e) =>
-                  setPayableDeposit(
-                    e.target.value === "" ? null : Number(e.target.value)
-                  )
-                }
-                placeholder="KSH"
-              />
-            </S.FormGroup>
-            <S.FormGroup>
-              <label>Monthly Rent</label>
+              <label>Monthly Rent (required)</label>
               <S.InputField
                 type="number"
                 value={payableRent !== null ? payableRent : ""}
@@ -114,15 +121,38 @@ const HouseModal: React.FC<HouseModalProps> = ({
                   )
                 }
                 placeholder="KSH"
+                required
               />
             </S.FormGroup>
+
+            <S.FormGroup>
+              <label>Deposit Amount (optional)</label>
+              <S.InputField
+                type="number"
+                value={payableDeposit !== null ? payableDeposit : ""}
+                onChange={(e) =>
+                  setPayableDeposit(
+                    e.target.value === "" ? null : Number(e.target.value)
+                  )
+                }
+                placeholder="KSH"
+                disabled={noDeposit}
+              />
+              <S.CheckboxContainer>
+                <input
+                  type="checkbox"
+                  checked={noDeposit}
+                  onChange={(e) => setNoDeposit(e.target.checked)}
+                />
+                <span>No payable deposit for this house</span>
+              </S.CheckboxContainer>
+            </S.FormGroup>
+
             <S.ButtonContainer>
               {isVariantEditHouse && (
                 <S.DeleteButton
                   type="button"
-                  onClick={() => {
-                    setShowConfirmationModal(true);
-                  }}
+                  onClick={() => setShowConfirmationModal(true)}
                 >
                   Delete
                 </S.DeleteButton>
@@ -134,11 +164,12 @@ const HouseModal: React.FC<HouseModalProps> = ({
           </form>
         </S.ModalContent>
       </ModalOverlay>
+
       {showConfirmationModal && (
         <ConfirmationModal
           message={`Deleting house ${
             house?.house_number || "this house"
-          } will also delete all of its related tenants data. Are you sure you want to proceed?`}
+          } will also delete all its tenant data. Are you sure?`}
           onConfirm={() => {
             if (house && propertyId) {
               deleteHouseFromProperty(house.id, propertyId);
@@ -146,9 +177,7 @@ const HouseModal: React.FC<HouseModalProps> = ({
               onClose();
             }
           }}
-          onCancel={() => {
-            setShowConfirmationModal(false);
-          }}
+          onCancel={() => setShowConfirmationModal(false)}
         />
       )}
     </>

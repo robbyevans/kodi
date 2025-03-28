@@ -23,10 +23,11 @@ class TenantsController < ApplicationController
   # POST /houses/:house_id/tenants
   # Create a tenant and link them to the house, including a house agreement
   def create
+    
     @tenant = Tenant.new(tenant_params)
 
-    agreement = nil # We'll define this outside the block so we can use it later
-
+    agreement = nil 
+    
     ActiveRecord::Base.transaction do
       @tenant.save!
       @house.update!(tenant: @tenant)
@@ -104,6 +105,6 @@ class TenantsController < ApplicationController
 
   # Strong params for tenant creation/update
   def tenant_params
-    params.require(:tenant).permit(:name, :phone_number, :email, :national_id, :house_deposit_paid)
+    params.require(:tenant).permit(:name, :phone_number, :email, :national_id)
   end
 end

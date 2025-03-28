@@ -3,18 +3,12 @@ import axiosInstance from "../utils";
 import { fetchAllProperties } from "./propertiesSlice";
 import { showToast } from "./toastSlice";
 
-// Updated ITenant interface with new attributes.
-// Note that house_deposit_paid is optional.
 export interface ITenant {
   id: number;
   name: string;
   email: string;
   phone_number: string;
   national_id: string;
-  house_deposit_paid?: number | null;
-  rent_paid?: number | null;
-  date_of_payment?: string | null;
-  mode_of_payment?: string | null;
   status?: string | null;
 }
 
@@ -30,7 +24,6 @@ const initialState: TenantsState = {
   error: null,
 };
 
-// Thunks
 export const fetchAllTenants = createAsyncThunk(
   "tenants/fetchAll",
   async () => {

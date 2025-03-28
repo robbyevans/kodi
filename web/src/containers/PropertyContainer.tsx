@@ -9,7 +9,6 @@ import { IHouse } from "../redux/slices/houseSlice";
 
 const PropertyContainer: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
-  console.log("propertyId", propertyId);
 
   const {
     getPropertyById,
@@ -17,8 +16,6 @@ const PropertyContainer: React.FC = () => {
     loading,
     error,
   } = useProperties();
-
-  console.log("propertyData", propertyData);
 
   useEffect(() => {
     if (propertyId) {
