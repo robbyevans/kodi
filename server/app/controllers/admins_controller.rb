@@ -114,7 +114,7 @@ class AdminsController < ApplicationController
   
   def admin_params
     if action_name == 'create'
-      params.require(:admin).permit(:name, :email, :password, :password_confirmation, :role)
+      params.require(:admin).permit(:name, :email,:phone_number, :password, :password_confirmation, :role)
     else
       params.require(:admin).permit(
         :name,

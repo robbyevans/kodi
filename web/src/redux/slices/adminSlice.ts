@@ -133,7 +133,12 @@ export const loginAdmin = createAsyncThunk(
 export const signupAdmin = createAsyncThunk(
   "admin/signup",
   async (
-    credentials: { name: string; email: string; password: string },
+    credentials: {
+      name: string;
+      email: string;
+      password: string;
+      phone_number: string;
+    },
     { dispatch, rejectWithValue }
   ) => {
     try {

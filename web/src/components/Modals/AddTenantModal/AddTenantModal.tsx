@@ -4,14 +4,19 @@ import { useTenants } from "../../../redux/hooks/useTenants";
 import { IHouse } from "../../../redux/slices/houseSlice";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
-import * as S from "./styles";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import * as S from "./styles";
 
 interface AddTenantModalProps {
   house: IHouse;
   visible: boolean;
   onClose: () => void;
 }
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const numericRegex = /^[0-9]+$/;
 
 const AddTenantModal: React.FC<AddTenantModalProps> = ({
   house,
@@ -65,9 +70,21 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
   const validateForm = () => {
     const newErrors = {
       name: tenantName ? "" : "Full name is required",
-      email: tenantEmail ? "" : "Email is required",
-      phone: tenantPhone ? "" : "Phone number is required",
-      nationalId: tenantNationalId ? "" : "National ID is required",
+      email: tenantEmail
+        ? emailRegex.test(tenantEmail)
+          ? ""
+          : "Invalid email format"
+        : "Email is required",
+      phone: tenantPhone
+        ? numericRegex.test(tenantPhone.replace(/\D/g, ""))
+          ? ""
+          : "Phone number must contain digits only"
+        : "Phone number is required",
+      nationalId: tenantNationalId
+        ? numericRegex.test(tenantNationalId)
+          ? ""
+          : "National ID must be a number"
+        : "National ID is required",
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -112,46 +129,56 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
         </S.ModalHeader>
 
         {!hasTenant || editingTenant ? (
-          <>
-            <S.FormContainer>
-              <S.InputField
-                placeholder="Full Names"
-                value={tenantName}
-                onChange={(e) => setTenantName(e.target.value)}
-              />
-              {errors.name && <S.ErrorMessage>{errors.name}</S.ErrorMessage>}
+          <S.FormContainer>
+            <S.InputField
+              placeholder="Full Names"
+              value={tenantName}
+              onChange={(e) => setTenantName(e.target.value)}
+            />
+            {errors.name && <S.ErrorMessage>{errors.name}</S.ErrorMessage>}
 
-              <S.InputField
-                placeholder="Email Address"
-                value={tenantEmail}
-                onChange={(e) => setTenantEmail(e.target.value)}
-              />
-              {errors.email && <S.ErrorMessage>{errors.email}</S.ErrorMessage>}
+            <S.InputField
+              placeholder="Email Address"
+              value={tenantEmail}
+              onChange={(e) => setTenantEmail(e.target.value)}
+            />
+            {errors.email && <S.ErrorMessage>{errors.email}</S.ErrorMessage>}
 
-              <S.InputField
-                placeholder="Phone Number"
-                value={tenantPhone}
-                onChange={(e) => setTenantPhone(e.target.value)}
-              />
-              {errors.phone && <S.ErrorMessage>{errors.phone}</S.ErrorMessage>}
+            <PhoneInput
+              country={"ke"}
+              value={tenantPhone}
+              onChange={(phone) => setTenantPhone(phone)}
+              inputStyle={{
+                width: "100%",
+                padding: "10px 10px 10px 50px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+              }}
+              buttonStyle={{
+                border: "none",
+                background: "transparent",
+                left: "10px",
+              }}
+            />
 
-              <S.InputField
-                placeholder="National ID"
-                value={tenantNationalId}
-                onChange={(e) => setTenantNationalId(e.target.value)}
-              />
-              {errors.nationalId && (
-                <S.ErrorMessage>{errors.nationalId}</S.ErrorMessage>
-              )}
+            {errors.phone && <S.ErrorMessage>{errors.phone}</S.ErrorMessage>}
 
-              <S.ButtonContainer>
-                <S.CancelButton onClick={onClose}>Cancel</S.CancelButton>
-                <S.SubmitButton onClick={handleSubmit}>
-                  {editingTenant ? "Save Changes" : "Add Tenant"}
-                </S.SubmitButton>
-              </S.ButtonContainer>
-            </S.FormContainer>
-          </>
+            <S.InputField
+              placeholder="National ID Number"
+              value={tenantNationalId}
+              onChange={(e) => setTenantNationalId(e.target.value)}
+            />
+            {errors.nationalId && (
+              <S.ErrorMessage>{errors.nationalId}</S.ErrorMessage>
+            )}
+
+            <S.ButtonContainer>
+              <S.CancelButton onClick={onClose}>Cancel</S.CancelButton>
+              <S.SubmitButton onClick={handleSubmit}>
+                {editingTenant ? "Save Changes" : "Add Tenant"}
+              </S.SubmitButton>
+            </S.ButtonContainer>
+          </S.FormContainer>
         ) : loading ? (
           <S.StatusMessage>Loading...</S.StatusMessage>
         ) : (

@@ -4,46 +4,68 @@ import React, { useState } from "react";
 import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import * as S from "./styles";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const numericRegex = /^[0-9]+$/;
 
 const QuizPage = () => {
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState("");
+  console.info("userType", userType);
   const [houseCount, setHouseCount] = useState("");
+  console.info("houseConut", houseCount);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
   const { handleSignup, handleGoogleAuth, error } = useAdmins();
   const [errorMessage, setErrorMessage] = useState(error);
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const navigate = useNavigate();
 
-  console.info("userType", userType);
-  console.info("houseCount", houseCount);
+  const handleNext = () => setStep((prev) => prev + 1);
+  const handleBack = () =>
+    step > 1 ? setStep((prev) => prev - 1) : navigate("/auth");
 
-  const handleNext = () => {
-    setStep((prev) => prev + 1);
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep((prev) => prev - 1);
-    } else {
-      navigate("/auth");
-    }
+  const validateForm = () => {
+    const newErrors = {
+      name: name ? "" : "Name is required",
+      email: email
+        ? emailRegex.test(email)
+          ? ""
+          : "Invalid email format"
+        : "Email is required",
+      phone: phone
+        ? numericRegex.test(phone.replace(/\D/g, ""))
+          ? ""
+          : "Phone number must contain digits only"
+        : "Phone number is required",
+      password: password ? "" : "Password is required",
+      confirmPassword:
+        confirmPassword === password ? "" : "Passwords do not match",
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((err) => err === "");
   };
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match. Please confirm your password.");
-      return;
-    }
-    setErrorMessage("");
+    if (!validateForm()) return;
     if (!agreed) return;
-    // Optionally, combine quiz answers (userType & houseCount) with signup info.
-    handleSignup(name, email, password);
+    setErrorMessage("");
+    handleSignup(name, email, password, phone);
   };
 
   const handleGoogleSuccess = (credentialResponse: any) => {
@@ -52,7 +74,6 @@ const QuizPage = () => {
       console.info("No token returned from Google");
       return;
     }
-    // Optionally, pass quiz details along with the token.
     handleGoogleAuth(token, "signup");
   };
 
@@ -129,28 +150,58 @@ const QuizPage = () => {
             <S.Form onSubmit={handleSignupSubmit}>
               <S.Input
                 type="text"
-                placeholder="User Name"
+                placeholder="Full Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+              {errors.name && <S.ErrorMessage>{errors.name}</S.ErrorMessage>}
+
               <S.Input
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {errors.email && <S.ErrorMessage>{errors.email}</S.ErrorMessage>}
+
+              <PhoneInput
+                country={"ke"}
+                value={phone}
+                onChange={(value) => setPhone(value)}
+                inputStyle={{
+                  width: "100%",
+                  padding: "10px 10px 10px 50px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+                buttonStyle={{
+                  border: "none",
+                  background: "transparent",
+                  left: "10px",
+                }}
+              />
+              {errors.phone && <S.ErrorMessage>{errors.phone}</S.ErrorMessage>}
+
               <S.Input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {errors.password && (
+                <S.ErrorMessage>{errors.password}</S.ErrorMessage>
+              )}
+
               <S.Input
                 type="password"
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              {errors.confirmPassword && (
+                <S.ErrorMessage>{errors.confirmPassword}</S.ErrorMessage>
+              )}
+
               <S.TermsContainer>
                 <S.Checkbox
                   type="checkbox"
@@ -161,6 +212,7 @@ const QuizPage = () => {
                   I agree to Kodi-Analytics Terms and Conditions
                 </S.TermsLabel>
               </S.TermsContainer>
+
               {errorMessage && <S.ErrorMessage>{errorMessage}</S.ErrorMessage>}
               <S.Button type="submit" disabled={!agreed}>
                 Signup

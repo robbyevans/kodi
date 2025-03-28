@@ -24,8 +24,13 @@ export const useAdmins = () => {
     dispatch(loginAdmin({ email, password }));
   };
 
-  const handleSignup = (name: string, email: string, password: string) => {
-    dispatch(signupAdmin({ name, email, password }));
+  const handleSignup = (
+    name: string,
+    email: string,
+    password: string,
+    phone_number: string
+  ) => {
+    dispatch(signupAdmin({ name, email, password, phone_number }));
   };
 
   const handleLogout = () => {
