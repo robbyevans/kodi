@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "autoUpdate", // auto-refresh silently
       includeAssets: ["favicon.ico", "kodi-logo192px.png", "offline.html"],
       manifest: {
         name: "Kodi Property Manager",
