@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate", // auto-refresh silently
-      includeAssets: ["favicon.ico", "kodi-logo192px.png", "offline.html"],
+      includeAssets: ["favicon.ico", "kodi-logo192px.png"],
       manifest: {
         name: "Kodi Property Manager",
         short_name: "Kodi",
@@ -22,7 +22,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: "/offline.html",
+        navigateFallback: "",
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === "document",

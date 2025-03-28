@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import LandingPage from "./LoadingPage/LandingPage";
 import ToastMessage from "./Toast/ToastMessage";
+import OfflinePage from "./OfflinePage/OfflinePage";
 
 import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
@@ -20,12 +21,32 @@ interface HOCWrapperProps {
 
 const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
   const isUserEnabledNotifications = user?.is_notifications_allowed;
 
   usePaymentNotifications();
+
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("✅ Internet reconnected");
+      setIsOnline(true);
+    };
+    const handleOffline = () => {
+      console.log("⚠️ Lost internet connection");
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -46,13 +67,10 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     if (isAuthenticated && !isUserEnabledNotifications && !alreadyRequested) {
       requestFirebaseNotificationPermission().then((token) => {
         if (token) {
-          console.log("✅ Push Token received:", token);
           dispatch(
             editAdmin({
               adminId: user.admin_id!,
-              data: {
-                is_notifications_allowed: true,
-              },
+              data: { is_notifications_allowed: true },
             })
           );
           localStorage.setItem("notification_permission", "true");
@@ -65,6 +83,7 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
 
   return (
     <>
+      {!isOnline && <OfflinePage />} {/* Only show when offline */}
       <ToastMessage
         message={toastMessage}
         type={messageType}
