@@ -45,6 +45,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
   });
 
   const hasTenant = tenants && tenants.length > 0;
+  const isRentMissing = !house.payable_rent || house.payable_rent <= 0;
 
   useEffect(() => {
     if (visible) {
@@ -121,14 +122,27 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
           <S.CloseButton onClick={onClose}>
             <IoClose size={20} color="red" />
           </S.CloseButton>
-          {editingTenant
+          {isRentMissing
+            ? "⚠️ Cannot Add Tenant"
+            : editingTenant
             ? `Edit Tenant - ${editingTenant.name}`
             : hasTenant
             ? `Tenant for House ${house.house_number}`
             : `Add Tenant to ${house.house_number}`}
         </S.ModalHeader>
 
-        {!hasTenant || editingTenant ? (
+        {isRentMissing ? (
+          <>
+            <S.StatusMessage>
+              You cannot add a tenant to a house that has no{" "}
+              <strong>payable rent</strong>. <br />
+              Please add payable rent to this house first.
+            </S.StatusMessage>
+            <S.ButtonContainer>
+              <S.CancelButton onClick={onClose}>Close</S.CancelButton>
+            </S.ButtonContainer>
+          </>
+        ) : !hasTenant || editingTenant ? (
           <S.FormContainer>
             <S.InputField
               placeholder="Full Names"
@@ -160,7 +174,6 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({
                 left: "10px",
               }}
             />
-
             {errors.phone && <S.ErrorMessage>{errors.phone}</S.ErrorMessage>}
 
             <S.InputField
