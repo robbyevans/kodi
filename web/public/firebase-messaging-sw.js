@@ -30,3 +30,16 @@ messaging.onBackgroundMessage(function (payload) {
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.addEventListener("push", function (event) {
+  const data = event.data.json();
+  const { property_name, house_number } = data;
+
+  const title = "New Payment Received!";
+  const options = {
+    body: `Received payment from ${property_name}, House ${house_number}`,
+    icon: "/kodi-logo192px.png",
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});

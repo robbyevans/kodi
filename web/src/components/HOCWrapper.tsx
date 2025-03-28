@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactElement } from "react";
 import LandingPage from "./LoadingPage/LandingPage";
 import ToastMessage from "./Toast/ToastMessage";
 
@@ -11,11 +11,11 @@ import { fetchAllTenants } from "../redux/slices/tenantsSlice";
 import { editAdmin } from "../redux/slices/adminSlice";
 import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
-// 👇 Import Firebase push setup
 import { requestFirebaseNotificationPermission } from "../firebase";
+import PullToRefreshWrapper from "./PullToRefreshWrapper/PullToRefreshWrapper";
 
 interface HOCWrapperProps {
-  children: React.ReactNode;
+  children: ReactElement;
 }
 
 const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
@@ -27,7 +27,6 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
 
   usePaymentNotifications();
 
-  // Fetch data when logged in
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(fetchAllProperties());
@@ -36,15 +35,15 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     }
   }, [dispatch, isAuthenticated]);
 
-  // ⏰ Loading splash
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
-  // 🔔 Ask for notification permission once user is authenticated
   useEffect(() => {
-    if (isAuthenticated && !isUserEnabledNotifications) {
+    const alreadyRequested = localStorage.getItem("notification_permission");
+
+    if (isAuthenticated && !isUserEnabledNotifications && !alreadyRequested) {
       requestFirebaseNotificationPermission().then((token) => {
         if (token) {
           console.log("✅ Push Token received:", token);
@@ -56,16 +55,13 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
               },
             })
           );
-        } else {
-          console.log("❌ Notification permission denied or failed.");
+          localStorage.setItem("notification_permission", "true");
         }
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isUserEnabledNotifications]);
 
-  if (loading) {
-    return <LandingPage />;
-  }
+  if (loading) return <LandingPage />;
 
   return (
     <>
@@ -74,7 +70,9 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
         type={messageType}
         clearToastMessage={clearToastMessage}
       />
-      {children}
+      <PullToRefreshWrapper>
+        <div>{children}</div>
+      </PullToRefreshWrapper>
     </>
   );
 };

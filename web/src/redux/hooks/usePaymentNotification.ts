@@ -1,3 +1,4 @@
+// /web/src/redux/hooks/usePaymentNotification.ts
 import { createConsumer } from "@rails/actioncable";
 import { useEffect } from "react";
 import { useAppDispatch } from "../utils";
@@ -18,19 +19,28 @@ const usePaymentNotifications = () => {
       {
         received(data) {
           if (data.payment) {
+            const { property_id, property_name, house_number } = data.payment;
+
             dispatch(
               showToast({
-                message: "New payment received!",
+                message: `Payment from ${property_name}, House ${house_number}`,
                 type: "info",
               })
             );
 
+            if (Notification.permission === "granted") {
+              navigator.serviceWorker.ready.then((registration) => {
+                registration.showNotification("New Payment Received!", {
+                  body: `Received payment from ${property_name}, House ${house_number}`,
+                  icon: "/kodi-logo192px.png",
+                });
+              });
+            }
+
             dispatch(fetchLedgerEntries());
             dispatch(fetchWalletBalance());
 
-            const { property_id } = data.payment;
             const correctedPropertyId = Number(property_id - 1000);
-
             if (property_id) {
               dispatch(fetchPropertyById(correctedPropertyId));
             }
@@ -38,7 +48,6 @@ const usePaymentNotifications = () => {
         },
       }
     );
-
     return () => {
       subscription.unsubscribe();
     };
