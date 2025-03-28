@@ -1,5 +1,4 @@
-// /web/src/App.tsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import AppRouter from "./Router/AppRouter";
@@ -7,24 +6,31 @@ import HOCWrapper from "./components/HOCWrapper";
 import OfflinePage from "./components/OfflinePage/OfflinePage";
 
 const App: React.FC = () => {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    const updateOnlineStatus = () => {
-      setIsOnline(navigator.onLine);
+    const handleOnline = () => {
+      console.log("✅ Internet reconnected");
+      setIsOnline(true);
     };
 
-    updateOnlineStatus(); // check on first load
-    window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
+    const handleOffline = () => {
+      console.log("⚠️ Lost internet connection");
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener("online", updateOnlineStatus);
-      window.removeEventListener("offline", updateOnlineStatus);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
-  if (!isOnline) return <OfflinePage />;
+  if (!isOnline) {
+    return <OfflinePage />;
+  }
 
   return (
     <Router>
