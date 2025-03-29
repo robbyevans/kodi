@@ -11,10 +11,13 @@ class PaymentsController < ApplicationController
     short_code         = params[:short_code]
     payment_date       = params[:timestamp] || Time.zone.now
 
+    # Extract property_uid and house number from the bill reference.
     property_uid, house_no = bill_ref_number.split('#')
+    # Calculate the actual property_id (property_uid is property_id + 1000).
     property_id = (property_uid.to_i - 1000).to_s
 
-    property = Property.find_by(property_uid: property_uid)
+    # Use property_id to look up the actual property.
+    property = Property.find_by(id: property_id.to_i)
     house    = property&.houses&.find_by(house_number: house_no)
     settled  = property.present? && house.present?
 
@@ -35,6 +38,7 @@ class PaymentsController < ApplicationController
 
     @payment = Payment.create!(payment_data)
 
+    # Lookup the property using the correct property_id and get the associated admin.
     admin = property_for(@payment)&.admin
 
     if admin&.device_token.present?
@@ -46,7 +50,7 @@ class PaymentsController < ApplicationController
         "Received KES #{@payment.transaction_amount} from House #{@payment.house_number}"
       )
     else
-      Rails.logger.warn "⚠️ Skipping Firebase Notification: Admin not found or no device_token for property_uid=#{@payment.property_uid}"
+      Rails.logger.warn "⚠️ Skipping Firebase Notification: Admin not found or no device_token for property_id=#{@payment.property_id}"
     end
 
     render json: @payment, status: :created
@@ -85,6 +89,6 @@ class PaymentsController < ApplicationController
   private
 
   def property_for(payment)
-    Property.find_by(property_uid: payment.property_uid)
+    Property.find_by(id: payment.property_id.to_i)
   end
 end
