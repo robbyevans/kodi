@@ -58,13 +58,13 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     }
   }, [dispatch, isAuthenticated]);
 
-  // Remove initial splash screen after a timeout
+  // Always show splash screen for at least 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
-  // REVISED: Request Firebase notification permission if no device token exists
+  // Request Firebase notification permission if needed
   useEffect(() => {
     if (isAuthenticated && user?.admin_id && !user.device_token) {
       requestFirebaseNotificationPermission(dispatch, user.admin_id);
@@ -85,10 +85,9 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     });
   }, [dispatch]);
 
-  if (loading) return <LandingPage />;
-
   return (
     <>
+      {/* Render always so redirection logic in children can run */}
       {!isOnline && <OfflinePage />}
       <ToastMessage
         message={toastMessage}
@@ -96,6 +95,9 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
         clearToastMessage={clearToastMessage}
       />
       {children}
+
+      {/* Overlay splash screen */}
+      {loading && <LandingPage />}
     </>
   );
 };
