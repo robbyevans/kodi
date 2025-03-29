@@ -325,6 +325,15 @@ const adminSlice = createSlice({
         if (action.payload.email) {
           localStorage.setItem("admin_email", action.payload.email);
         }
+        if (action.payload.device_token) {
+          localStorage.setItem("device_token", action.payload.device_token);
+        }
+        if (action.payload.is_notifications_allowed !== undefined) {
+          localStorage.setItem(
+            "is_notifications_allowed",
+            action.payload.is_notifications_allowed.toString()
+          );
+        }
       })
       .addCase(editAdmin.rejected, (state, action) => {
         state.loading = false;

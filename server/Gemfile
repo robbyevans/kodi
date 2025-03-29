@@ -43,6 +43,13 @@ group :test do
   gem "selenium-webdriver"
 end
 
+
+group :development, :test do
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
+end
+
+
 gem 'africastalking-ruby', github: 'AfricasTalkingLtd/africastalking-ruby', branch: 'master'
 
 gem "jwt", "~> 2.10"

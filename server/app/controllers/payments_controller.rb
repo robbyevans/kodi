@@ -36,6 +36,8 @@ class PaymentsController < ApplicationController
     @payment = Payment.create!(payment_data)
 
     admin = property_for(@payment)&.admin
+    
+    Rails.logger.info "📲 Sending Firebase Notification to: #{admin.device_token}"
 
     if admin&.device_token.present?
       FirebaseService.send_notification(
@@ -44,6 +46,8 @@ class PaymentsController < ApplicationController
         "Received KES #{@payment.transaction_amount} from House #{@payment.house_number}"
       )
     end
+    
+
 
     render json: @payment, status: :created
 

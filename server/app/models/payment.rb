@@ -16,61 +16,55 @@ class Payment < ApplicationRecord
   private
 
   def credit_landlord_wallet
-
-  # 1) Find the property using property_uid 
+    # 1) Find the property using property_uid
     property = Property.find_by(property_uid: property_uid)
 
     return unless property && property.admin && property.admin.wallet
 
-  # credit the tenantHouseAgreement balance
+    # credit the tenantHouseAgreement balance
 
- # 2) Find the correct house by house_number
-  house_obj = property.houses.find_by(house_number: house_number)
-  if house_obj
-    agreement = TenantHouseAgreement.where(
-      house_id: house_obj.id,
-      property_id: house_obj.property_id,
-      status: "active"
-    ).first
+    # 2) Find the correct house by house_number
+    house_obj = property.houses.find_by(house_number: house_number)
+    if house_obj
+      agreement = TenantHouseAgreement.where(
+        house_id: house_obj.id,
+        property_id: house_obj.property_id,
+        status: 'active'
+      ).first
 
-     # 4) Credit the agreement if found
-       if agreement
-        agreement.credit!(transaction_amount)
-      end
-  end
+      # 4) Credit the agreement if found
+      agreement.credit!(transaction_amount) if agreement
+    end
 
-     # 5) Also credit the Admin’s wallet + ledger
+    # 5) Also credit the Admin’s wallet + ledger
 
     wallet = property.admin.wallet
     wallet.with_lock do
-    wallet.credit!(transaction_amount)
-      
+      wallet.credit!(transaction_amount)
+
       # Create a ledger entry for the deposit
       LedgerEntry.create!(
         admin: property.admin,
         wallet: wallet,
-        transaction_type: "deposit",
+        transaction_type: 'deposit',
         amount: transaction_amount,
         balance_after: wallet.balance,
         description: "Rent payment received (Payment ID: #{transaction_id})"
       )
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Failed to credit wallet: #{e.message}"
   end
 
-
   def broadcast_payment
     if (property = Property.find_by(property_uid: property_uid)) && property.admin
-      PaymentsChannel.broadcast_to(property.admin, payment: self.as_json)
+      PaymentsChannel.broadcast_to(property.admin, payment: as_json)
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Failed to broadcast payment: #{e.message}"
-  end  
-
-
-  def enqueue_sms_notification
-    PaymentSmsJob.perform_later(self.id)
   end
 
+  def enqueue_sms_notification
+    PaymentSmsJob.perform_later(id)
+  end
 end
