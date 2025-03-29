@@ -5,7 +5,7 @@ class PaymentsController < ApplicationController
   # POST /payments/ipn - IPN Callback
   def ipn
     transaction_id     = params[:transaction_id]
-    bill_ref_number    = params[:bill_ref_number]  # Format: "1002#A101"
+    bill_ref_number    = params[:bill_ref_number]
     msisdn             = params[:msisdn]
     transaction_amount = params[:transaction_amount]
     short_code         = params[:short_code]
@@ -35,8 +35,9 @@ class PaymentsController < ApplicationController
 
     @payment = Payment.create!(payment_data)
 
-    admin = @payment.property.admin
-    if admin.device_token.present?
+    admin = property_for(@payment)&.admin
+
+    if admin&.device_token.present?
       FirebaseService.send_notification(
         admin.device_token,
         "New Payment Received!",
@@ -47,6 +48,7 @@ class PaymentsController < ApplicationController
     render json: @payment, status: :created
 
   rescue => e
+    Rails.logger.error "❗ Payment IPN Error: #{e.message}"
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
@@ -75,5 +77,11 @@ class PaymentsController < ApplicationController
     end
 
     render json: payments
+  end
+
+  private
+
+  def property_for(payment)
+    Property.find_by(property_uid: payment.property_uid)
   end
 end

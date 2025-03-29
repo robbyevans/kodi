@@ -9,6 +9,7 @@ import { useToast } from "../redux/hooks/useToast";
 import { fetchAllProperties } from "../redux/slices/propertiesSlice";
 import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
+import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
 import {
   requestFirebaseNotificationPermission,
@@ -26,6 +27,8 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const { isAuthenticated, user } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
   const isUserEnabledNotifications = user?.is_notifications_allowed;
+
+  usePaymentNotifications();
 
   useEffect(() => {
     const handleOnline = () => {
