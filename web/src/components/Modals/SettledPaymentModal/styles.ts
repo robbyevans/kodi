@@ -26,7 +26,7 @@ export const Modal = styled.div`
   max-width: 90%;
   border-radius: ${borderRadius.md};
   box-shadow: ${shadows.md};
-  padding: ${spacing.md};
+  padding: ${spacing.lg};
   display: flex;
   flex-direction: column;
 `;
