@@ -50,13 +50,51 @@ const initialState: PaymentState = {
   error: null,
 };
 
-// Fetch payments by property id
-export const fetchPaymentsByProperty = createAsyncThunk(
-  "payments/fetchPaymentsByProperty",
-  async (propertyId: string, { rejectWithValue }) => {
+// Fetch payments with flexible filters
+export const fetchPaymentsByProperties = createAsyncThunk(
+  "payments/fetchPaymentsByProperties",
+  async (
+    params: {
+      propertyIds?: string[];
+      propertyId?: string;
+      settled?: boolean;
+      month?: number;
+      year?: number;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.get("/payments", {
-        params: { property_id: propertyId },
+        params: {
+          property_ids: params.propertyIds,
+          property_id: params.propertyId,
+          settled: params.settled,
+          month: params.month,
+          year: params.year,
+        },
+        paramsSerializer: (params) => {
+          const searchParams = new URLSearchParams();
+
+          if (params.property_ids) {
+            params.property_ids.forEach((id: string) =>
+              searchParams.append("property_ids[]", id)
+            );
+          }
+          if (params.property_id) {
+            searchParams.append("property_id", params.property_id);
+          }
+          if (params.settled !== undefined) {
+            searchParams.append("settled", params.settled.toString());
+          }
+          if (params.month) {
+            searchParams.append("month", params.month.toString());
+          }
+          if (params.year) {
+            searchParams.append("year", params.year.toString());
+          }
+
+          return searchParams.toString();
+        },
       });
       return response.data;
     } catch (error: any) {
@@ -220,14 +258,14 @@ const paymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // fetchPaymentsByProperty
-    builder.addCase(fetchPaymentsByProperty.pending, (state) => {
+    builder.addCase(fetchPaymentsByProperties.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchPaymentsByProperty.fulfilled, (state, action) => {
+    builder.addCase(fetchPaymentsByProperties.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
     });
-    builder.addCase(fetchPaymentsByProperty.rejected, (state, action) => {
+    builder.addCase(fetchPaymentsByProperties.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
       showToast({

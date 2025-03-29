@@ -1,5 +1,3 @@
-// File: /web/src/containers/paymentContainer.tsx
-
 import React, { useState, useEffect } from "react";
 import { usePayments } from "../redux/hooks/usePayment";
 import { IPayment } from "../redux/slices/paymentSlice";
@@ -9,12 +7,13 @@ const PaymentContainer: React.FC = () => {
   const [propertyId, setPropertyId] = useState<string>("");
   const [year, setYear] = useState<number>(currentYear);
   const [month, setMonth] = useState<number | undefined>(undefined);
+  const [settled, setSettled] = useState<boolean | undefined>(undefined);
 
   const {
     data: payments,
     loading,
     error,
-    getPaymentsByProperty,
+    getPaymentsByProperties,
     getMonthlyPayments,
     getYearlyPayments,
     getAllPayments,
@@ -23,12 +22,15 @@ const PaymentContainer: React.FC = () => {
   // On initial load, fetch all payments (system admin view) for the current year
   useEffect(() => {
     getAllPayments(year, month);
-  }, [year, month, getAllPayments]);
+  }, [year, month]);
 
-  // Handler for fetching payments by property only (no date filter)
+  // Handler for fetching payments by property only (with optional settled)
   const handleFetchByPropertyOnly = () => {
     if (propertyId.trim()) {
-      getPaymentsByProperty(propertyId.trim());
+      getPaymentsByProperties({
+        propertyId: propertyId.trim(),
+        settled,
+      });
     }
   };
 
@@ -51,11 +53,12 @@ const PaymentContainer: React.FC = () => {
     getAllPayments(year, month);
   };
 
-  // Reset filter to default: system admin view (all payments for current year, no month filter)
+  // Reset filter to default
   const handleResetFilter = () => {
     setPropertyId("");
     setYear(currentYear);
     setMonth(undefined);
+    setSettled(undefined);
     getAllPayments(currentYear, undefined);
   };
 
@@ -106,6 +109,24 @@ const PaymentContainer: React.FC = () => {
               min="1"
               max="12"
             />
+          </label>
+        </div>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <label>
+            Settled:{" "}
+            <select
+              value={
+                settled === undefined ? "" : settled ? "true" : "false"
+              }
+              onChange={(e) => {
+                const val = e.target.value;
+                setSettled(val === "" ? undefined : val === "true");
+              }}
+            >
+              <option value="">All</option>
+              <option value="true">Settled</option>
+              <option value="false">Unsettled</option>
+            </select>
           </label>
         </div>
         <div>

@@ -36,23 +36,33 @@ class PaymentsController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
   end
 
-  # New index action to fetch payments by property_id and payment_date
   def index
     payments = Payment.all
-
-    # Filter by property_id if provided
-    payments = payments.where(property_id: params[:property_id]) if params[:property_id].present?
-
-    # Filter by month and/or year using SQL EXTRACT
+  
+    # Filter by multiple property_ids if provided
+    if params[:property_ids].present?
+      payments = payments.where(property_id: params[:property_ids])
+    elsif params[:property_id].present?
+      payments = payments.where(property_id: params[:property_id])
+    end
+  
+    # Filter by settled status if provided
+    if params[:settled].present?
+      settled_value = ActiveModel::Type::Boolean.new.cast(params[:settled])
+      payments = payments.where(settled: settled_value)
+    end
+  
+    # Optional month/year filter
     if params[:month].present? && params[:year].present?
       payments = payments.where("EXTRACT(MONTH FROM payment_date) = ? AND EXTRACT(YEAR FROM payment_date) = ?",
                                 params[:month].to_i, params[:year].to_i)
     elsif params[:year].present?
       payments = payments.where("EXTRACT(YEAR FROM payment_date) = ?", params[:year].to_i)
     end
-
+  
     render json: payments
-  end
+  end  
+  
 
     # Permit both :settled and :bill_ref_number from the `payment` hash
     def update

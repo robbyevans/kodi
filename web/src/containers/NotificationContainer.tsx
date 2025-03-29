@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import Notification from "../components/Notification/Notification";
 import SettlePaymentModal from "../components/Modals/SettledPaymentModal/SettledPaymentModal";
 import { usePayments } from "../redux/hooks/usePayment";
+import { useProperties } from "../redux/hooks/useProperties";
 
 const NotificationContainer: React.FC = () => {
   const {
     data: allPayments,
-    getAllPayments,
+    getPaymentsByProperties,
     updatePaymentInfo,
   } = usePayments();
+
+  const { getAllProperties, data: propertiesData } = useProperties();
 
   const [showSettleModal, setShowSettleModal] = useState(false);
   const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
@@ -16,12 +19,22 @@ const NotificationContainer: React.FC = () => {
   );
 
   useEffect(() => {
-    // On mount, fetch all payments for the current admin (filtering if needed)
-    getAllPayments(new Date().getFullYear());
+    getAllProperties();
   }, []);
 
-  // Filter out only unsettled payments
-  const unsettledPayments = allPayments.filter((p) => !p.settled);
+  useEffect(() => {
+    if (propertiesData && propertiesData.length > 0) {
+      const propertyIds = propertiesData
+        .map((property) => property.id)
+        .filter((id): id is number => id !== undefined)
+        .map((id) => (id + 1000).toString());
+
+      getPaymentsByProperties({
+        propertyIds: propertyIds,
+        settled: false,
+      });
+    }
+  }, [propertiesData]);
 
   // When user clicks "View" in Notification
   const handleViewUnsettledPayment = (paymentId: number) => {
@@ -29,7 +42,7 @@ const NotificationContainer: React.FC = () => {
     setShowSettleModal(true);
   };
 
-  // After user settles the payment in the modal, update settled to true along with house number and bill ref number.
+  // After user settles the payment in the modal
   const handlePaymentSettled = (
     paymentId: number,
     updates: { house_number: string; bill_ref_number: string }
@@ -41,7 +54,7 @@ const NotificationContainer: React.FC = () => {
   return (
     <>
       <Notification
-        notifications={unsettledPayments.map((pay) => ({
+        notifications={allPayments.map((pay) => ({
           id: pay.id,
           title: `Unsettled Payment #${pay.id}`,
           senderContacts: pay.msisdn,

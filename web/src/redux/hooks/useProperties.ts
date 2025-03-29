@@ -4,6 +4,7 @@ import {
   addProperty,
   editProperty,
   deleteProperty,
+  fetchAllProperties,
 } from "../slices/propertiesSlice";
 import {
   selectProperties,
@@ -17,6 +18,10 @@ export const useProperties = () => {
   const data = useAppSelector(selectProperties);
   const loading = useAppSelector(selectPropertiesLoading);
   const error = useAppSelector(selectPropertiesError);
+
+  const getAllProperties = () => {
+    dispatch(fetchAllProperties);
+  };
 
   const getPropertyById = (id: number) => {
     dispatch(fetchPropertyById(id));
@@ -37,6 +42,7 @@ export const useProperties = () => {
     loading,
     error,
     getPropertyById,
+    getAllProperties,
     editProperty,
     handleEditProperty,
     handleDeleteProperty,

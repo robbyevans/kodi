@@ -1,5 +1,3 @@
-// File: /web/src/Router/AppRouter.tsx
-
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import Auth from "../components/Auth/Auth";
@@ -14,6 +12,7 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
 import QuizPage from "../components/QuizPage/QuizPage";
 import FooterMobile from "../components/FooterMobile/FooterMobile";
+import PaymentContainer from "../containers/paymentContainer";
 import * as S from "./styles";
 
 const AppRouter = () => {
@@ -89,6 +88,14 @@ const AppRouter = () => {
               element={
                 <AccessRouter>
                   <AnalyticsContainer />
+                </AccessRouter>
+              }
+            />
+            <Route
+              path="/payments"
+              element={
+                <AccessRouter>
+                  <PaymentContainer />
                 </AccessRouter>
               }
             />

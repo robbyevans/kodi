@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../utils";
 import {
-  fetchPaymentsByProperty,
+  fetchPaymentsByProperties,
   fetchMonthlyPropertyPayments,
   fetchYearlyPropertyPayments,
   fetchAllPaymentData,
@@ -17,8 +17,14 @@ export const usePayments = () => {
     (state) => state.payments
   );
 
-  const getPaymentsByProperty = (propertyId: string) => {
-    dispatch(fetchPaymentsByProperty(propertyId));
+  const getPaymentsByProperties = (filters: {
+    propertyIds?: string[];
+    propertyId?: string;
+    settled?: boolean;
+    month?: number;
+    year?: number;
+  }) => {
+    dispatch(fetchPaymentsByProperties(filters));
   };
 
   const getMonthlyPayments = (
@@ -65,7 +71,7 @@ export const usePayments = () => {
     wallet,
     loading,
     error,
-    getPaymentsByProperty,
+    getPaymentsByProperties,
     getMonthlyPayments,
     getYearlyPayments,
     getAllPayments,
