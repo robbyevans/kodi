@@ -5,6 +5,7 @@ import { useAdmins } from "../redux/hooks/useAdmin";
 import Dashboard from "../components/Dashboard/Dashboard";
 import AddPropertyModal from "../components/Modals/AddPropertyModal/AddPropertyModal";
 import { getPropertyStats } from "../helpers/utils/getPropertyStats";
+// import InstructionDashboard from "../components/Instructions/InstructionDashboard";
 
 const DashboardContainer = () => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ const DashboardContainer = () => {
         averageRent={averageRent}
         vacancyRate={vacancyRate}
       />
+      {/* <InstructionDashboard /> */}
       <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
   );

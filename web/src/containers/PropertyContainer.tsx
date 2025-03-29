@@ -6,6 +6,7 @@ import { useProperties } from "../redux/hooks/useProperties";
 import PropertyPage from "../components/PropertyPage/PropertyPage";
 import * as S from "../components/PropertyPage/styles";
 import { IHouse } from "../redux/slices/houseSlice";
+// import InstructionPropertyPage from "../components/Instructions/InstructionPropertyPage";
 
 const PropertyContainer: React.FC = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
@@ -95,6 +96,7 @@ const PropertyContainer: React.FC = () => {
         propertyId={Number(propertyId)}
         downloadPDF={downloadPDF}
       />
+      {/* <InstructionPropertyPage /> */}
     </S.PropertyPageContainer>
   );
 };
