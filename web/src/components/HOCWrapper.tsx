@@ -26,10 +26,10 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
-  const isUserEnabledNotifications = user?.is_notifications_allowed;
 
   usePaymentNotifications();
 
+  // Handle connectivity status
   useEffect(() => {
     const handleOnline = () => {
       console.log("✅ Internet reconnected");
@@ -49,6 +49,7 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     };
   }, []);
 
+  // Fetch initial data if authenticated
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(fetchAllProperties());
@@ -57,24 +58,20 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     }
   }, [dispatch, isAuthenticated]);
 
+  // Remove initial splash screen after a timeout
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  // REVISED: Request Firebase notification permission if no device token exists
   useEffect(() => {
-    const alreadyRequested = localStorage.getItem("notification_permission");
-
-    if (
-      isAuthenticated &&
-      user?.admin_id &&
-      !isUserEnabledNotifications &&
-      !alreadyRequested
-    ) {
+    if (isAuthenticated && user?.admin_id && !user.device_token) {
       requestFirebaseNotificationPermission(dispatch, user.admin_id);
     }
-  }, [isAuthenticated, isUserEnabledNotifications, user?.admin_id, dispatch]);
+  }, [isAuthenticated, user?.admin_id, user?.device_token, dispatch]);
 
+  // Listen for incoming foreground messages
   useEffect(() => {
     onMessageListener().then((payload: any) => {
       console.log("📩 Foreground Notification Received:", payload);

@@ -15,6 +15,7 @@ export interface IUser {
   role: string;
   is_notifications_allowed?: boolean;
   is_terms_and_conditions_agreed?: boolean;
+  device_token?: string;
 }
 
 interface AdminState {
@@ -27,6 +28,7 @@ interface AdminState {
     phone_number: string;
     is_notifications_allowed?: boolean;
     is_terms_and_conditions_agreed?: boolean;
+    device_token?: string;
   };
   token: string | null;
   loading: boolean;
@@ -47,6 +49,7 @@ const storeAuthData = (
     admin_id: number;
     is_notifications_allowed: boolean;
     is_terms_and_conditions_agreed: boolean;
+    device_token?: string;
   }
 ) => {
   localStorage.setItem("auth_token", token);
@@ -58,12 +61,15 @@ const storeAuthData = (
   localStorage.setItem("phone_number", admin.phone_number);
   localStorage.setItem(
     "is_notifications_allowed",
-    admin.is_notifications_allowed?.toString() || "false"
+    admin.is_notifications_allowed.toString()
   );
   localStorage.setItem(
     "is_terms_and_conditions_agreed",
-    admin.is_terms_and_conditions_agreed?.toString() || "false"
+    admin.is_terms_and_conditions_agreed.toString()
   );
+  if (admin.device_token) {
+    localStorage.setItem("device_token", admin.device_token);
+  }
 };
 
 const getStoredAuthData = () => {
@@ -78,6 +84,7 @@ const getStoredAuthData = () => {
     localStorage.getItem("is_notifications_allowed") === "true";
   const is_terms_and_conditions_agreed =
     localStorage.getItem("is_terms_and_conditions_agreed") === "true";
+  const device_token = localStorage.getItem("device_token");
 
   return {
     token: token || null,
@@ -88,8 +95,9 @@ const getStoredAuthData = () => {
       phone_number: phone_number || "",
       profile_image: profile_image || "",
       admin_id: admin_id ? parseInt(admin_id) : null,
-      is_notifications_allowed: is_notifications_allowed || false,
-      is_terms_and_conditions_agreed: is_terms_and_conditions_agreed || false,
+      is_notifications_allowed: is_notifications_allowed,
+      is_terms_and_conditions_agreed: is_terms_and_conditions_agreed,
+      device_token: device_token || "",
     },
   };
 };
@@ -107,7 +115,6 @@ const initialState: AdminState = {
 // ASYNC THUNKS
 // -------------------------------------
 
-// loginAdmin
 export const loginAdmin = createAsyncThunk(
   "admin/loginAdmin",
   async (
@@ -129,7 +136,6 @@ export const loginAdmin = createAsyncThunk(
   }
 );
 
-// signupAdmin
 export const signupAdmin = createAsyncThunk(
   "admin/signup",
   async (
@@ -158,7 +164,6 @@ export const signupAdmin = createAsyncThunk(
   }
 );
 
-// googleAuthAdmin
 export const googleAuthAdmin = createAsyncThunk(
   "admin/googleAuthAdmin",
   async (
@@ -186,7 +191,6 @@ export const googleAuthAdmin = createAsyncThunk(
   }
 );
 
-//  editAdmin
 export const editAdmin = createAsyncThunk(
   "admin/editAdmin",
   async (
@@ -244,6 +248,7 @@ const adminSlice = createSlice({
         role: "",
         admin_id: null,
         profile_image: "",
+        device_token: "",
       };
       state.token = null;
       state.loading = false;
@@ -257,12 +262,11 @@ const adminSlice = createSlice({
       localStorage.removeItem("profile_image");
       localStorage.removeItem("is_notifications_allowed");
       localStorage.removeItem("is_terms_and_conditions_agreed");
+      localStorage.removeItem("device_token");
     },
   },
   extraReducers: (builder) => {
     builder
-
-      // loginAdmin
       .addCase(loginAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -277,8 +281,6 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
-      // signupAdmin
       .addCase(signupAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -293,8 +295,6 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
-      //googleAuthAdmin
       .addCase(googleAuthAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -309,15 +309,12 @@ const adminSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-
-      // editAdmin
       .addCase(editAdmin.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(editAdmin.fulfilled, (state, action) => {
         state.loading = false;
-        // Merge the updated fields into admin
         state.admin = {
           ...state.admin,
           ...action.payload,
@@ -342,6 +339,5 @@ const adminSlice = createSlice({
   },
 });
 
-// Export your logout action if needed
 export const { logout } = adminSlice.actions;
 export default adminSlice.reducer;
