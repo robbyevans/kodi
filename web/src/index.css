@@ -1,22 +1,23 @@
-/* File: /web/src/index.css */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap");
 
-/* Rest of your existing index.css */
-
 body {
-  display: flex;
   height: 100vh;
+  width: 100vw;
   margin: 0;
   padding: 0;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  overflow: hidden; /* Prevent pull-to-refresh */
+  overscroll-behavior: none;
+  background: #f9f9f9; /* Optional: light background */
+  font-family: "Inter", sans-serif;
 }
 
 #root {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto; /* Allow vertical scroll inside app */
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

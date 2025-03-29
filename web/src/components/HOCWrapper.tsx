@@ -13,7 +13,6 @@ import { editAdmin } from "../redux/slices/adminSlice";
 import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
 import { requestFirebaseNotificationPermission } from "../firebase";
-import PullToRefreshWrapper from "./PullToRefreshWrapper/PullToRefreshWrapper";
 
 interface HOCWrapperProps {
   children: ReactElement;
@@ -89,9 +88,7 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
         type={messageType}
         clearToastMessage={clearToastMessage}
       />
-      <PullToRefreshWrapper>
-        <div>{children}</div>
-      </PullToRefreshWrapper>
+      {children}
     </>
   );
 };
