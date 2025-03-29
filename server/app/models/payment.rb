@@ -5,7 +5,7 @@ class Payment < ApplicationRecord
   validates :bill_ref_number, :msisdn, :transaction_type, :payment_date, :short_code, :status, presence: true
 
   # After a payment record is created, update the landlord's wallet
-  after_create :credit_landlord_wallet,  if: :settled?
+  after_create :credit_landlord_wallet
 
   # After a payment is received broadcast this payment
   after_create_commit :broadcast_payment
@@ -17,9 +17,9 @@ class Payment < ApplicationRecord
 
   def credit_landlord_wallet
 
-     # 1) Find the property from property_id (the unique_id)
+  # 1) Find the property using property_uid 
+    property = Property.find_by(property_uid: property_uid)
 
-    property = Property.find_by(unique_id: property_id)
     return unless property && property.admin && property.admin.wallet
 
   # credit the tenantHouseAgreement balance
@@ -61,13 +61,12 @@ class Payment < ApplicationRecord
 
 
   def broadcast_payment
-    if (property = Property.find_by(unique_id: property_id)) && property.admin
-      # Broadcast to the PaymentsChannel for this admin
+    if (property = Property.find_by(property_uid: property_uid)) && property.admin
       PaymentsChannel.broadcast_to(property.admin, payment: self.as_json)
     end
   rescue => e
     Rails.logger.error "Failed to broadcast payment: #{e.message}"
-  end
+  end  
 
 
   def enqueue_sms_notification

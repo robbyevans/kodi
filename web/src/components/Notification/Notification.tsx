@@ -1,26 +1,20 @@
-// File: /web/src/components/Notification/Notification.tsx
 import React, { useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import * as S from "./styles";
 
 export interface NotificationItem {
   id: number;
-  type: "unsettledPayment" | "system" | "other";
+  type: "system" | "other";
   title: string;
-  senderContacts: string;
   content: string;
-  paymentId?: number;
+  onHandleClick: () => void;
 }
 
 interface NotificationProps {
   notifications: NotificationItem[];
-  onViewUnsettledPayment?: (paymentId: number) => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({
-  notifications,
-  onViewUnsettledPayment,
-}) => {
+const Notification: React.FC<NotificationProps> = ({ notifications }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
@@ -41,16 +35,8 @@ const Notification: React.FC<NotificationProps> = ({
             <S.NotificationItem key={notif.id}>
               <S.NotificationHeader>
                 <S.NotificationTitle>{notif.title}</S.NotificationTitle>
-
-                {notif.type === "unsettledPayment" && notif.paymentId && (
-                  <S.ViewButton
-                    onClick={() => onViewUnsettledPayment?.(notif.paymentId!)}
-                  >
-                    View
-                  </S.ViewButton>
-                )}
+                <S.ViewButton onClick={notif.onHandleClick}>View</S.ViewButton>
               </S.NotificationHeader>
-
               <S.NotificationContent>{notif.content}</S.NotificationContent>
             </S.NotificationItem>
           ))}

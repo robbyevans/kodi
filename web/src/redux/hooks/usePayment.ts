@@ -7,8 +7,6 @@ import {
   fetchWalletBalance,
   initiateWithdrawal,
   fetchLedgerEntries,
-  updatePayment,
-  IPayment,
 } from "../slices/paymentSlice";
 
 export const usePayments = () => {
@@ -47,10 +45,6 @@ export const usePayments = () => {
     dispatch(fetchWalletBalance());
   };
 
-  const updatePaymentInfo = (paymentId: number, updates: Partial<IPayment>) => {
-    dispatch(updatePayment({ paymentId, updates }));
-  };
-
   const initiateWithdrawalRequest = (
     amount: number,
     withdrawal_type: string,
@@ -78,6 +72,5 @@ export const usePayments = () => {
     getWalletBalance,
     initiateWithdrawalRequest,
     getLedgerEntries,
-    updatePaymentInfo,
   };
 };

@@ -5,7 +5,7 @@ class House < ApplicationRecord
   has_many :tenant_house_agreements
   has_many :active_tenant_house_agreements, -> {
     where(status: 'active')
-  }, class_name: 'TenantHouseAgreement' 
+  }, class_name: 'TenantHouseAgreement'
 
   validates :house_number, presence: true, uniqueness: { scope: :property_id, message: "should be unique within a property" }
   validates :payable_rent, numericality: { greater_than_or_equal_to: 0 }
@@ -16,8 +16,8 @@ class House < ApplicationRecord
   private
 
   def generate_account_number
-    if property && property.unique_id.present? && house_number.present?
-      self.account_number = "#{property.unique_id}##{house_number}"
+    if property && property.property_uid.present? && house_number.present?
+      self.account_number = "#{property.property_uid}##{house_number}"
     end
   end
 end

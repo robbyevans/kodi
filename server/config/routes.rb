@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     post "/auth/google", to: "admins#google_auth"
 
   # Payment routes 
-  resources :payments, only: [:index, :update]
+  resources :payments, only: [:index]
   post 'payments/ipn', to: 'payments#ipn'  # IPN listener route
 
   # Root path – returns all properties for the current admin

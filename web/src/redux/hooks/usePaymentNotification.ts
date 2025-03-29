@@ -1,53 +1,63 @@
-// /web/src/redux/hooks/usePaymentNotification.ts
 import { createConsumer } from "@rails/actioncable";
 import { useEffect } from "react";
 import { useAppDispatch } from "../utils";
 import { showToast } from "../slices/toastSlice";
-import { fetchPropertyById } from "../slices/propertiesSlice";
 import { fetchLedgerEntries, fetchWalletBalance } from "../slices/paymentSlice";
+import axiosInstance from "../utils";
+import { fetchPropertyById } from "../slices/propertiesSlice";
 
 const usePaymentNotifications = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
+    if (!token) return;
+
     const cableUrl = `${import.meta.env.VITE_API_URL}/cable?token=${token}`;
     const consumer = createConsumer(cableUrl);
 
     const subscription = consumer.subscriptions.create(
       { channel: "PaymentsChannel" },
       {
-        received(data) {
+        received: async (data) => {
           if (data.payment) {
-            const { property_id, property_name, house_number } = data.payment;
+            const { property_id, house_number, transaction_amount } =
+              data.payment;
+            try {
+              // Get property name
+              const res = await axiosInstance.get(`/properties/${property_id}`);
+              const propertyName = res.data.name;
 
-            dispatch(
-              showToast({
-                message: `Payment from ${property_name}, House ${house_number}`,
-                type: "info",
-              })
-            );
+              // Show toast
+              dispatch(
+                showToast({
+                  message: `Received payment from ${propertyName}, House ${house_number}`,
+                  type: "info",
+                })
+              );
 
-            if (Notification.permission === "granted") {
-              navigator.serviceWorker.ready.then((registration) => {
-                registration.showNotification("New Payment Received!", {
-                  body: `Received payment from ${property_name}, House ${house_number}`,
-                  icon: "/kodi-logo192px.png",
+              // Show browser notification
+              if (Notification.permission === "granted") {
+                navigator.serviceWorker.ready.then((registration) => {
+                  registration.showNotification("New Payment Received!", {
+                    body: `You have received KES ${transaction_amount} from ${propertyName}, House ${house_number}`,
+                    icon: "/kodi-logo192px.png",
+                  });
                 });
-              });
-            }
+              }
 
-            dispatch(fetchLedgerEntries());
-            dispatch(fetchWalletBalance());
-
-            const correctedPropertyId = Number(property_id - 1000);
-            if (property_id) {
-              dispatch(fetchPropertyById(correctedPropertyId));
+              // Refresh ledger, wallet and property
+              dispatch(fetchLedgerEntries());
+              dispatch(fetchWalletBalance());
+              dispatch(fetchPropertyById(property_id));
+            } catch (error) {
+              console.error("Failed to fetch property name", error);
             }
           }
         },
       }
     );
+
     return () => {
       subscription.unsubscribe();
     };

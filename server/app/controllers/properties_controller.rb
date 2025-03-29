@@ -5,15 +5,13 @@ class PropertiesController < ApplicationController
   def create
     @property = current_admin.properties.new(property_params)
 
-    # Use the virtual attribute "number_of_units" to prefill nested house records.
+    # Prefill houses only if number_of_units is present
     if params[:property][:number_of_units].present? && params[:property][:number_of_units].to_i > 0
       units = params[:property][:number_of_units].to_i
- # At creation, property.unique_id is not available yet; it will be set in the after_create callback.
       @property.houses_attributes = generate_houses(units)
     end
 
     if @property.save
-      # Reload the property so that associations (houses) are available.
       @property.reload
       render json: @property.as_json(include: { houses: { only: [:id, :house_number, :payable_rent, :payable_deposit, :account_number] } }), status: :created
     else
@@ -33,7 +31,7 @@ class PropertiesController < ApplicationController
             active_tenant_house_agreements: {
               only: [:id, :balance, :status, :start_date],
               methods: [:status_label]
-        }
+            }
           }
         }
       }
@@ -82,26 +80,21 @@ class PropertiesController < ApplicationController
       :property_image,  
       :location, 
       :address, 
-      :number_of_units  # Virtual attribute for prefilling houses; not persisted.
+      :number_of_units
     )
   end
 
-  # Build an array of nested attributes for houses.
- # The property_unique_id parameter is optional. When creating a new property, it will be nil.
-def generate_houses(units, property_unique_id = nil)
-  houses = []
-  allowed_letters = %w[A B C D E F G H K M N P R S T U V W X Y Z]
-  units.times do |i|
-    group = i / 10                          # Each letter group represents 10 houses.
-    letter = allowed_letters[group] || "X"    # Fallback if units exceed allowed groups.
-    num = 101 + group * 10 + (i % 10)
-     # Build the account number if property_unique_id is provided; otherwise, leave as empty string.
-     account_num = property_unique_id.present? ? "#{property_unique_id}##{letter}#{num}" : "#{letter}#{num}"
-     houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0", account_number: account_num }
+  def generate_houses(units)
+    houses = []
+    allowed_letters = %w[A B C D E F G H K M N P R S T U V W X Y Z]
+    units.times do |i|
+      group = i / 10
+      letter = allowed_letters[group] || "X"
+      num = 101 + group * 10 + (i % 10)
+      houses << { house_number: "#{letter}#{num}", payable_rent: "0", payable_deposit: "0" }
+    end
+    houses
   end
-  houses
-end
-
 
   def authorize_admin
     return if action_name == 'create'

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
-import { fetchPropertyById } from "../slices/propertiesSlice";
 
 export interface ILedger {
   id: number;
@@ -163,44 +162,6 @@ export const fetchAllPaymentData = createAsyncThunk(
   }
 );
 
-// New: Update a payment (e.g., mark it as settled)
-// Payment slice partial
-export const updatePayment = createAsyncThunk(
-  "payments/updatePayment",
-  async (
-    { paymentId, updates }: { paymentId: number; updates: Partial<IPayment> },
-    { dispatch, rejectWithValue }
-  ) => {
-    try {
-      const response = await axiosInstance.put(`/payments/${paymentId}`, {
-        payment: updates,
-      });
-
-      const updatedPayment = response.data as IPayment;
-
-      // Only dispatch if this payment has now been settled
-      if (updatedPayment.settled) {
-        dispatch(fetchWalletBalance());
-        dispatch(fetchLedgerEntries());
-
-        // property_id in DB is a string; ensure it's a number for fetchPropertyById
-        const numericPropertyId =
-          parseInt(updatedPayment.property_id, 10) - 1000;
-
-        if (!isNaN(numericPropertyId)) {
-          dispatch(fetchPropertyById(numericPropertyId));
-        }
-      }
-
-      return updatedPayment;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data || "Failed to update payment"
-      );
-    }
-  }
-);
-
 // --- NEW: Fetch Wallet Balance Thunk ---
 export const fetchWalletBalance = createAsyncThunk(
   "payments/fetchWalletBalance",
@@ -314,23 +275,6 @@ const paymentSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
       showToast({ message: "Failed to fetch all payments", type: "error" });
-    });
-
-    // update payment info(settled only)
-    builder.addCase(updatePayment.fulfilled, (state, action) => {
-      state.loading = false;
-      const updatedPayment = action.payload as IPayment;
-      // Find the index in `state.data` and update it
-      const index = state.data.findIndex((p) => p.id === updatedPayment.id);
-      if (index !== -1) {
-        state.data[index] = updatedPayment;
-      }
-      showToast({ message: "Payment updated successfully", type: "success" });
-    });
-    builder.addCase(updatePayment.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-      showToast({ message: state.error, type: "error" });
     });
 
     // New cases for wallet balance

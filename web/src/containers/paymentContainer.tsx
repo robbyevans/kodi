@@ -115,9 +115,7 @@ const PaymentContainer: React.FC = () => {
           <label>
             Settled:{" "}
             <select
-              value={
-                settled === undefined ? "" : settled ? "true" : "false"
-              }
+              value={settled === undefined ? "" : settled ? "true" : "false"}
               onChange={(e) => {
                 const val = e.target.value;
                 setSettled(val === "" ? undefined : val === "true");

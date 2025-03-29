@@ -1,79 +1,34 @@
-import React, { useEffect, useState } from "react";
-import Notification from "../components/Notification/Notification";
-import SettlePaymentModal from "../components/Modals/SettledPaymentModal/SettledPaymentModal";
-import { usePayments } from "../redux/hooks/usePayment";
-import { useProperties } from "../redux/hooks/useProperties";
+import React from "react";
+import Notification, {
+  NotificationItem,
+} from "../components/Notification/Notification";
 
 const NotificationContainer: React.FC = () => {
-  const {
-    data: allPayments,
-    getPaymentsByProperties,
-    updatePaymentInfo,
-  } = usePayments();
+  const notificationsData: NotificationItem[] = [
+    {
+      id: 1,
+      type: "system",
+      title: "New System Update",
+      content: "Version 2.0 has been released with new features.",
+      onHandleClick: () => alert("Viewing update 1"),
+    },
+    {
+      id: 2,
+      type: "other",
+      title: "Upcoming Maintenance",
+      content: "System maintenance scheduled for tomorrow at 10:00 AM.",
+      onHandleClick: () => alert("Viewing update 2"),
+    },
+    {
+      id: 3,
+      type: "system",
+      title: "New Feature Alert",
+      content: "You can now download payment statements in PDF.",
+      onHandleClick: () => alert("Viewing update 3"),
+    },
+  ];
 
-  const { getAllProperties, data: propertiesData } = useProperties();
-
-  const [showSettleModal, setShowSettleModal] = useState(false);
-  const [selectedPaymentId, setSelectedPaymentId] = useState<number | null>(
-    null
-  );
-
-  useEffect(() => {
-    getAllProperties();
-  }, []);
-
-  useEffect(() => {
-    if (propertiesData && propertiesData.length > 0) {
-      const propertyIds = propertiesData
-        .map((property) => property.id)
-        .filter((id): id is number => id !== undefined)
-        .map((id) => (id + 1000).toString());
-
-      getPaymentsByProperties({
-        propertyIds: propertyIds,
-        settled: false,
-      });
-    }
-  }, [propertiesData]);
-
-  // When user clicks "View" in Notification
-  const handleViewUnsettledPayment = (paymentId: number) => {
-    setSelectedPaymentId(paymentId);
-    setShowSettleModal(true);
-  };
-
-  // After user settles the payment in the modal
-  const handlePaymentSettled = (
-    paymentId: number,
-    updates: { house_number: string; bill_ref_number: string }
-  ) => {
-    updatePaymentInfo(paymentId, { settled: true, ...updates });
-    setShowSettleModal(false);
-  };
-
-  return (
-    <>
-      <Notification
-        notifications={allPayments.map((pay) => ({
-          id: pay.id,
-          title: `Unsettled Payment #${pay.id}`,
-          senderContacts: pay.msisdn,
-          type: "unsettledPayment",
-          content: `House: ${pay.house_number} | Amount: ${pay.transaction_amount}`,
-          paymentId: pay.id,
-        }))}
-        onViewUnsettledPayment={handleViewUnsettledPayment}
-      />
-
-      {showSettleModal && selectedPaymentId && (
-        <SettlePaymentModal
-          paymentId={selectedPaymentId}
-          onClose={() => setShowSettleModal(false)}
-          onSettled={handlePaymentSettled}
-        />
-      )}
-    </>
-  );
+  return <Notification notifications={notificationsData} />;
 };
 
 export default NotificationContainer;
