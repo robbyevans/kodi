@@ -10,6 +10,7 @@ export const AppWrapper = styled.div`
 `;
 
 export const BodyWrapper = styled.div<{ $isAuthPage: boolean }>`
+  width: 100vw;
   flex: 1;
   overflow: scroll;
   background: ${colors.neutral["100"]};

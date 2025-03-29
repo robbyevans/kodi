@@ -14,6 +14,7 @@ export const AnalyticsContainer = styled.div`
   padding: ${spacing["2xl"]} ${spacing.xl};
   font-family: ${fonts.primary};
   color: ${colors.text.primary};
+  border: 1px solid red;
 `;
 
 // Page Header

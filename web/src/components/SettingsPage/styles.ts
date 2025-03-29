@@ -7,10 +7,6 @@ export const SettingsContainer = styled.div`
   padding: ${spacing["2xl"]} ${spacing.xl};
   font-family: ${fonts.primary};
   color: ${colors.text.primary};
-
-  @media (max-width: 768px) {
-    padding: ${spacing.lg} ${spacing.md};
-  }
 `;
 
 export const SettingsHeader = styled.header`

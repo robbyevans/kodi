@@ -29,7 +29,7 @@ const Notification: React.FC<NotificationProps> = ({
   return (
     <S.NotificationContainer>
       <S.NotificationIcon onClick={toggleDropdown}>
-        <IoMdNotificationsOutline />
+        <IoMdNotificationsOutline color="#ffffff" />
         {count > 0 && <S.NotificationBadge>{count}</S.NotificationBadge>}
       </S.NotificationIcon>
 

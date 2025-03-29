@@ -23,10 +23,6 @@ export const AppName = styled.h1`
   font-size: ${fontSizes.lg};
   font-weight: bold;
   cursor: pointer;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const NavActions = styled.div`
@@ -53,28 +49,6 @@ export const IconButton = styled.button`
 
   &:hover {
     background: #265d50;
-  }
-`;
-
-// Only show these icons on larger screens.
-export const LargeScreenActions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${spacing.md};
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-// Only show on small screens.
-export const SmallScreenActions = styled.div`
-  display: none;
-  position: relative; /* so that the dropdown positions relative to this container */
-
-  @media (max-width: 768px) {
-    display: flex;
-    align-items: center;
   }
 `;
 

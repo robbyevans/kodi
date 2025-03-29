@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
-import { FiHome, FiSettings, FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { FiHome, FiSettings, FiLogOut } from "react-icons/fi";
 import { IoAnalytics } from "react-icons/io5";
 import * as S from "./styles";
 
@@ -14,16 +14,11 @@ const menuItems = [
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { handleLogout } = useAdmins();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Track the active menu item (default to dashboard)
   const [activePath, setActivePath] = useState("/dashboard");
-
-  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
   const handleNavigation = (path: string) => {
     setActivePath(path);
     navigate(path);
-    if (isMobileMenuOpen) toggleMobileMenu();
   };
 
   const renderMenuItems = () => (
@@ -46,22 +41,12 @@ const Sidebar: React.FC = () => {
   );
 
   return (
-    <>
-      <S.MobileMenuIcon onClick={toggleMobileMenu}>
-        {isMobileMenuOpen ? <FiX /> : <FiMenu />}
-      </S.MobileMenuIcon>
-
-      <S.SidebarContainer>
-        <div>
-          <S.SidebarHeader />
-          <S.Menu>{renderMenuItems()}</S.Menu>
-        </div>
-      </S.SidebarContainer>
-
-      {isMobileMenuOpen && (
-        <S.MobileDropdown>{renderMenuItems()}</S.MobileDropdown>
-      )}
-    </>
+    <S.SidebarContainer>
+      <div>
+        <S.SidebarHeader />
+        <S.Menu>{renderMenuItems()}</S.Menu>
+      </div>
+    </S.SidebarContainer>
   );
 };
 

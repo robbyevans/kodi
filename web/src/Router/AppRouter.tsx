@@ -13,6 +13,7 @@ import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Footer from "../components/Footer/Footer";
 import QuizPage from "../components/QuizPage/QuizPage";
+import FooterMobile from "../components/FooterMobile/FooterMobile";
 import * as S from "./styles";
 
 const AppRouter = () => {
@@ -99,6 +100,7 @@ const AppRouter = () => {
               }
             />
           </Routes>
+          {isAuthenticated && <FooterMobile />}
           {isAuthenticated && <Footer />}
         </S.BodyWrapper>
       </S.AppWrapper>
