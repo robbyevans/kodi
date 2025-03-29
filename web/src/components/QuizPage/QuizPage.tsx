@@ -1,6 +1,4 @@
-// File: /web/src/components/Quiz/quizPage.tsx
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAdmins } from "../../redux/hooks/useAdmin";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
@@ -34,6 +32,7 @@ const QuizPage = () => {
   });
 
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAdmins();
 
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () =>
@@ -80,6 +79,12 @@ const QuizPage = () => {
   const handleGoogleError = () => {
     console.info("Google signup failed");
   };
+
+  useEffect(() => {
+    if (isAuthenticated && user.role === "admin") {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, user.role, navigate]);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>

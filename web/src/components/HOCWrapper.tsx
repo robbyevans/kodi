@@ -87,17 +87,19 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
 
   return (
     <>
-      {/* Render always so redirection logic in children can run */}
-      {!isOnline && <OfflinePage />}
-      <ToastMessage
-        message={toastMessage}
-        type={messageType}
-        clearToastMessage={clearToastMessage}
-      />
-      {children}
-
-      {/* Overlay splash screen */}
-      {loading && <LandingPage />}
+      {loading ? (
+        <LandingPage />
+      ) : (
+        <>
+          {!isOnline && <OfflinePage />}
+          <ToastMessage
+            message={toastMessage}
+            type={messageType}
+            clearToastMessage={clearToastMessage}
+          />
+          {children}
+        </>
+      )}
     </>
   );
 };
