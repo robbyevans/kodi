@@ -16,7 +16,9 @@ const LandingPage = () => {
       <S.ProgressBar>
         <S.ProgressFill />
       </S.ProgressBar>
-      <RotatingPoints />
+      <S.RotatingPointsWrapper>
+        <RotatingPoints />
+      </S.RotatingPointsWrapper>
     </S.LandingContainer>
   );
 };

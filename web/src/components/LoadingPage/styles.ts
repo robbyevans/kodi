@@ -104,3 +104,13 @@ export const ProgressFill = styled.div`
   background: ${colors.background};
   animation: ${progress} 2s ease-in-out;
 `;
+
+export const RotatingPointsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
