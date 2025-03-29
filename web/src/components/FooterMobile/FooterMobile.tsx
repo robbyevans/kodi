@@ -16,6 +16,7 @@ const FooterContainer = styled.footer`
     left: 0;
     right: 0;
     height: 60px;
+    padding: 5px 5px 10px;
     background: ${colors.primary};
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2);
     justify-content: space-around;
