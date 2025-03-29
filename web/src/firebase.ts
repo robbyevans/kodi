@@ -14,14 +14,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// 👇 You'll use this to get permission and device token
-export const requestFirebaseNotificationPermission = async () => {
+// Request permission and save device token
+export const requestFirebaseNotificationPermission = async (
+  dispatch: any,
+  adminId: number
+) => {
   try {
     const token = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
 
     console.log("Firebase Token:", token);
+
+    if (token) {
+      dispatch({
+        type: "admin/editAdmin",
+        payload: {
+          adminId,
+          data: {
+            is_notifications_allowed: true,
+            device_token: token,
+          },
+        },
+      });
+      localStorage.setItem("notification_permission", "true");
+    }
+
     return token;
   } catch (error) {
     console.error("Unable to get permission to notify.", error);
@@ -29,6 +47,7 @@ export const requestFirebaseNotificationPermission = async () => {
   }
 };
 
+// Listen when app is open
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(messaging, (payload) => {

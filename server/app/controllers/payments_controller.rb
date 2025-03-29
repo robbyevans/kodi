@@ -2,10 +2,10 @@ class PaymentsController < ApplicationController
   skip_before_action :authenticate_admin, only: [:ipn, :index]
   skip_before_action :verify_authenticity_token, only: [:ipn]
 
-  # IPN action
+  # POST /payments/ipn - IPN Callback
   def ipn
     transaction_id     = params[:transaction_id]
-    bill_ref_number    = params[:bill_ref_number]  # e.g., "1002#A101"
+    bill_ref_number    = params[:bill_ref_number]  # Format: "1002#A101"
     msisdn             = params[:msisdn]
     transaction_amount = params[:transaction_amount]
     short_code         = params[:short_code]
@@ -33,8 +33,19 @@ class PaymentsController < ApplicationController
       settled:            settled
     }
 
-    Payment.create!(payment_data)
-    render json: payment_data, status: :ok
+    @payment = Payment.create!(payment_data)
+
+    admin = @payment.property.admin
+    if admin.device_token.present?
+      FirebaseService.send_notification(
+        admin.device_token,
+        "New Payment Received!",
+        "Received KES #{@payment.transaction_amount} from House #{@payment.house_number}"
+      )
+    end
+
+    render json: @payment, status: :created
+
   rescue => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -65,5 +76,4 @@ class PaymentsController < ApplicationController
 
     render json: payments
   end
-
 end

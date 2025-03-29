@@ -123,6 +123,7 @@ class AdminsController < ApplicationController
         :password,
         :password_confirmation,
         :is_notifications_allowed,
+        :device_token,
         :is_terms_and_conditions_agreed
       )
     end

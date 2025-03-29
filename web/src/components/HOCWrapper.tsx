@@ -9,10 +9,11 @@ import { useToast } from "../redux/hooks/useToast";
 import { fetchAllProperties } from "../redux/slices/propertiesSlice";
 import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
-import { editAdmin } from "../redux/slices/adminSlice";
-import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
-import { requestFirebaseNotificationPermission } from "../firebase";
+import {
+  requestFirebaseNotificationPermission,
+  onMessageListener,
+} from "../firebase";
 
 interface HOCWrapperProps {
   children: ReactElement;
@@ -25,8 +26,6 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const { isAuthenticated, user } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
   const isUserEnabledNotifications = user?.is_notifications_allowed;
-
-  usePaymentNotifications();
 
   useEffect(() => {
     const handleOnline = () => {
@@ -56,33 +55,41 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 4000);
+    const timer = setTimeout(() => setLoading(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     const alreadyRequested = localStorage.getItem("notification_permission");
 
-    if (isAuthenticated && !isUserEnabledNotifications && !alreadyRequested) {
-      requestFirebaseNotificationPermission().then((token) => {
-        if (token) {
-          dispatch(
-            editAdmin({
-              adminId: user.admin_id!,
-              data: { is_notifications_allowed: true },
-            })
-          );
-          localStorage.setItem("notification_permission", "true");
-        }
-      });
+    if (
+      isAuthenticated &&
+      user?.admin_id &&
+      !isUserEnabledNotifications &&
+      !alreadyRequested
+    ) {
+      requestFirebaseNotificationPermission(dispatch, user.admin_id);
     }
-  }, [isAuthenticated, isUserEnabledNotifications]);
+  }, [isAuthenticated, isUserEnabledNotifications, user?.admin_id, dispatch]);
+
+  useEffect(() => {
+    onMessageListener().then((payload: any) => {
+      console.log("📩 Foreground Notification Received:", payload);
+      dispatch({
+        type: "toast/showToast",
+        payload: {
+          message: payload.notification.body,
+          type: "info",
+        },
+      });
+    });
+  }, [dispatch]);
 
   if (loading) return <LandingPage />;
 
   return (
     <>
-      {!isOnline && <OfflinePage />} {/* Only show when offline */}
+      {!isOnline && <OfflinePage />}
       <ToastMessage
         message={toastMessage}
         type={messageType}
