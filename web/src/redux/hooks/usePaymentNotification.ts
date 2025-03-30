@@ -21,8 +21,7 @@ const usePaymentNotifications = () => {
       {
         received: async (data) => {
           if (data.payment) {
-            const { property_id, house_number, transaction_amount } =
-              data.payment;
+            const { property_id, house_number } = data.payment;
             try {
               // Get property name
               const res = await axiosInstance.get(`/properties/${property_id}`);
@@ -36,15 +35,15 @@ const usePaymentNotifications = () => {
                 })
               );
 
-              // Show browser notification
-              if (Notification.permission === "granted") {
-                navigator.serviceWorker.ready.then((registration) => {
-                  registration.showNotification("New Payment Received!", {
-                    body: `You have received KES ${transaction_amount} from ${propertyName}, House ${house_number}`,
-                    icon: "/kodi-logo192px.png",
-                  });
-                });
-              }
+              // // Show browser notification -->> to be revisited (we currently use server side firebase notification )
+              // if (Notification.permission === "granted") {
+              //   navigator.serviceWorker.ready.then((registration) => {
+              //     registration.showNotification("New Payment Received!", {
+              //       body: `You have received KES ${transaction_amount} from ${propertyName}, House ${house_number}`,
+              //       icon: "/kodi-logo192px.png",
+              //     });
+              //   });
+              // }
 
               // Refresh ledger, wallet and property
               dispatch(fetchLedgerEntries());

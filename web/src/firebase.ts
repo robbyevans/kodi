@@ -1,6 +1,7 @@
 // File: /web/src/firebase.ts
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
+// import { onMessage } from "firebase/messaging";
 import { editAdmin } from "./redux/slices/adminSlice";
 
 const firebaseConfig = {
@@ -44,11 +45,11 @@ export const requestFirebaseNotificationPermission = async (
   }
 };
 
-// Listen when app is open
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      console.log("onMessage triggered with payload:", payload);
-      resolve(payload);
-    });
-  });
+// // Listen when app is open
+// export const onMessageListener = () =>
+//   new Promise((resolve) => {
+//     onMessage(messaging, (payload) => {
+//       console.log("onMessage triggered with payload:", payload);
+//       resolve(payload);
+//     });
+//   });

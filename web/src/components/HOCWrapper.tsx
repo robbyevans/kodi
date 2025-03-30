@@ -12,10 +12,8 @@ import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
 import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
 
-import {
-  requestFirebaseNotificationPermission,
-  onMessageListener,
-} from "../firebase";
+import { requestFirebaseNotificationPermission } from "../firebase";
+// import { onMessageListener } from "../firebase";
 
 interface HOCWrapperProps {
   children: ReactElement;
@@ -88,18 +86,18 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   }, [isAuthenticated, user?.admin_id, dispatch]);
 
   // Listen for incoming foreground messages
-  useEffect(() => {
-    onMessageListener().then((payload: any) => {
-      console.log("📩 Foreground Notification Received:", payload);
-      dispatch({
-        type: "toast/showToast",
-        payload: {
-          message: payload.notification.body,
-          type: "info",
-        },
-      });
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   onMessageListener().then((payload: any) => {
+  //     console.log("📩 Foreground Notification Received:", payload);
+  //     dispatch({
+  //       type: "toast/showToast",
+  //       payload: {
+  //         message: payload.notification.body,
+  //         type: "info",
+  //       },
+  //     });
+  //   });
+  // }, [dispatch]);
 
   return (
     <>
