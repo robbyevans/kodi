@@ -1,6 +1,7 @@
 # 🏠 Kodi Property Manager
 
-A modern **Property & Tenant Management Progressive Web App (PWA)** built with **React, Vite, Redux, Ruby on Rails, and Cloudflare Pages**.  
+A modern **Property & Tenant Management Progressive Web App (PWA)** built with **React, Vite, Redux, Ruby on Rails, and Cloudflare Pages**.
+
 Designed to help property managers manage houses, tenants, payments, and notifications in real-time — both on **Web** and **Mobile (PWA)**.
 
 ---
@@ -8,6 +9,7 @@ Designed to help property managers manage houses, tenants, payments, and notific
 ## 🚀 Tech Stack
 
 ### 🖥️ Frontend – React PWA
+
 - **React + TypeScript**
 - **Vite** (Fast build tooling)
 - **Redux Toolkit** (State management)
@@ -18,6 +20,7 @@ Designed to help property managers manage houses, tenants, payments, and notific
 
 #### 📂 Folder Structure
 
+```
 /web
 ├── public/                # Static assets (logos, images)
 ├── src/
@@ -30,12 +33,12 @@ Designed to help property managers manage houses, tenants, payments, and notific
 │   ├── App.tsx            # Main App component
 │   ├── main.tsx           # App entry point
 │   └── vite.config.ts     # Vite + PWA configuration
-
-
+```
 
 ---
 
 ### 💾 Backend – Ruby on Rails API
+
 - **Ruby on Rails 7 API**
 - **PostgreSQL** Database
 - **ActionCable** (Real-time notifications)
@@ -45,6 +48,7 @@ Designed to help property managers manage houses, tenants, payments, and notific
 
 #### 📂 Folder Structure
 
+```
 /server
 ├── app/
 │   ├── controllers/       # API Controllers (admins, properties, payments, tenants)
@@ -56,7 +60,7 @@ Designed to help property managers manage houses, tenants, payments, and notific
 ├── db/                    # Migrations & seeds
 ├── Dockerfile             # Containerization setup
 └── Gemfile                # Ruby dependencies
-
+```
 
 ---
 
@@ -90,86 +94,103 @@ Designed to help property managers manage houses, tenants, payments, and notific
 
 ### 🖥️ Frontend – React PWA
 
-1. Go to the frontend directory:
+Go to the frontend directory:
+
 ```bash
 cd web
+```
 
+Install dependencies:
 
-1. Install dependencies:
+```bash
+npm install
+```
 
-```npm install```
+Run the development server:
 
-2. Run the development server:
+```bash
+npm run dev
+```
 
+The app will be available at: [http://localhost:5173](http://localhost:5173)
 
-```npm run dev```
-
-The app will be available at: http://localhost:5173
-
-Backend – Rails API
+### 💾 Backend – Rails API
 
 Go to the server directory:
 
-
-```cd server```
+```bash
+cd server
+```
 
 Install Ruby gems:
 
-
-```bundle install```
+```bash
+bundle install
+```
 
 Setup the database:
 
-
-```bundle exec rails db:create db:migrate db:seed```
-
+```bash
+bundle exec rails db:create db:migrate db:seed
+```
 
 Run the server:
 
+```bash
+bundle exec rails server -b 0.0.0.0 -p 3000
+```
 
-```bundle exec rails server -b 0.0.0.0 -p 3000```
+The API will be available at: [http://localhost:3000](http://localhost:3000)
 
-The API will be available at:
-http://localhost:3000
+---
 
-🚀 Production Deployment Workflow
+## 🚀 Production Deployment Workflow
+
 This project uses a GitHub Actions CI/CD pipeline for automated deployments.
 
-Every time you push to the main branch:
+Every time you push to the `main` branch:
 
-✅ Backend API is deployed to Render.com
-
-✅ Frontend PWA is built and deployed to Cloudflare Pages
-
+✅ Backend API is deployed to **Render.com**  
+✅ Frontend PWA is built and deployed to **Cloudflare Pages**  
 ✅ PWA users receive instant updates and a version refresh notification
 
 You can also manually trigger deployment via:
-GitHub → Actions → Deploy Kodi App → Run Workflow
 
-🔔 PWA Update Notifications
+```
+GitHub → Actions → Deploy Kodi App → Run Workflow
+```
+
+---
+
+## 🔔 PWA Update Notifications
+
 When a new version of the app is deployed:
 
 Users will see a banner at the bottom:
 
-🔄 New version available. [Refresh]
+🔄 **New version available. [Refresh]**
 
-Clicking Refresh will instantly load the latest version without the need to clear browser cache.
+Clicking **Refresh** will instantly load the latest version without the need to clear browser cache.
 
-👥 Contributors
-@robbyevans – Creator & Maintainer
+---
 
-📝 License
-This project is open-source and available under the MIT License.
+## 👥 Contributors
 
-🙌 Acknowledgements
-React
+- [@robbyevans](https://github.com/robbyevans) – Creator & Maintainer
 
-Ruby on Rails
+---
 
-Cloudflare Pages
+## 📝 License
 
-Render.com
+This project is open-source and available under the [MIT License](LICENSE).
 
-vite-plugin-pwa
+---
 
-Firebase Cloud Messaging
+## 🙌 Acknowledgements
+
+- [React](https://reactjs.org)
+- [Ruby on Rails](https://rubyonrails.org)
+- [Cloudflare Pages](https://pages.cloudflare.com)
+- [Render.com](https://render.com)
+- [vite-plugin-pwa](https://github.com/vite-pwa/vite-plugin-pwa)
+- [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)
