@@ -3,6 +3,7 @@ import React, { useEffect, useState, ReactElement } from "react";
 import LandingPage from "./LoadingPage/LandingPage";
 import ToastMessage from "./Toast/ToastMessage";
 import OfflinePage from "./OfflinePage/OfflinePage";
+import styled from "styled-components";
 
 import { useAppDispatch } from "../redux/hooks";
 import { useAdmins } from "../redux/hooks/useAdmin";
@@ -11,6 +12,7 @@ import { fetchAllProperties } from "../redux/slices/propertiesSlice";
 import { fetchAllHouses } from "../redux/slices/houseSlice";
 import { fetchAllTenants } from "../redux/slices/tenantsSlice";
 import usePaymentNotifications from "../redux/hooks/usePaymentNotification";
+import { usePWAUpdateNotifier } from "../redux/hooks/usePWAUpdates";
 
 import { requestFirebaseNotificationPermission } from "../firebase";
 // import { onMessageListener } from "../firebase";
@@ -25,6 +27,7 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAdmins();
   const { toastMessage, messageType, clearToastMessage } = useToast();
+  const { updateAvailable, refreshApp } = usePWAUpdateNotifier();
 
   usePaymentNotifications();
 
@@ -99,12 +102,49 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
   //   });
   // }, [dispatch]);
 
+  const UpdateBanner = styled.div`
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    gap: 10px;
+  `;
+
+  const RefreshButton = styled.button`
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #45a049;
+    }
+  `;
+
   return (
     <>
       {loading ? (
         <LandingPage />
       ) : (
         <>
+          {updateAvailable && (
+            <UpdateBanner>
+              🔄 New version available.
+              <RefreshButton onClick={refreshApp}>Refresh</RefreshButton>
+            </UpdateBanner>
+          )}
+
           {!isOnline && <OfflinePage />}
           <ToastMessage
             message={toastMessage}

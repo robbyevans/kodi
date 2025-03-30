@@ -1,0 +1,31 @@
+name: Deploy Kodi App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Wrangler (Cloudflare CLI)
+        run: npm install -g wrangler
+
+      - name: Deploy Backend to Render
+        run: |
+          curl -X POST "https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_DEPLOY_KEY }}"
+
+      - name: Build Frontend
+        run: |
+          cd web
+          npm install
+          npm run build
+
+      - name: Deploy Frontend to Cloudflare Pages
+        run: |
+          wrangler pages deploy ./web/dist --project-name=kodi-pwa --branch=main
