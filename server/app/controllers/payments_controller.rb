@@ -43,15 +43,19 @@ class PaymentsController < ApplicationController
     # Reload the admin from the property to ensure the latest data (device_token, etc.)
     admin = property_for(@payment)&.admin&.reload
 
-    if admin && admin.device_token.present?
-      Rails.logger.info "📲 Sending Firebase Notification to: #{admin.device_token}"
-      FirebaseService.send_notification(
-        admin.device_token,
-        'New Payment Received!',
-        "Received KES #{@payment.transaction_amount} from House #{@payment.house_number}"
-      )
+    if admin.present?
+      if admin.device_token.present?
+        Rails.logger.info "📲 Sending Firebase Notification to: #{admin.device_token}"
+        FirebaseService.send_notification(
+          admin.device_token,
+          'New Payment Received!',
+          "Received KES #{@payment.transaction_amount} from House #{@payment.house_number}"
+        )
+      else
+        Rails.logger.warn "⚠️ Admin #{admin.id} does not have a device_token registered."
+      end
     else
-      Rails.logger.warn "⚠️ Skipping Firebase Notification: No admin or device_token for property_id=#{@payment.property_id}"
+      Rails.logger.error "❌ No admin associated with property ID #{@payment.property_id}"
     end
 
     render json: @payment, status: :created

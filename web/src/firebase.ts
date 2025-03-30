@@ -1,6 +1,7 @@
 // File: /web/src/firebase.ts
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { editAdmin } from "./redux/slices/adminSlice";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,28 +21,20 @@ export const requestFirebaseNotificationPermission = async (
   adminId: number
 ) => {
   try {
-    console.log(
-      "Requesting Firebase token with vapidKey:",
-      import.meta.env.VITE_FIREBASE_VAPID_KEY
-    );
     const token = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
-    console.log("Firebase Token received:", token);
 
     if (token) {
-      dispatch({
-        type: "admin/editAdmin",
-        payload: {
-          adminId,
-          data: {
-            is_notifications_allowed: true,
-            device_token: token,
-          },
-        },
-      });
+      // Create a FormData instance to send the device_token
+      const formData = new FormData();
+      formData.append("admin[device_token]", token);
+      formData.append("admin[is_notifications_allowed]", "true");
+
+      // Dispatch the editAdmin action with FormData
+      dispatch(editAdmin({ adminId, data: formData }));
+
       localStorage.setItem("notification_permission", "true");
-      console.log("Dispatched update for admin with token.");
     }
 
     return token;

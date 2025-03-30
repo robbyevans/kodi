@@ -92,9 +92,11 @@ class AdminsController < ApplicationController
   end
 
   private
-
+  
   def admin_params
-    params.require(:admin).permit(:name, :email, :phone_number, :password, :profile_image,
-                                  :is_notifications_allowed, :device_token, :is_terms_and_conditions_agreed)
+    params.require(:admin).permit(
+      :name, :email, :phone_number, :password, :profile_image,
+      :is_notifications_allowed, :device_token, :is_terms_and_conditions_agreed
+    )
   end
 end

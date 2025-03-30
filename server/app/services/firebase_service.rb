@@ -3,10 +3,10 @@
 require 'net/http'
 require 'uri'
 require 'json'
+require 'googleauth' # Add this line
 
 class FirebaseService
   FCM_URL = 'https://fcm.googleapis.com/v1/projects/kodiapp-ef355/messages:send'
-  
 
   def self.send_notification(device_token, title, body)
     uri = URI.parse(FCM_URL)
@@ -23,14 +23,15 @@ class FirebaseService
       }
     }
 
-    Rails.logger.info "🔔 Preparing Firebase message: #{message.to_json}"
+    Rails.logger.info "🔔 Firebase Message Payload: #{message.to_json}"
+
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Authorization'] = "Bearer #{access_token}"
     request['Content-Type'] = 'application/json'
     request.body = message.to_json
 
     response = http.request(request)
-    Rails.logger.info "Firebase Response: #{response.body}"
+    Rails.logger.info "Firebase Response: #{response.code} - #{response.body}"
     response
   end
 

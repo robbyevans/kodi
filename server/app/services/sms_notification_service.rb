@@ -16,12 +16,12 @@ class SmsNotificationService
     sms = at.sms
     
     # Always set the sender ID (ensure this sender is registered with Africa's Talking)
-    options = { "from" => ENV.fetch("AFRICASTALKING_SENDER_ID", "KODI_PMS") }
+    # options = { "from" => ENV.fetch("AFRICASTALKING_SENDER_ID", "KODI_PMS") }
     
     response = sms.send({
       "message" => @message,
       "to" => @phone_number,
-      **options
+      # **options
     })
     
     Rails.logger.info "SMS sent successfully: #{response.inspect}"
