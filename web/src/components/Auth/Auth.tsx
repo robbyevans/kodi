@@ -88,11 +88,10 @@ const Auth = () => {
               Own your properties, not the hassle. Kodi does the rest.
             </S.InfoTitle>
 
-            {/* Install button */}
             {showInstallButton && (
-              <S.InstallButton onClick={handleInstallClick}>
-                📲 Install Kodi App
-              </S.InstallButton>
+              <S.InstallButtonTopRight onClick={handleInstallClick}>
+                📲
+              </S.InstallButtonTopRight>
             )}
 
             <S.GetStartedContainer>

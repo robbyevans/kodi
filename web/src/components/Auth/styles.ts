@@ -11,6 +11,16 @@ import {
   borderRadius,
   shadows,
 } from "../../styles/foundation";
+import { keyframes } from "styled-components";
+
+const bounce = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+`;
 
 // Overall split screen container
 export const SplitContainer = styled.div`
@@ -267,8 +277,6 @@ export const GoogleContainer = styled.div`
   text-align: center;
 `;
 
-import { keyframes } from "styled-components";
-
 const bounceIn = keyframes`
   0% {
     transform: translateY(-10px);
@@ -303,5 +311,34 @@ export const InstallButton = styled.button`
     background: ${colors.primary};
     transform: translateY(-1px) scale(1.03);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+export const InstallButtonTopRight = styled.button`
+  position: fixed;
+  top: 16px;
+  right: 16px;
+
+  color: ${colors.text.inverted};
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: ${fontWeights.bold};
+  cursor: pointer;
+  z-index: 999;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  animation: ${bounce} 1.5s infinite ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    top: 12px;
+    right: 12px;
   }
 `;
