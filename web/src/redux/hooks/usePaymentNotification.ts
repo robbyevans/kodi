@@ -22,15 +22,18 @@ const usePaymentNotifications = () => {
         received: async (data) => {
           if (data.payment) {
             const { property_id, house_number } = data.payment;
+            console.log("data", data);
             try {
               // Get property name
               const res = await axiosInstance.get(`/properties/${property_id}`);
               const propertyName = res.data.name;
+              console.log("propertyName", propertyName);
+              console.log("house_number", house_number);
 
               // Show toast
               dispatch(
                 showToast({
-                  message: `Received payment from ${propertyName}, House ${house_number}`,
+                  message: `💰 New Payment Received`,
                   type: "info",
                 })
               );
