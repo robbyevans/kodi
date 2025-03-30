@@ -48,8 +48,8 @@ class PaymentsController < ApplicationController
         Rails.logger.info "📲 Sending Firebase Notification to: #{admin.device_token}"
         FirebaseService.send_notification(
           admin.device_token,
-          'New Payment Received!',
-          "Received KES #{@payment.transaction_amount} from #{property.name}, House #{@payment.house_number}"
+          ' 💸 New Payment Received!',
+          "You have received KES #{@payment.transaction_amount} from #{property.name}, House #{@payment.house_number}"
         )
       else
         Rails.logger.warn "⚠️ Admin #{admin.id} does not have a device_token registered."
