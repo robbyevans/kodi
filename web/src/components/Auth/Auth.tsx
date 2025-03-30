@@ -22,6 +22,14 @@ const Auth = () => {
   // PWA Install Prompt
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
+
+  const isMobileSafari = () => {
+    const ua = window.navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/.test(ua);
+    const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS/.test(ua);
+    return isIOS && isSafari;
+  };
 
   useEffect(() => {
     const handler = (e: any) => {
@@ -87,6 +95,14 @@ const Auth = () => {
             <S.InfoTitle>
               Own your properties, not the hassle. Kodi does the rest.
             </S.InfoTitle>
+
+            {isMobileSafari() && showBanner && (
+              <S.SafariInstallBanner>
+                📲 Add Kodi App to Home Screen: Tap{" "}
+                <strong>Share → Add to Home Screen</strong>
+                <button onClick={() => setShowBanner(false)}>Dismiss</button>
+              </S.SafariInstallBanner>
+            )}
 
             {showInstallButton && (
               <S.InstallButtonTopRight onClick={handleInstallClick}>

@@ -342,3 +342,56 @@ export const InstallButtonTopRight = styled.button`
     right: 12px;
   }
 `;
+
+export const SafariInstallBanner = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: ${colors.primary};
+  color: ${colors.text.inverted};
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: ${fontSizes.sm};
+  z-index: 999;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.5s ease forwards;
+  gap: 8px;
+
+  @keyframes slideUp {
+    0% {
+      transform: translateY(100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  strong {
+    font-weight: ${fontWeights.semibold};
+    margin: 0 4px;
+  }
+
+  button {
+    background: transparent;
+    border: 1px solid ${colors.text.inverted};
+    color: ${colors.text.inverted};
+    padding: 4px 8px;
+    border-radius: ${borderRadius.sm};
+    cursor: pointer;
+    font-size: ${fontSizes.xs};
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background: ${colors.text.inverted};
+      color: ${colors.primary};
+    }
+  }
+
+  @media (min-width: 768px) {
+    display: none; /* Hide on large screens */
+  }
+`;
