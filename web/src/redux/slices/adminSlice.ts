@@ -114,7 +114,6 @@ const initialState: AdminState = {
 // -------------------------------------
 // ASYNC THUNKS
 // -------------------------------------
-
 export const loginAdmin = createAsyncThunk(
   "admin/loginAdmin",
   async (
@@ -223,7 +222,7 @@ export const editAdmin = createAsyncThunk(
       dispatch(
         showToast({ message: "Admin updated successfully!", type: "success" })
       );
-      return response.data;
+      return response.data; // This should be the full updated admin object
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error || "Failed to update admin";
@@ -315,22 +314,12 @@ const adminSlice = createSlice({
       })
       .addCase(editAdmin.fulfilled, (state, action) => {
         state.loading = false;
+        // Merge the updated fields into the admin state
         state.admin = {
           ...state.admin,
           ...action.payload,
         };
-        if (action.payload.email) {
-          localStorage.setItem("admin_email", action.payload.email);
-        }
-        if (action.payload.device_token) {
-          localStorage.setItem("device_token", action.payload.device_token);
-        }
-        if (action.payload.is_notifications_allowed !== undefined) {
-          localStorage.setItem(
-            "is_notifications_allowed",
-            action.payload.is_notifications_allowed.toString()
-          );
-        }
+        storeAuthData(state.token!, action.payload);
       })
       .addCase(editAdmin.rejected, (state, action) => {
         state.loading = false;

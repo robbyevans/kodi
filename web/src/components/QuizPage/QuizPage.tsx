@@ -23,6 +23,7 @@ const QuizPage = () => {
   const [agreed, setAgreed] = useState(false);
   const { handleSignup, handleGoogleAuth, error } = useAdmins();
   const [errorMessage, setErrorMessage] = useState(error);
+
   const [errors, setErrors] = useState({
     name: "",
     email: "",
@@ -214,7 +215,7 @@ const QuizPage = () => {
                   onChange={(e) => setAgreed(e.target.checked)}
                 />
                 <S.TermsLabel>
-                  I agree to Kodi-Analytics Terms and Conditions
+                  I agree to Kodi-PMS Terms and Conditions.
                 </S.TermsLabel>
               </S.TermsContainer>
 

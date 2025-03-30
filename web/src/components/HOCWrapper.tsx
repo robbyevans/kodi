@@ -1,3 +1,4 @@
+// File: /web/src/components/HOCWrapper.tsx
 import React, { useEffect, useState, ReactElement } from "react";
 import LandingPage from "./LoadingPage/LandingPage";
 import ToastMessage from "./Toast/ToastMessage";
@@ -64,12 +65,27 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Request Firebase notification permission if needed
+  // Request Firebase notification permission if needed.
   useEffect(() => {
-    if (isAuthenticated && user?.admin_id && !user.device_token) {
-      requestFirebaseNotificationPermission(dispatch, user.admin_id);
+    if (isAuthenticated && user?.admin_id) {
+      console.log(
+        `Requesting Firebase notification permission for admin_id: ${user.admin_id}`
+      );
+      requestFirebaseNotificationPermission(dispatch, user.admin_id)
+        .then((token) => {
+          if (token) {
+            console.log(
+              `✅ Successfully updated device_token for admin_id: ${user.admin_id}`
+            );
+          } else {
+            console.warn(
+              `⚠️ No device_token returned for admin_id: ${user.admin_id}`
+            );
+          }
+        })
+        .catch((err) => console.error("Error in notification request:", err));
     }
-  }, [isAuthenticated, user?.admin_id, user?.device_token, dispatch]);
+  }, [isAuthenticated, user?.admin_id, dispatch]);
 
   // Listen for incoming foreground messages
   useEffect(() => {

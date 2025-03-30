@@ -1,3 +1,5 @@
+# File: /server/app/models/payment.rb
+
 class Payment < ApplicationRecord
   # Validations to ensure data integrity
   validates :transaction_id, presence: true, uniqueness: true
@@ -16,11 +18,10 @@ class Payment < ApplicationRecord
   private
 
   def credit_landlord_wallet
-    # Find the property using property_id (the actual database id)
+    Rails.logger.info "Starting credit_landlord_wallet for Payment ID: #{transaction_id}"
     property = Property.find_by(id: property_id.to_i)
     return unless property && property.admin && property.admin.wallet
 
-    # Find the correct house by house_number
     house_obj = property.houses.find_by(house_number: house_number)
     if house_obj
       agreement = TenantHouseAgreement.where(
@@ -28,16 +29,17 @@ class Payment < ApplicationRecord
         property_id: house_obj.property_id,
         status: 'active'
       ).first
-
-      # Credit the agreement if found
-      agreement.credit!(transaction_amount) if agreement
+      if agreement
+        Rails.logger.info "Crediting TenantHouseAgreement for house: #{house_number}"
+        agreement.credit!(transaction_amount)
+      else
+        Rails.logger.warn "No active TenantHouseAgreement found for house: #{house_number}"
+      end
     end
 
-    # Also credit the Admin’s wallet and create a ledger entry.
     wallet = property.admin.wallet
     wallet.with_lock do
       wallet.credit!(transaction_amount)
-
       LedgerEntry.create!(
         admin: property.admin,
         wallet: wallet,
@@ -46,14 +48,17 @@ class Payment < ApplicationRecord
         balance_after: wallet.balance,
         description: "Rent payment received (Payment ID: #{transaction_id})"
       )
+      Rails.logger.info "Admin wallet credited. New balance: #{wallet.balance}"
     end
   rescue StandardError => e
     Rails.logger.error "Failed to credit wallet: #{e.message}"
   end
 
   def broadcast_payment
+    Rails.logger.info "Starting broadcast_payment for Payment ID: #{transaction_id}"
     if (property = Property.find_by(id: property_id.to_i)) && property.admin
       PaymentsChannel.broadcast_to(property.admin, payment: as_json)
+      Rails.logger.info "Broadcasted payment to admin with ID: #{property.admin.id}"
     end
   rescue StandardError => e
     Rails.logger.error "Failed to broadcast payment: #{e.message}"

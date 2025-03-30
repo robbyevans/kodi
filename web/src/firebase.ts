@@ -1,4 +1,4 @@
-// src/firebase.ts
+// File: /web/src/firebase.ts
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
@@ -20,11 +20,14 @@ export const requestFirebaseNotificationPermission = async (
   adminId: number
 ) => {
   try {
+    console.log(
+      "Requesting Firebase token with vapidKey:",
+      import.meta.env.VITE_FIREBASE_VAPID_KEY
+    );
     const token = await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
     });
-
-    console.log("Firebase Token:", token);
+    console.log("Firebase Token received:", token);
 
     if (token) {
       dispatch({
@@ -38,6 +41,7 @@ export const requestFirebaseNotificationPermission = async (
         },
       });
       localStorage.setItem("notification_permission", "true");
+      console.log("Dispatched update for admin with token.");
     }
 
     return token;
@@ -51,6 +55,7 @@ export const requestFirebaseNotificationPermission = async (
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(messaging, (payload) => {
+      console.log("onMessage triggered with payload:", payload);
       resolve(payload);
     });
   });
