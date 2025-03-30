@@ -14,9 +14,42 @@ const Auth = () => {
     handleLogin,
     handleGoogleAuth,
   } = useAdmins();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // PWA Install Prompt
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        console.log("✅ User accepted the install prompt");
+      } else {
+        console.log("❌ User dismissed the install prompt");
+      }
+      setDeferredPrompt(null);
+      setShowInstallButton(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +87,13 @@ const Auth = () => {
             <S.InfoTitle>
               Own your properties, not the hassle. Kodi does the rest.
             </S.InfoTitle>
+
+            {/* Install button */}
+            {showInstallButton && (
+              <S.InstallButton onClick={handleInstallClick}>
+                📲 Install Kodi App
+              </S.InstallButton>
+            )}
 
             <S.GetStartedContainer>
               <S.GetStartedButton onClick={handleGetStarted}>

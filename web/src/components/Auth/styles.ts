@@ -266,3 +266,42 @@ export const GoogleContainer = styled.div`
   align-items: center;
   text-align: center;
 `;
+
+import { keyframes } from "styled-components";
+
+const bounceIn = keyframes`
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+export const InstallButton = styled.button`
+  margin-top: 12px;
+  background: ${colors.accent};
+  color: ${colors.text.inverted};
+  padding: 8px 16px;
+  border: none;
+  border-radius: ${borderRadius.md};
+  font-size: ${fontSizes.sm};
+  font-weight: ${fontWeights.semibold};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: ${bounceIn} 0.8s ease forwards;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: ${colors.primary};
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+`;
