@@ -318,7 +318,7 @@ export const InstallButtonTopRight = styled.button`
   position: fixed;
   top: 16px;
   right: 16px;
-
+  background-color: #ffff;
   color: ${colors.text.inverted};
   padding: 10px;
   border: none;
