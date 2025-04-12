@@ -9,9 +9,10 @@ export interface ILedger {
   transaction_type: "deposit" | "withdrawal";
   amount: number;
   balance_after: number;
-  description: string;
+  transaction_id: string;
+  house_number: string;
+  property_id: string;
   created_at: string; // or Date
-  updated_at: string; // or Date
 }
 
 export interface IPayment {

@@ -17,11 +17,27 @@ const Analytics: React.FC<IAnalyticsProps> = ({
   wallet,
   // loading,
 }) => {
-  const totalDeposits = ledgerEntries
-    .filter((item) => item.transaction_type === "deposit")
-    .reduce((acc, cur) => acc + Number(cur.amount), 0); // use `cur.amount`
+  // Get the current date and month name
+  const currentDate = new Date();
+  const currentMonthName = currentDate.toLocaleString("default", {
+    month: "long",
+  });
 
-  const totalWithdrawals = ledgerEntries
+  // Filter ledger entries to only include those from the current month
+  const currentMonthLedgerEntries = ledgerEntries.filter((entry) => {
+    const entryDate = new Date(entry.created_at);
+    return (
+      entryDate.getMonth() === currentDate.getMonth() &&
+      entryDate.getFullYear() === currentDate.getFullYear()
+    );
+  });
+
+  // Calculate totals only for the current month
+  const totalDeposits = currentMonthLedgerEntries
+    .filter((item) => item.transaction_type === "deposit")
+    .reduce((acc, cur) => acc + Number(cur.amount), 0);
+
+  const totalWithdrawals = currentMonthLedgerEntries
     .filter((item) => item.transaction_type === "withdrawal")
     .reduce((acc, cur) => acc + Number(cur.amount), 0);
 
@@ -46,37 +62,39 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         </S.StatCard>
 
         <S.StatCard>
-          <S.StatTitle>Total Deposits</S.StatTitle>
+          <S.StatTitle>{`Total Deposits for ${currentMonthName}`}</S.StatTitle>
           <S.StatValue>KES {totalDeposits.toFixed(2)}</S.StatValue>
-          <S.StatSubtitle>All time</S.StatSubtitle>
+          <S.StatSubtitle>{`${currentMonthName} Deposits`}</S.StatSubtitle>
         </S.StatCard>
 
         <S.StatCard>
-          <S.StatTitle>Total Withdrawals</S.StatTitle>
+          <S.StatTitle>{`Total Withdrawals for ${currentMonthName}`}</S.StatTitle>
           <S.StatValue>KES {totalWithdrawals.toFixed(2)}</S.StatValue>
-          <S.StatSubtitle>All time</S.StatSubtitle>
+          <S.StatSubtitle>{`${currentMonthName} Withdrawals`}</S.StatSubtitle>
         </S.StatCard>
       </S.StatsContainer>
 
       {/* ========== Transaction Table ========== */}
-      <S.SectionTitle>Recent Transactions</S.SectionTitle>
+      <S.SectionTitle>{`Recent Transactions for ${currentMonthName}`}</S.SectionTitle>
       <S.TableWrapper>
         <S.Table>
           <thead>
             <tr>
-              <th>Recipient</th>
+              <th>Transaction ID</th>
+              <th>Description</th>
               <th>Date</th>
               <th>Amount</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            {ledgerEntries.map((entry) => (
+            {currentMonthLedgerEntries.map((entry) => (
               <tr key={entry.id}>
+                <td>{entry.transaction_id}</td>
                 <td>
                   {entry.transaction_type === "deposit"
-                    ? "Rent Payment"
-                    : "Self"}
+                    ? `${entry.property_id}, ${entry.house_number}`
+                    : "withdrawal"}
                 </td>
                 <td>{new Date(entry.created_at).toLocaleString()}</td>
                 <td>KES {Number(entry.amount).toFixed(2)}</td>

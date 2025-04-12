@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_29_163524) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_12_135917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -76,9 +76,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_29_163524) do
     t.string "transaction_type", null: false
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.decimal "balance_after", precision: 10, scale: 2, null: false
-    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "transaction_id"
+    t.string "property_id"
+    t.string "house_number"
     t.index ["admin_id"], name: "index_ledger_entries_on_admin_id"
     t.index ["wallet_id"], name: "index_ledger_entries_on_wallet_id"
   end

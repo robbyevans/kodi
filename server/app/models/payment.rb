@@ -4,7 +4,8 @@ class Payment < ApplicationRecord
   # Validations to ensure data integrity
   validates :transaction_id, presence: true, uniqueness: true
   validates :transaction_amount, presence: true, numericality: { greater_than: 0 }
-  validates :bill_ref_number, :msisdn, :transaction_type, :payment_date, :short_code, :status, presence: true
+  validates :bill_ref_number, :house_number, :property_id, :msisdn, :transaction_type, :payment_date, :short_code,
+            :status, presence: true
 
   # After a payment record is created, update the landlord's wallet
   after_create :credit_landlord_wallet
@@ -46,7 +47,9 @@ class Payment < ApplicationRecord
         transaction_type: 'deposit',
         amount: transaction_amount,
         balance_after: wallet.balance,
-        description: "Rent payment received (Payment ID: #{transaction_id})"
+        transaction_id: transaction_id,
+        house_number: house_number,
+        property_id: property_id,
       )
       Rails.logger.info "Admin wallet credited. New balance: #{wallet.balance}"
     end
