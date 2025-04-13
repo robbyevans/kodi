@@ -18,7 +18,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
   const [location, setLocation] = useState("");
   const [address, setAddress] = useState("");
   const [propertyImage, setPropertyImage] = useState<File | null>(null);
-  const [numberOfUnits, setNumberOfUnits] = useState<number>(0);
+  const [numberOfUnits, setNumberOfUnits] = useState<string>("");
 
   const { handleAddProperty } = useProperties();
   const { user } = useAdmins();
@@ -39,7 +39,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
         location: location || undefined,
         address: address || undefined,
         property_image: propertyImage || undefined,
-        number_of_units: numberOfUnits > 0 ? numberOfUnits : undefined,
+        number_of_units: Number(numberOfUnits)<=100? Number(numberOfUnits) : 0,
       };
 
       await handleAddProperty(newProperty);
@@ -48,7 +48,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
       setLocation("");
       setAddress("");
       setPropertyImage(null);
-      setNumberOfUnits(0);
+      setNumberOfUnits("");
       onClose();
     }
   };
@@ -126,9 +126,7 @@ const AddPropertyModal: React.FC<AddPropertyModalProps> = ({
                 max="100"
                 placeholder="number of houses in this property"
                 value={numberOfUnits}
-                onChange={(e) =>
-                  setNumberOfUnits(Math.min(100, parseInt(e.target.value)))
-                }
+                onChange={(e) => setNumberOfUnits(e.target.value)}
               />
             </S.FormGroup>
           </form>
