@@ -27,7 +27,7 @@ const Analytics: React.FC<IAnalyticsProps> = ({
 
   // Check viewport width
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.innerWidth < 450);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -103,24 +103,16 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         <S.Table>
           <thead>
             <tr>
-              <th>Transaction ID</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Amount</th>
               <th>Status</th>
+              <th>Amount</th>
+              <th>Description</th>
+              <th>Transaction ID</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
             {currentMonthLedgerEntries.map((entry) => (
               <tr key={entry.id}>
-                <td>{entry.transaction_id}</td>
-                <td>
-                  {entry.transaction_type === "deposit"
-                    ? `${entry.property_uid}#${entry.house_number}`
-                    : "withdrawal"}
-                </td>
-                <td>{new Date(entry.created_at).toLocaleString()}</td>
-                <td>KES {Number(entry.amount).toFixed(2)}</td>
                 <td>
                   {entry.transaction_type === "deposit" ? (
                     <S.StatusPill color="#27ae60">Deposit</S.StatusPill>
@@ -128,6 +120,14 @@ const Analytics: React.FC<IAnalyticsProps> = ({
                     <S.StatusPill color="#c0392b">Withdrawal</S.StatusPill>
                   )}
                 </td>
+                <td> {Number(entry.amount).toFixed(2)}</td>
+                <td>
+                  {entry.transaction_type === "deposit"
+                    ? `${entry.property_uid}#${entry.house_number}`
+                    : "withdrawal"}
+                </td>
+                <td>{entry.transaction_id}</td>
+                <td>{new Date(entry.created_at).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

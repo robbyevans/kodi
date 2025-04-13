@@ -58,9 +58,6 @@ export const StatsContainer = styled.div`
   margin-bottom: ${spacing.xl};
 
   @media (max-width: 768px) {
-    /* On mobile, we won't use this container as-is.
-       Instead, we use SwiperHOC to wrap stat cards. */
-    display: none;
   }
 `;
 
@@ -140,7 +137,7 @@ export const PaymentRateBadge = styled.div<{ rate: number }>`
 // Section Titles
 export const SectionTitle = styled.h2`
   font-size: ${fontSizes.xl};
-  margin: ${spacing.xl} 0 ${spacing.md};
+  margin: ${spacing.xl} 0 ${spacing.xl};
   color: ${colors.primary};
 
   @media (max-width: 768px) {
