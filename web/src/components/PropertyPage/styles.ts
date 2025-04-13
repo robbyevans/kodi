@@ -162,7 +162,9 @@ export const DownloadWRapper = styled.div`
   width: 100%;
 `;
 
-// Skeleton loading keyframes (same as before)
+/* ------------------------- Skeleton Loader Styles -------------------------- */
+
+// Keyframes for skeleton loading animation
 const skeletonLoading = keyframes`
   0% {
     background-position: -200px 0;
@@ -206,4 +208,39 @@ export const SkeletonTableData = styled.td`
   animation: ${skeletonLoading} 1.5s infinite linear;
   padding: ${spacing.md};
   border: none;
+`;
+
+// Skeleton Button Style
+export const SkeletonButton = styled.button`
+  width: 150px;
+  height: 40px;
+  border-radius: ${borderRadius.sm};
+  background: ${colors.neutral[300]};
+  background-size: 200px 100%;
+  animation: ${skeletonLoading} 1.5s infinite linear;
+  border: none;
+  margin: ${spacing.md} auto;
+  display: block;
+`;
+
+export const SkeletonBlock = styled.div<{
+  width?: string;
+  height?: string;
+  marginBottom?: string;
+  borderRadius?: string;
+}>`
+  width: ${({ width }) => width || "100%"};
+  height: ${({ height }) => height || "20px"};
+  margin-bottom: ${({ marginBottom }) => marginBottom || "0"};
+  border-radius: ${({ borderRadius }) => borderRadius || "4px"};
+  background: #eee;
+  background-image: linear-gradient(
+    to right,
+    #eee 0%,
+    #f5f5f5 20%,
+    #eee 40%,
+    #eee 100%
+  );
+  background-size: 800px 104px;
+  animation: ${skeletonLoading} 1.5s linear infinite;
 `;
