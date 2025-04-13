@@ -1,3 +1,5 @@
+// File: /web/src/components/Analytics/Analytics.tsx
+
 import React, { useEffect, useState } from "react";
 import * as S from "./styles";
 import WithdrawalForm from "../WithdrawalForm/WithdrawalForm";
@@ -86,12 +88,13 @@ const Analytics: React.FC<IAnalyticsProps> = ({
       </S.AnalyticsHeader>
 
       {isMobile ? (
-        // On mobile, use the SwiperHOC to enable horizontal scrolling
+        // On mobile, use the SwiperHOC to enable horizontal scrolling.
+        // Use slidesPerView set to 2 and spaceBetween of 20px.
         <SwiperHOC slidesPerView={2} spaceBetween={20}>
           {statCards}
         </SwiperHOC>
       ) : (
-        // On desktop, use a regular flex container
+        // On desktop, use a regular flex container.
         <S.StatsContainer>{statCards}</S.StatsContainer>
       )}
 

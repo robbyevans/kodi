@@ -1,3 +1,5 @@
+// File: /web/src/components/SwiperHOC/styles.ts
+
 import styled from "styled-components";
 
 export const StyledSwiperContainer = styled.div`
@@ -10,6 +12,7 @@ export const StyledSwiperContainer = styled.div`
 
   .swiper-pagination {
     height: 13px;
+    margin-top: 20px; /* Added margin to separate pagination dots from the cards */
   }
 
   .swiper {
