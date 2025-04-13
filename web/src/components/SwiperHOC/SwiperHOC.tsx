@@ -1,5 +1,3 @@
-// File: /web/src/components/SwiperHOC/SwiperHOC.tsx
-
 import { FC, ReactNode } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -8,7 +6,7 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-// Import styled-components styles (make sure the file path is correct)
+// Import styled-components styles
 import * as S from "./styles";
 
 type Props = {
@@ -23,9 +21,10 @@ const SwiperHOC: FC<Props> = ({
   children,
   showPaginationDots = true,
   slidesPerView = "auto",
-  spaceBetween = 13,
+  className,
+  spaceBetween = 23,
 }) => (
-  <S.StyledSwiperContainer>
+  <S.StyledSwiperContainer className={className}>
     <Swiper
       modules={[Pagination]}
       pagination={showPaginationDots ? { clickable: true } : false}

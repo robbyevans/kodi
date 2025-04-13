@@ -73,13 +73,15 @@ export const StatCard = styled.div`
   padding: ${spacing.lg};
   text-align: left;
   min-width: 200px;
+  max-width: 300px;
   position: relative;
+  border: 1px solid ${colors.primary};
 
   @media (max-width: 768px) {
     /* Let the SwiperHOC control layout */
     flex: 1 1 auto;
     padding: ${spacing.sm};
-    min-width: 250px;
+    min-width: 150px;
   }
 `;
 

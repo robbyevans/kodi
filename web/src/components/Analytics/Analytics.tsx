@@ -90,7 +90,7 @@ const Analytics: React.FC<IAnalyticsProps> = ({
       {isMobile ? (
         // On mobile, use the SwiperHOC to enable horizontal scrolling.
         // Use slidesPerView set to 2 and spaceBetween of 20px.
-        <SwiperHOC slidesPerView={2} spaceBetween={20}>
+        <SwiperHOC slidesPerView={1.35} spaceBetween={10}>
           {statCards}
         </SwiperHOC>
       ) : (
