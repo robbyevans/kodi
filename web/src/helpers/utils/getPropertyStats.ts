@@ -10,6 +10,7 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
   let totalTenants = 0;
   let currentPayableRevenue = 0;
   let totalPayableRevenue = 0;
+  let totalUnitsPaid = 0;
 
   properties.forEach((property) => {
     if (property.houses && Array.isArray(property.houses)) {
@@ -27,6 +28,10 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
           totalTenants++;
           currentPayableRevenue += rent;
         }
+        const agreement = house?.active_tenant_house_agreements;
+        if (agreement && agreement[0]?.balance >= 0) {
+          totalUnitsPaid++;
+        }
       });
     }
   });
@@ -40,6 +45,7 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
   // New metrics: Average Rent & Vacancy Rate
   const averageRent = totalUnits > 0 ? totalPayableRevenue / totalUnits : 0;
   const vacancyRate = 100 - occupancyRate;
+  const paymentRate = totalUnits > 0 ? (totalUnitsPaid / totalUnits) * 100 : 0;
 
   return {
     totalUnits,
@@ -47,6 +53,7 @@ export const getPropertyStats = (propertyData: IProperty | IProperty[]) => {
     occupancyRate: parseFloat(occupancyRate.toFixed(2)),
     currentPayableRevenue: parseFloat(currentPayableRevenue.toFixed(2)),
     totalPayableRevenue: parseFloat(totalPayableRevenue.toFixed(2)),
+    paymentRate: parseFloat(paymentRate.toFixed(2)),
     currentRevenueRate: parseFloat(currentRevenueRate.toFixed(2)),
     averageRent: parseFloat(averageRent.toFixed(2)),
     vacancyRate: parseFloat(vacancyRate.toFixed(2)),

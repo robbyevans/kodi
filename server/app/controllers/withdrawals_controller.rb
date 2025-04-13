@@ -1,4 +1,3 @@
-# /server/app/controllers/withdrawals_controller.rb
 class WithdrawalsController < ApplicationController
   before_action :authenticate_admin
 

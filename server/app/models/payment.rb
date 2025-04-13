@@ -1,5 +1,3 @@
-# File: /server/app/models/payment.rb
-
 class Payment < ApplicationRecord
   # Validations to ensure data integrity
   validates :transaction_id, presence: true, uniqueness: true
@@ -49,7 +47,7 @@ class Payment < ApplicationRecord
         balance_after: wallet.balance,
         transaction_id: transaction_id,
         house_number: house_number,
-        property_id: property_id,
+        property_uid: property_uid
       )
       Rails.logger.info "Admin wallet credited. New balance: #{wallet.balance}"
     end

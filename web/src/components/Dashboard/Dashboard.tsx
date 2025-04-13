@@ -21,8 +21,7 @@ interface DashboardProps {
   totalUnits: number;
   occupancyRate: number;
   totalTenants: number;
-  averageRent: number;
-  vacancyRate: number;
+  paymentRate: number;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -34,9 +33,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   totalProperties,
   totalUnits,
   occupancyRate,
+  paymentRate,
   totalTenants,
-  averageRent,
-  vacancyRate,
 }) => {
   return (
     <S.DashboardContainer>
@@ -66,6 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           totalProperties={totalProperties}
           totalUnits={totalUnits}
           occupancyRate={occupancyRate}
+          paymentRate={paymentRate}
         />
       </S.MobileStatsContainer>
 
@@ -116,8 +115,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             occupancyRate={occupancyRate}
             totalRevenuePercentage={totalRevenuePercentage}
             totalTenants={totalTenants}
-            averageRent={averageRent}
-            vacancyRate={vacancyRate}
+            paymentRate={paymentRate}
           />
         </S.SidePanel>
       </S.ContentWrapper>

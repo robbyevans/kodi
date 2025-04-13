@@ -9,8 +9,7 @@ interface QuickStatCardProps {
   occupancyRate: number;
   totalRevenuePercentage: number;
   totalTenants: number;
-  averageRent: number;
-  vacancyRate: number;
+  paymentRate: number;
 }
 
 const COLORS = [colors.primary, "#F17F1E"];
@@ -21,8 +20,7 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
   occupancyRate,
   totalRevenuePercentage,
   totalTenants,
-  averageRent,
-  vacancyRate,
+  paymentRate,
 }) => {
   const data = [
     { name: "Collected Revenue", value: totalRevenuePercentage },
@@ -78,16 +76,12 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         <strong>{totalTenants}</strong>
       </S.StatItem>
       <S.StatItem>
-        <span>Vacancy Rate</span>
-        <strong>{vacancyRate}%</strong>
-      </S.StatItem>
-      <S.StatItem>
         <span>Occupancy Rate</span>
         <strong>{occupancyRate}%</strong>
       </S.StatItem>
       <S.StatItem>
-        <span>Average Rent</span>
-        <strong>${averageRent.toLocaleString()}</strong>
+        <span>Payment Rate</span>
+        <strong>${paymentRate}%</strong>
       </S.StatItem>
     </S.QuickStats>
   );

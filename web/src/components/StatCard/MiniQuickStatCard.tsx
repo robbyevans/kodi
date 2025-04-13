@@ -5,6 +5,7 @@ interface MiniQuickStatCardProps {
   totalProperties: number;
   totalUnits: number;
   occupancyRate: number;
+  paymentRate: number;
 }
 
 const useCountUp = (target: number, duration: number = 1500) => {
@@ -33,10 +34,12 @@ const MiniQuickStatCard: React.FC<MiniQuickStatCardProps> = ({
   totalProperties,
   totalUnits,
   occupancyRate,
+  paymentRate,
 }) => {
   const animatedProperties = useCountUp(totalProperties, 1500);
   const animatedUnits = useCountUp(totalUnits, 1500);
   const animatedOcc = useCountUp(occupancyRate, 1500);
+  const animatedPaymentRate = useCountUp(paymentRate, 1500);
 
   return (
     <S.MiniQuickStats data-testid="mini-quick-stats">
@@ -51,6 +54,10 @@ const MiniQuickStatCard: React.FC<MiniQuickStatCardProps> = ({
       <S.MiniStatItem>
         <span>Occ%</span>
         <strong>{animatedOcc}%</strong>
+      </S.MiniStatItem>
+      <S.MiniStatItem>
+        <span>Payment%</span>
+        <strong>{animatedPaymentRate}%</strong>
       </S.MiniStatItem>
     </S.MiniQuickStats>
   );

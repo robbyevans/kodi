@@ -93,7 +93,7 @@ const Analytics: React.FC<IAnalyticsProps> = ({
                 <td>{entry.transaction_id}</td>
                 <td>
                   {entry.transaction_type === "deposit"
-                    ? `${entry.property_id}, ${entry.house_number}`
+                    ? `${entry.property_uid}#${entry.house_number}`
                     : "withdrawal"}
                 </td>
                 <td>{new Date(entry.created_at).toLocaleString()}</td>

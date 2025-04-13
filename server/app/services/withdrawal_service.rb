@@ -31,7 +31,7 @@ class WithdrawalService
       amount: @amount,
       balance_after: wallet.balance,
       transaction_id: response['transaction_id'] || SecureRandom.hex(10),
-      property_id: nil,
+      property_uid: nil,
       house_number: nil
     )
 

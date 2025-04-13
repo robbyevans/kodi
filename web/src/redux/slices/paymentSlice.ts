@@ -11,7 +11,7 @@ export interface ILedger {
   balance_after: number;
   transaction_id: string;
   house_number: string;
-  property_id: string;
+  property_uid: string;
   created_at: string; // or Date
 }
 

@@ -21,8 +21,7 @@ const DashboardContainer = () => {
     occupancyRate,
     currentRevenueRate,
     totalTenants,
-    averageRent,
-    vacancyRate,
+    paymentRate,
   } = getPropertyStats(propertyData);
 
   return (
@@ -37,9 +36,8 @@ const DashboardContainer = () => {
         totalRevenuePercentage={currentRevenueRate}
         totalUnits={totalUnits}
         occupancyRate={occupancyRate}
+        paymentRate={paymentRate}
         totalTenants={totalTenants}
-        averageRent={averageRent}
-        vacancyRate={vacancyRate}
       />
       {/* <InstructionDashboard /> */}
       <AddPropertyModal isOpen={isModalOpen} onClose={handleCloseModal} />
