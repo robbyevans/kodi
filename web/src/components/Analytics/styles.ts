@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   colors,
   fonts,
@@ -6,6 +6,8 @@ import {
   spacing,
   borderRadius,
 } from "../../styles/foundation";
+
+/* ----------------------------- Main Components ----------------------------- */
 
 // Outer Container
 export const AnalyticsContainer = styled.div`
@@ -51,7 +53,7 @@ export const StatCard = styled.div`
   padding: ${spacing.lg};
   text-align: left;
   min-width: 200px;
-  position: relative; /* Important for the badge positioning */
+  position: relative; /* For positioning skeleton badges */
 `;
 
 // Stat Title
@@ -174,4 +176,39 @@ export const LedgerButton = styled.button`
   &:hover {
     background-color: ${colors.secondary};
   }
+`;
+
+/* ------------------------- Skeleton Loader Styles -------------------------- */
+
+// Shimmer animation
+const shimmer = keyframes`
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+`;
+
+// A reusable skeleton block component
+export const SkeletonBlock = styled.div<{
+  width?: string;
+  height?: string;
+  marginBottom?: string;
+  borderRadius?: string;
+}>`
+  width: ${({ width }) => width || "100%"};
+  height: ${({ height }) => height || "20px"};
+  margin-bottom: ${({ marginBottom }) => marginBottom || "0"};
+  border-radius: ${({ borderRadius }) => borderRadius || "4px"};
+  background: #eee;
+  background-image: linear-gradient(
+    to right,
+    #eee 0%,
+    #f5f5f5 20%,
+    #eee 40%,
+    #eee 100%
+  );
+  background-size: 800px 104px;
+  animation: ${shimmer} 1.5s linear infinite;
 `;

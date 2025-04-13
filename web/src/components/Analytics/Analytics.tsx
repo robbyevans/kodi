@@ -3,6 +3,7 @@ import * as S from "./styles";
 import WithdrawalForm from "../WithdrawalForm/WithdrawalForm";
 import { IUser } from "../../redux/slices/adminSlice";
 import { ILedger } from "../../redux/slices/paymentSlice";
+import AnalyticsSkeleton from "./AnalyticsSkeleton";
 
 interface IAnalyticsProps {
   user: IUser;
@@ -16,8 +17,8 @@ const Analytics: React.FC<IAnalyticsProps> = ({
   user,
   ledgerEntries,
   wallet,
+  loading,
   paymentRate,
-  // loading,
 }) => {
   // Get the current date and month name
   const currentDate = new Date();
@@ -48,7 +49,10 @@ const Analytics: React.FC<IAnalyticsProps> = ({
     // Implementation for download statement goes here.
   };
 
-  return (
+  // Render the skeleton if loading is true
+  return loading ? (
+    <AnalyticsSkeleton />
+  ) : (
     <S.AnalyticsContainer data-testid="analytics-page-container">
       <S.AnalyticsHeader>
         <h1>Analytics Dashboard</h1>

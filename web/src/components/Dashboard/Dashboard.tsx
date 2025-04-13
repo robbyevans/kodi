@@ -9,6 +9,8 @@ import PropertyCardSkeleton from "../PropertyCard/PropertyCardSkeleton";
 import DashboardHeaderSkeleton from "./DashboardHeaderSkeleton";
 import { IUser } from "../../redux/slices/adminSlice";
 import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
+import QuickStatCardSkeleton from "../StatCard/QuickStatCardSkeleton";
+import MiniQuickStatCardSkeleton from "../StatCard/MiniQuickStatCardSkeleton";
 
 interface DashboardProps {
   propertyData: IProperty[];
@@ -60,12 +62,16 @@ const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Mobile: Mini Quick Stats Card */}
       <S.MobileStatsContainer>
-        <MiniQuickStatCard
-          totalProperties={totalProperties}
-          totalUnits={totalUnits}
-          occupancyRate={occupancyRate}
-          paymentRate={paymentRate}
-        />
+        {loading ? (
+          <MiniQuickStatCardSkeleton />
+        ) : (
+          <MiniQuickStatCard
+            totalProperties={totalProperties}
+            totalUnits={totalUnits}
+            occupancyRate={occupancyRate}
+            paymentRate={paymentRate}
+          />
+        )}
       </S.MobileStatsContainer>
 
       <S.ContentWrapper>
@@ -109,14 +115,18 @@ const Dashboard: React.FC<DashboardProps> = ({
 
         {/* Desktop: Full Quick Stats Card */}
         <S.SidePanel>
-          <QuickStatCard
-            totalProperties={totalProperties}
-            totalUnits={totalUnits}
-            occupancyRate={occupancyRate}
-            totalRevenuePercentage={totalRevenuePercentage}
-            totalTenants={totalTenants}
-            paymentRate={paymentRate}
-          />
+          {loading ? (
+            <QuickStatCardSkeleton />
+          ) : (
+            <QuickStatCard
+              totalProperties={totalProperties}
+              totalUnits={totalUnits}
+              occupancyRate={occupancyRate}
+              totalRevenuePercentage={totalRevenuePercentage}
+              totalTenants={totalTenants}
+              paymentRate={paymentRate}
+            />
+          )}
         </S.SidePanel>
       </S.ContentWrapper>
     </S.DashboardContainer>
