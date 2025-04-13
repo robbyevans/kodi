@@ -36,7 +36,7 @@ const PropertyPageSkeleton: React.FC = () => {
         <S.Table>
           <thead>
             <tr>
-              {headers.map((header, index) => (
+              {headers.map((_, index) => (
                 // Use your real TableHeader style so the header colors match the live table.
                 <S.TableHeader key={index}>
                   {/* A SkeletonBlock inside simulates header content */}

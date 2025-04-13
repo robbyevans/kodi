@@ -20,7 +20,7 @@ export const useProperties = () => {
   const error = useAppSelector(selectPropertiesError);
 
   const getAllProperties = () => {
-    dispatch(fetchAllProperties);
+    dispatch(fetchAllProperties());
   };
 
   const getPropertyById = (id: number) => {
