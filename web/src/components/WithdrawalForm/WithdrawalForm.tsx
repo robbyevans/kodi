@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { usePayments } from "../../redux/hooks/usePayment";
 import { useAdmins } from "../../redux/hooks/useAdmin";
+import * as S from "./styles";
 
 const WithdrawalForm: React.FC = () => {
-  const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
   const [withdrawalType, setWithdrawalType] = useState<"mpesa" | "bank">(
     "mpesa"
   );
@@ -17,16 +18,16 @@ const WithdrawalForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (withdrawAmount <= 0) {
+    const amount = Number(withdrawAmount);
+    if (!withdrawAmount || amount <= 0) {
       alert("Please enter a valid withdrawal amount.");
       return;
     }
-    if (wallet && withdrawAmount > Number(wallet.balance)) {
+    if (wallet && amount > Number(wallet.balance)) {
       alert("Insufficient wallet balance.");
       return;
     }
 
-    // Build recipient details based on withdrawal type
     let recipient_details = {};
 
     if (withdrawalType === "bank") {
@@ -53,29 +54,18 @@ const WithdrawalForm: React.FC = () => {
       recipient_details = { mpesa_number: user.phone_number };
     }
 
-    initiateWithdrawalRequest(
-      withdrawAmount,
-      withdrawalType,
-      recipient_details
-    );
+    initiateWithdrawalRequest(amount, withdrawalType, recipient_details);
   };
 
   return (
-    <div
-      style={{
-        padding: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        marginTop: "1rem",
-      }}
-    >
-      <h3>Withdraw Funds</h3>
-      <p>
+    <S.FormContainer>
+      <S.FormTitle>Withdraw Funds</S.FormTitle>
+      <S.BalanceText>
         Current Balance: KES{" "}
         {wallet ? Number(wallet.balance).toFixed(2) : "0.00"}
-      </p>
-      <form onSubmit={handleSubmit}>
-        <div>
+      </S.BalanceText>
+      <S.Form onSubmit={handleSubmit}>
+        <S.RadioGroup>
           <label>
             <input
               type="radio"
@@ -85,7 +75,7 @@ const WithdrawalForm: React.FC = () => {
             />{" "}
             MPesa
           </label>
-          <label style={{ marginLeft: "1rem" }}>
+          <label>
             <input
               type="radio"
               value="bank"
@@ -94,75 +84,53 @@ const WithdrawalForm: React.FC = () => {
             />{" "}
             Bank Account
           </label>
-        </div>
+        </S.RadioGroup>
+
         {withdrawalType === "mpesa" ? (
-          <div>
-            <input
-              type="text"
-              placeholder="Mobile number for MPesa"
-              value={
-                user.phone_number ||
-                "Update and verify your phone number in your profile"
-              }
-              disabled
-              style={{
-                padding: "0.5rem",
-                width: "100%",
-                margin: "0.5rem 0",
-                backgroundColor: "#eee",
-              }}
-            />
-          </div>
+          <S.InputField
+            type="text"
+            placeholder="Mobile number for MPesa"
+            value={
+              user.phone_number ||
+              "Update and verify your phone number in your profile"
+            }
+            disabled
+          />
         ) : (
-          <div>
-            <input
+          <>
+            <S.InputField
               type="text"
               placeholder="Bank Account Number"
               value={bankAccountNumber}
               onChange={(e) => setBankAccountNumber(e.target.value)}
-              style={{ padding: "0.5rem", width: "100%", margin: "0.5rem 0" }}
             />
-            <input
+            <S.InputField
               type="text"
               placeholder="Bank Code"
               value={bankCode}
               onChange={(e) => setBankCode(e.target.value)}
-              style={{ padding: "0.5rem", width: "100%", margin: "0.5rem 0" }}
             />
-            <input
+            <S.InputField
               type="text"
               placeholder="Account Name"
               value={accountName}
               onChange={(e) => setAccountName(e.target.value)}
-              style={{ padding: "0.5rem", width: "100%", margin: "0.5rem 0" }}
             />
-          </div>
+          </>
         )}
-        <input
+
+        <S.InputField
           type="number"
           placeholder="Amount to withdraw"
           value={withdrawAmount}
-          onChange={(e) => setWithdrawAmount(Number(e.target.value))}
-          style={{ padding: "0.5rem", width: "100%", marginBottom: "0.5rem" }}
+          onChange={(e) => setWithdrawAmount(e.target.value)}
         />
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ padding: "0.5rem 1rem" }}
-        >
+        <S.SubmitButton type="submit" disabled={loading}>
           {loading ? "Processing..." : "Withdraw"}
-        </button>
-      </form>
+        </S.SubmitButton>
+      </S.Form>
 
-      <span
-        style={{
-          display: "block",
-          textAlign: "center",
-          width: "100%",
-          boxSizing: "border-box",
-          marginTop: "20px",
-        }}
-      >
+      <S.TrustBadgeContainer>
         <a
           href="https://intasend.com/security"
           target="_blank"
@@ -170,19 +138,11 @@ const WithdrawalForm: React.FC = () => {
         >
           <img
             src="https://intasend-prod-static.s3.amazonaws.com/img/trust-badges/intasend-trust-badge-no-mpesa-hr-light.png"
-            style={{ width: "100%", maxWidth: "375px", height: "auto" }}
             alt="IntaSend Secure Payments (PCI-DSS Compliant)"
           />
         </a>
         <strong>
           <a
-            style={{
-              display: "block",
-              color: "#454545",
-              textDecoration: "none",
-              fontSize: "0.8em",
-              marginTop: "0.6em",
-            }}
             href="https://intasend.com/security"
             target="_blank"
             rel="noopener noreferrer"
@@ -190,8 +150,8 @@ const WithdrawalForm: React.FC = () => {
             Secured by IntaSend Payments
           </a>
         </strong>
-      </span>
-    </div>
+      </S.TrustBadgeContainer>
+    </S.FormContainer>
   );
 };
 

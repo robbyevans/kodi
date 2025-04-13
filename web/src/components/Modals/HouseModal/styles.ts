@@ -33,7 +33,7 @@ export const FormGroup = styled.div`
   label {
     margin-bottom: ${spacing.xs};
     color: ${colors.text.secondary};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     font-weight: 500;
   }
 `;
@@ -42,7 +42,7 @@ export const InputField = styled.input`
   padding: ${spacing.sm};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.md};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   transition: border-color 0.3s ease;
 
   &:focus {

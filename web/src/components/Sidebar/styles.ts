@@ -50,7 +50,7 @@ export const MenuItem = styled.button<{ $active?: boolean }>`
   padding: ${spacing.sm};
   display: flex;
   align-items: center;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
   border-radius: ${borderRadius.sm};

@@ -93,7 +93,7 @@ export const OptionButton = styled.button`
   color: ${colors.primary};
   border: 1px solid ${colors.primary};
   border-radius: ${borderRadius.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   font-weight: ${fontWeights.semibold};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -119,7 +119,7 @@ export const Input = styled.input`
   padding: ${spacing.sm} ${spacing.md};
   border: 1px solid ${colors.primary}; /* Solid border in primary color */
   border-radius: ${borderRadius.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   background: ${colors.background};
   transition: all 0.2s ease;
 
@@ -138,7 +138,7 @@ export const Button = styled.button`
   color: ${colors.text.inverted};
   border: none;
   border-radius: ${borderRadius.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   font-weight: ${fontWeights.semibold};
   cursor: pointer;
   transition: all 0.2s ease;

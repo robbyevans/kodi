@@ -39,7 +39,7 @@ export const InputField = styled.input`
   padding: ${spacing.sm};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   transition: border-color 0.3s ease;
   &:focus {
     border-color: ${colors.primary};
@@ -61,7 +61,7 @@ export const SubmitButton = styled.button`
   border: none;
   border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   transition: background 0.3s ease;
   -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
@@ -79,7 +79,7 @@ export const CancelButton = styled.button`
   border: none;
   border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   transition: background 0.3s ease;
   -webkit-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 6px 5px 12px -7px rgba(0, 0, 0, 0.75);
@@ -134,7 +134,7 @@ export const SectionHeader = styled.h3`
 
 export const StatusMessage = styled.p`
   text-align: center;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   color: ${colors.text.secondary};
 `;
 

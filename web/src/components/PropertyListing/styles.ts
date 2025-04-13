@@ -195,7 +195,7 @@ export const InputField = styled.input`
   padding: ${spacing.sm};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   outline: none;
   flex: 1;
 `;

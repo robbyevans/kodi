@@ -101,7 +101,7 @@ export const AddPropertyButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
   border: none;
   border-radius: ${borderRadius.md};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   cursor: pointer;
   transition: all 0.2s ease;
 

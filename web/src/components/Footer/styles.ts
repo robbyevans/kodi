@@ -34,7 +34,7 @@ export const SocialIconLink = styled.a`
 
 export const FooterText = styled.p`
   color: ${colors.text.inverted};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   margin: 0;
   letter-spacing: 0.5px;
   text-align: center;

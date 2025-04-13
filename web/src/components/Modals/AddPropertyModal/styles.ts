@@ -42,7 +42,7 @@ export const FormGroup = styled.div`
   label {
     display: block;
     margin-bottom: ${spacing.xs};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     color: ${colors.primary};
     font-weight: 500;
   }
@@ -51,7 +51,7 @@ export const FormGroup = styled.div`
   select {
     width: 93%;
     padding: ${spacing.sm};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     border: 1px solid ${colors.neutral[300]};
     border-radius: ${borderRadius.md};
 
@@ -203,7 +203,7 @@ export const PaymentToggleButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s;
   margin-bottom: ${spacing.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
 `;
 
 export const PaymentActionButton = styled.button`
@@ -211,13 +211,13 @@ export const PaymentActionButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s;
   margin-top: ${spacing.sm};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
 `;
 
 export const PaymentFormGroup = styled.div`
   label {
     display: flex;
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     color: ${colors.primary};
     font-weight: 500;
     margin-bottom: 0;
@@ -227,7 +227,7 @@ export const PaymentFormGroup = styled.div`
   select {
     width: 100%;
     padding: ${spacing.sm};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     border: 1px solid ${colors.neutral[300]};
     border-radius: ${borderRadius.md};
 

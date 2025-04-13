@@ -41,7 +41,7 @@ export const StatementButton = styled.button`
   border: none;
   border-radius: ${borderRadius.sm};
   cursor: pointer;
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
 
   &:hover {
     background-color: ${colors.secondary};

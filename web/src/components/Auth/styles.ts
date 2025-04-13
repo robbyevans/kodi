@@ -98,7 +98,7 @@ export const Input = styled.input`
   margin-bottom: ${spacing.sm};
   border: 1px solid ${colors.neutral[300]};
   border-radius: ${borderRadius.md};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   transition: all 0.2s ease;
 
   &:focus {
@@ -114,7 +114,7 @@ export const Button = styled.button`
   padding: ${spacing.sm};
   background: ${colors.primary};
   color: ${colors.text.inverted};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   font-weight: ${fontWeights.semibold};
   border: none;
   border-radius: ${borderRadius.md};
@@ -201,7 +201,7 @@ export const GetStartedButton = styled.button`
   color: ${colors.text.inverted};
   border: 1px solid ${colors.primary};
   border-radius: ${borderRadius.md};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   font-weight: ${fontWeights.semibold};
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -238,7 +238,7 @@ export const InfoTitle = styled.h1`
 `;
 
 export const InfoText = styled.p`
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   margin-bottom: ${spacing.lg};
 `;
 
@@ -249,7 +249,7 @@ export const InfoFeatures = styled.ul`
   list-style-type: disc;
   padding-left: ${spacing.lg};
   margin-bottom: ${spacing.lg};
-  font-size: ${fontSizes.base};
+  font-size: ${fontSizes.md};
   color: ${colors.text.inverted};
 `;
 

@@ -20,13 +20,11 @@ const Analytics: React.FC<IAnalyticsProps> = ({
   loading,
   paymentRate,
 }) => {
-  // Get the current date and month name
   const currentDate = new Date();
   const currentMonthName = currentDate.toLocaleString("default", {
     month: "long",
   });
 
-  // Filter ledger entries to only include those from the current month
   const currentMonthLedgerEntries = ledgerEntries.filter((entry) => {
     const entryDate = new Date(entry.created_at);
     return (
@@ -35,7 +33,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
     );
   });
 
-  // Calculate totals only for the current month
   const totalDeposits = currentMonthLedgerEntries
     .filter((item) => item.transaction_type === "deposit")
     .reduce((acc, cur) => acc + Number(cur.amount), 0);
@@ -49,7 +46,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
     // Implementation for download statement goes here.
   };
 
-  // Render the skeleton if loading is true
   return loading ? (
     <AnalyticsSkeleton />
   ) : (
@@ -59,7 +55,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         <p>Welcome, {user.name || "Admin"}!</p>
       </S.AnalyticsHeader>
 
-      {/* ========== Top Stats Cards ========== */}
       <S.StatsContainer>
         <S.StatCard>
           <S.StatTitle>Wallet Balance</S.StatTitle>
@@ -83,7 +78,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         </S.StatCard>
       </S.StatsContainer>
 
-      {/* ========== Transaction Table ========== */}
       <S.SectionTitle>{`Recent Transactions for ${currentMonthName}`}</S.SectionTitle>
       <S.TableWrapper>
         <S.Table>
@@ -125,8 +119,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         Download Statement
       </S.DownloadButton>
 
-      {/* ========== Withdrawal Section ========== */}
-      <S.SectionTitle>Make a Withdrawal</S.SectionTitle>
       <WithdrawalForm />
     </S.AnalyticsContainer>
   );

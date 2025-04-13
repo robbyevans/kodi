@@ -29,7 +29,7 @@ export const SettingsHeader = styled.header`
     color: ${colors.text.secondary};
 
     @media (max-width: 768px) {
-      font-size: ${fontSizes.base};
+      font-size: ${fontSizes.md};
     }
   }
 `;

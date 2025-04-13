@@ -51,7 +51,7 @@ export const FormGroup = styled.div`
   label {
     display: block;
     margin-bottom: ${spacing.xs};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     color: ${colors.primary};
     font-weight: 500;
   }
@@ -59,7 +59,7 @@ export const FormGroup = styled.div`
   input {
     width: 100%;
     padding: ${spacing.sm};
-    font-size: ${fontSizes.base};
+    font-size: ${fontSizes.md};
     border: 1px solid ${colors.neutral[300]};
     border-radius: ${borderRadius.md};
 
