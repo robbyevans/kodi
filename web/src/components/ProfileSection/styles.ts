@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import {
   colors,
   fonts,
@@ -147,4 +147,35 @@ export const ChangeImageButton = styled.button`
   &:hover {
     color: ${colors.secondary};
   }
+`;
+
+const skeletonLoading = keyframes`
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+`;
+
+export const SkeletonBlock = styled.div<{
+  width?: string;
+  height?: string;
+  marginBottom?: string;
+  borderRadius?: string;
+}>`
+  width: ${({ width }) => width || "100%"};
+  height: ${({ height }) => height || "20px"};
+  margin-bottom: ${({ marginBottom }) => marginBottom || "0"};
+  border-radius: ${({ borderRadius }) => borderRadius || "4px"};
+  background: #eee;
+  background-image: linear-gradient(
+    to right,
+    #eee 0%,
+    #f5f5f5 20%,
+    #eee 40%,
+    #eee 100%
+  );
+  background-size: 800px 104px;
+  animation: ${skeletonLoading} 1.5s linear infinite;
 `;

@@ -1,13 +1,13 @@
 import React from "react";
 import * as S from "./styles";
 import PropertyListing from "../PropertyListing/PropertyListing";
-import { IProperty } from "../../redux/slices/propertiesSlice";
 import ProfileSection from "../ProfileSection/ProfileSection";
+import { IProperty } from "../../redux/slices/propertiesSlice";
 import { IUser } from "../../redux/slices/adminSlice";
 
 interface SettingsPageProps {
   propertiesData: IProperty[];
-  isPropertyLoading: boolean;
+  isLoading: boolean;
   onEditProperty: (updatedProperty: IProperty) => void;
   onDeleteProperty: (id: number) => void;
   user: IUser;
@@ -16,7 +16,7 @@ interface SettingsPageProps {
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
   propertiesData,
-  isPropertyLoading,
+  isLoading,
   onEditProperty,
   onDeleteProperty,
   user,
@@ -28,9 +28,15 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         <h1>Account Settings</h1>
         <p>Manage your account details and properties</p>
       </S.SettingsHeader>
-      <ProfileSection user={user} onEditUser={onEditUser} />
+
+      <ProfileSection
+        isLoading={isLoading}
+        user={user}
+        onEditUser={onEditUser}
+      />
+
       <PropertyListing
-        isPropertyLoading={isPropertyLoading}
+        isLoading={isLoading}
         propertiesData={propertiesData}
         onEditProperty={onEditProperty}
         onDeleteProperty={onDeleteProperty}

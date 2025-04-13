@@ -8,14 +8,14 @@ import PropertyListingSkeleton from "./PropertyListingSkeleton";
 
 interface PropertyListingProps {
   propertiesData: IProperty[];
-  isPropertyLoading: boolean;
+  isLoading: boolean;
   onEditProperty: (updatedProperty: IProperty) => void;
   onDeleteProperty: (id: number) => void;
 }
 
 const PropertyListing: React.FC<PropertyListingProps> = ({
   propertiesData,
-  isPropertyLoading,
+  isLoading,
   onEditProperty,
   onDeleteProperty,
 }) => {
@@ -32,7 +32,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [propertyToDelete, setPropertyToDelete] = useState<number | null>(null);
 
-  // Open editing mode for the selected property.
   const startEditingProperty = (property: IProperty) => {
     setEditingPropertyId(property.id!);
     setPropertyName(property.name);
@@ -41,7 +40,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     setEditingPropertyImage(null);
   };
 
-  // Cancel editing mode.
   const cancelEditingProperty = () => {
     setEditingPropertyId(null);
     setPropertyName("");
@@ -50,7 +48,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     setEditingPropertyImage(null);
   };
 
-  // Handle clicks on the main (non-interactive) area.
   const handleMainClick = (property: IProperty) => {
     if (editingPropertyId === property.id) {
       cancelEditingProperty();
@@ -59,7 +56,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     }
   };
 
-  // Save the updated property.
   const saveEditingProperty = (property: IProperty) => {
     const updatedProperty: IProperty = {
       ...property,
@@ -74,7 +70,6 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
     cancelEditingProperty();
   };
 
-  // Setup deletion confirmation.
   const confirmDeletion = (id: number, name: string) => {
     setPropertyToDelete(id);
     setPropertyName(name);
@@ -105,141 +100,144 @@ const PropertyListing: React.FC<PropertyListingProps> = ({
 
   return (
     <>
-      {isPropertyLoading && <PropertyListingSkeleton />}
-      <S.PropertyListingContainer>
-        <S.ListingHeader>
-          <h2>Managed Properties</h2>
-        </S.ListingHeader>
-        <S.PropertiesList>
-          {propertiesData.map((property, index) => (
-            <S.PropertyItem key={property.id}>
-              <S.PropertyMain onClick={() => handleMainClick(property)}>
-                <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
-                <S.PropertyWrapper>
-                  <S.PropertyIcon
-                    src={
-                      typeof property.property_image === "string"
-                        ? property.property_image
-                        : property.property_image
-                        ? URL.createObjectURL(property.property_image)
-                        : "/apartment-placeholder.png"
-                    }
-                    alt="property-image"
-                  />
-                  <div>
-                    <S.PropertyName>{property.name}</S.PropertyName>
-                    <S.PropertyUnits>
-                      {property.houses?.length || 0} Units
-                    </S.PropertyUnits>
-                  </div>
-                </S.PropertyWrapper>
-                <S.PropertyActions>
-                  {editingPropertyId !== property.id && (
-                    <>
-                      <S.EditButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startEditingProperty(property);
-                        }}
-                      >
-                        <FiEdit />
-                      </S.EditButton>
-                      <S.DeleteButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          confirmDeletion(property.id!, property.name);
-                        }}
-                      >
-                        <FiTrash2 />
-                      </S.DeleteButton>
-                    </>
-                  )}
-                </S.PropertyActions>
-              </S.PropertyMain>
+      {isLoading ? (
+        <PropertyListingSkeleton />
+      ) : (
+        <S.PropertyListingContainer>
+          <S.ListingHeader>
+            <h2>Managed Properties</h2>
+          </S.ListingHeader>
+          <S.PropertiesList>
+            {propertiesData.map((property, index) => (
+              <S.PropertyItem key={property.id}>
+                <S.PropertyMain onClick={() => handleMainClick(property)}>
+                  <S.PropertyNumber>{index + 1}.</S.PropertyNumber>
+                  <S.PropertyWrapper>
+                    <S.PropertyIcon
+                      src={
+                        typeof property.property_image === "string"
+                          ? property.property_image
+                          : property.property_image
+                          ? URL.createObjectURL(property.property_image)
+                          : "/apartment-placeholder.png"
+                      }
+                      alt="property-image"
+                    />
+                    <div>
+                      <S.PropertyName>{property.name}</S.PropertyName>
+                      <S.PropertyUnits>
+                        {property.houses?.length || 0} Units
+                      </S.PropertyUnits>
+                    </div>
+                  </S.PropertyWrapper>
+                  <S.PropertyActions>
+                    {editingPropertyId !== property.id && (
+                      <>
+                        <S.EditButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startEditingProperty(property);
+                          }}
+                        >
+                          <FiEdit />
+                        </S.EditButton>
+                        <S.DeleteButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            confirmDeletion(property.id!, property.name);
+                          }}
+                        >
+                          <FiTrash2 />
+                        </S.DeleteButton>
+                      </>
+                    )}
+                  </S.PropertyActions>
+                </S.PropertyMain>
 
-              {/* Render the edit form if this property is being edited */}
-              {editingPropertyId === property.id && (
-                <S.EditFormContainer
-                  expanded
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <S.InputGroup>
-                    <S.InputWrapper>
-                      <S.InputLabel>Update Property Name</S.InputLabel>
-                      <S.InputField
-                        type="text"
-                        value={propertyName}
-                        onChange={(e) => setPropertyName(e.target.value)}
-                        placeholder="Name"
-                      />
-                    </S.InputWrapper>
-                    <S.InputWrapper>
-                      <S.InputLabel>Update Location</S.InputLabel>
-                      <S.InputField
-                        type="text"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Location"
-                      />
-                    </S.InputWrapper>
-                    <S.InputWrapper>
-                      <S.InputLabel>Update Address</S.InputLabel>
-                      <S.InputField
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Address"
-                      />
-                    </S.InputWrapper>
-                    <S.InputWrapper>
-                      <S.InputLabel>Update Property Image</S.InputLabel>
-                      <S.FileInput
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                      />
-                      {editingPropertyImage && (
-                        <S.ImagePreview
-                          src={URL.createObjectURL(editingPropertyImage)}
-                          alt="Image Preview"
+                {/* Render the edit form if this property is being edited */}
+                {editingPropertyId === property.id && (
+                  <S.EditFormContainer
+                    expanded
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <S.InputGroup>
+                      <S.InputWrapper>
+                        <S.InputLabel>Update Property Name</S.InputLabel>
+                        <S.InputField
+                          type="text"
+                          value={propertyName}
+                          onChange={(e) => setPropertyName(e.target.value)}
+                          placeholder="Name"
                         />
-                      )}
-                    </S.InputWrapper>
-                    <S.ButtonWrapper>
-                      <S.StyledButton
-                        $isVariantAccept
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          saveEditingProperty(property);
-                        }}
-                      >
-                        Done
-                      </S.StyledButton>
-                      <S.StyledButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          cancelEditingProperty();
-                        }}
-                      >
-                        Cancel
-                      </S.StyledButton>
-                    </S.ButtonWrapper>
-                  </S.InputGroup>
-                </S.EditFormContainer>
-              )}
-            </S.PropertyItem>
-          ))}
-        </S.PropertiesList>
-        {showModal && (
-          <ConfirmationModal
-            message={`Deleting ${
-              propertyName || "this property"
-            } will also delete all of its related data. Are you sure you want to proceed?`}
-            onConfirm={handleConfirmDelete}
-            onCancel={handleCancelDelete}
-          />
-        )}
-      </S.PropertyListingContainer>
+                      </S.InputWrapper>
+                      <S.InputWrapper>
+                        <S.InputLabel>Update Location</S.InputLabel>
+                        <S.InputField
+                          type="text"
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          placeholder="Location"
+                        />
+                      </S.InputWrapper>
+                      <S.InputWrapper>
+                        <S.InputLabel>Update Address</S.InputLabel>
+                        <S.InputField
+                          type="text"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          placeholder="Address"
+                        />
+                      </S.InputWrapper>
+                      <S.InputWrapper>
+                        <S.InputLabel>Update Property Image</S.InputLabel>
+                        <S.FileInput
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                        {editingPropertyImage && (
+                          <S.ImagePreview
+                            src={URL.createObjectURL(editingPropertyImage)}
+                            alt="Image Preview"
+                          />
+                        )}
+                      </S.InputWrapper>
+                      <S.ButtonWrapper>
+                        <S.StyledButton
+                          $isVariantAccept
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            saveEditingProperty(property);
+                          }}
+                        >
+                          Done
+                        </S.StyledButton>
+                        <S.StyledButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            cancelEditingProperty();
+                          }}
+                        >
+                          Cancel
+                        </S.StyledButton>
+                      </S.ButtonWrapper>
+                    </S.InputGroup>
+                  </S.EditFormContainer>
+                )}
+              </S.PropertyItem>
+            ))}
+          </S.PropertiesList>
+          {showModal && (
+            <ConfirmationModal
+              message={`Deleting ${
+                propertyName || "this property"
+              } will also delete all of its related data. Are you sure you want to proceed?`}
+              onConfirm={handleConfirmDelete}
+              onCancel={handleCancelDelete}
+            />
+          )}
+        </S.PropertyListingContainer>
+      )}
     </>
   );
 };

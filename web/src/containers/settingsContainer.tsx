@@ -16,7 +16,7 @@ const SettingsContainer: React.FC = () => {
     <SettingsPage
       user={user}
       onEditUser={handleEditUser}
-      isPropertyLoading={loading}
+      isLoading={!loading}
       propertiesData={propertiesData}
       onEditProperty={handleEditProperty}
       onDeleteProperty={handleDeleteProperty}
