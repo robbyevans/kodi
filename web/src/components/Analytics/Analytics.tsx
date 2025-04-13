@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "./styles";
 import WithdrawalForm from "../WithdrawalForm/WithdrawalForm";
 import { IUser } from "../../redux/slices/adminSlice";
 import { ILedger } from "../../redux/slices/paymentSlice";
 import AnalyticsSkeleton from "./AnalyticsSkeleton";
+import SwiperHOC from "../SwiperHOC/SwiperHOC";
 
 interface IAnalyticsProps {
   user: IUser;
@@ -20,6 +21,16 @@ const Analytics: React.FC<IAnalyticsProps> = ({
   loading,
   paymentRate,
 }) => {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Check viewport width
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const currentDate = new Date();
   const currentMonthName = currentDate.toLocaleString("default", {
     month: "long",
@@ -42,9 +53,28 @@ const Analytics: React.FC<IAnalyticsProps> = ({
     .reduce((acc, cur) => acc + Number(cur.amount), 0);
 
   const handleDownloadStatement = () => {
-    // Suppose you have an endpoint: GET /ledger_entries/download_statement
     // Implementation for download statement goes here.
   };
+
+  // Define the stat cards array
+  const statCards = [
+    <S.StatCard key="wallet">
+      <S.StatTitle>Wallet Balance</S.StatTitle>
+      <S.StatValue>KES {wallet ? wallet.balance : "0.00"}</S.StatValue>
+      <S.StatSubtitle>Updated in real-time</S.StatSubtitle>
+    </S.StatCard>,
+    <S.StatCard key="deposits">
+      <S.StatTitle>{`Total Deposits for ${currentMonthName}`}</S.StatTitle>
+      <S.StatValue>KES {totalDeposits.toFixed(2)}</S.StatValue>
+      <S.StatSubtitle>{`${currentMonthName} Deposits`}</S.StatSubtitle>
+      <S.PaymentRateBadge rate={paymentRate}>{paymentRate}%</S.PaymentRateBadge>
+    </S.StatCard>,
+    <S.StatCard key="withdrawals">
+      <S.StatTitle>{`Total Withdrawals for ${currentMonthName}`}</S.StatTitle>
+      <S.StatValue>KES {totalWithdrawals.toFixed(2)}</S.StatValue>
+      <S.StatSubtitle>{`${currentMonthName} Withdrawals`}</S.StatSubtitle>
+    </S.StatCard>,
+  ];
 
   return loading ? (
     <AnalyticsSkeleton />
@@ -55,28 +85,15 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         <p>Welcome, {user.name || "Admin"}!</p>
       </S.AnalyticsHeader>
 
-      <S.StatsContainer>
-        <S.StatCard>
-          <S.StatTitle>Wallet Balance</S.StatTitle>
-          <S.StatValue>KES {wallet ? wallet.balance : "0.00"}</S.StatValue>
-          <S.StatSubtitle>Updated in real-time</S.StatSubtitle>
-        </S.StatCard>
-
-        <S.StatCard>
-          <S.StatTitle>{`Total Deposits for ${currentMonthName}`}</S.StatTitle>
-          <S.StatValue>KES {totalDeposits.toFixed(2)}</S.StatValue>
-          <S.StatSubtitle>{`${currentMonthName} Deposits`}</S.StatSubtitle>
-          <S.PaymentRateBadge rate={paymentRate}>
-            {paymentRate}%
-          </S.PaymentRateBadge>
-        </S.StatCard>
-
-        <S.StatCard>
-          <S.StatTitle>{`Total Withdrawals for ${currentMonthName}`}</S.StatTitle>
-          <S.StatValue>KES {totalWithdrawals.toFixed(2)}</S.StatValue>
-          <S.StatSubtitle>{`${currentMonthName} Withdrawals`}</S.StatSubtitle>
-        </S.StatCard>
-      </S.StatsContainer>
+      {isMobile ? (
+        // On mobile, use the SwiperHOC to enable horizontal scrolling
+        <SwiperHOC slidesPerView={2} spaceBetween={20}>
+          {statCards}
+        </SwiperHOC>
+      ) : (
+        // On desktop, use a regular flex container
+        <S.StatsContainer>{statCards}</S.StatsContainer>
+      )}
 
       <S.SectionTitle>{`Recent Transactions for ${currentMonthName}`}</S.SectionTitle>
       <S.TableWrapper>
@@ -114,7 +131,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
         </S.Table>
       </S.TableWrapper>
 
-      {/* Download Statement Button */}
       <S.DownloadButton onClick={handleDownloadStatement}>
         Download Statement
       </S.DownloadButton>

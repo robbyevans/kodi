@@ -14,6 +14,11 @@ export const AnalyticsContainer = styled.div`
   background: ${colors.background};
   min-height: 100vh;
   padding: ${spacing["2xl"]} ${spacing.xl};
+
+  @media (max-width: 768px) {
+    padding: ${spacing.xl} ${spacing.sm};
+  }
+
   font-family: ${fonts.primary};
   color: ${colors.text.primary};
 `;
@@ -26,6 +31,11 @@ export const AnalyticsHeader = styled.header`
   h1 {
     font-family: ${fonts.secondary};
     font-size: ${fontSizes["2xl"]};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.xl};
+    }
+
     color: ${colors.primary};
     margin-bottom: ${spacing.xs};
   }
@@ -33,15 +43,25 @@ export const AnalyticsHeader = styled.header`
   p {
     font-size: ${fontSizes.sm};
     color: ${colors.text.secondary};
+
+    @media (max-width: 768px) {
+      font-size: ${fontSizes.xs};
+    }
   }
 `;
 
-// Top Stats Container
+// Top Stats Container (Desktop Only)
 export const StatsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${spacing.md};
   margin-bottom: ${spacing.xl};
+
+  @media (max-width: 768px) {
+    /* On mobile, we won't use this container as-is.
+       Instead, we use SwiperHOC to wrap stat cards. */
+    display: none;
+  }
 `;
 
 // Stat Card
@@ -53,7 +73,14 @@ export const StatCard = styled.div`
   padding: ${spacing.lg};
   text-align: left;
   min-width: 200px;
-  position: relative; /* For positioning skeleton badges */
+  position: relative;
+
+  @media (max-width: 768px) {
+    /* Let the SwiperHOC control layout */
+    flex: 1 1 auto;
+    padding: ${spacing.sm};
+    min-width: 250px;
+  }
 `;
 
 // Stat Title
@@ -61,6 +88,10 @@ export const StatTitle = styled.h3`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
   margin-bottom: ${spacing.xs};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.xs};
+  }
 `;
 
 // Stat Value
@@ -68,15 +99,23 @@ export const StatValue = styled.div`
   font-size: ${fontSizes["2xl"]};
   font-weight: bold;
   margin-bottom: ${spacing.xs};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.xl};
+  }
 `;
 
 // Stat Subtitle
 export const StatSubtitle = styled.div`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.xs};
+  }
 `;
 
-// Payment Rate Badge (for the bottom right of the stat card)
+// Payment Rate Badge
 export const PaymentRateBadge = styled.div<{ rate: number }>`
   position: absolute;
   right: ${spacing.lg};
@@ -87,6 +126,13 @@ export const PaymentRateBadge = styled.div<{ rate: number }>`
   border-radius: ${borderRadius.sm};
   font-size: ${fontSizes.sm};
   font-weight: bold;
+
+  @media (max-width: 768px) {
+    right: ${spacing.sm};
+    bottom: ${spacing.sm};
+    padding: ${spacing.xs};
+    font-size: ${fontSizes.xs};
+  }
 `;
 
 // Section Titles
@@ -94,6 +140,11 @@ export const SectionTitle = styled.h2`
   font-size: ${fontSizes.xl};
   margin: ${spacing.xl} 0 ${spacing.md};
   color: ${colors.primary};
+
+  @media (max-width: 768px) {
+    font-size: ${fontSizes.lg};
+    margin: ${spacing.lg} 0 ${spacing.sm};
+  }
 `;
 
 // Table Wrapper
@@ -101,6 +152,10 @@ export const TableWrapper = styled.div`
   width: 100%;
   overflow-x: auto;
   margin-bottom: ${spacing.lg};
+
+  @media (max-width: 768px) {
+    margin-bottom: ${spacing.md};
+  }
 `;
 
 // Table
