@@ -4,7 +4,9 @@ import { useAdmins } from "../../redux/hooks/useAdmin";
 
 const WithdrawalForm: React.FC = () => {
   const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-  const [withdrawalType, setWithdrawalType] = useState<"mpesa" | "bank">("mpesa");
+  const [withdrawalType, setWithdrawalType] = useState<"mpesa" | "bank">(
+    "mpesa"
+  );
 
   const [bankAccountNumber, setBankAccountNumber] = useState("");
   const [bankCode, setBankCode] = useState("");
@@ -28,7 +30,11 @@ const WithdrawalForm: React.FC = () => {
     let recipient_details = {};
 
     if (withdrawalType === "bank") {
-      if (!bankAccountNumber.trim() || !bankCode.trim() || !accountName.trim()) {
+      if (
+        !bankAccountNumber.trim() ||
+        !bankCode.trim() ||
+        !accountName.trim()
+      ) {
         alert("Please fill in all bank account details.");
         return;
       }
@@ -37,9 +43,21 @@ const WithdrawalForm: React.FC = () => {
         bank_code: bankCode,
         account_name: accountName,
       };
+    } else if (withdrawalType === "mpesa") {
+      if (!user.phone_number) {
+        alert(
+          "Your profile does not have a phone number, please update your profile."
+        );
+        return;
+      }
+      recipient_details = { mpesa_number: user.phone_number };
     }
 
-    initiateWithdrawalRequest(withdrawAmount, withdrawalType, recipient_details);
+    initiateWithdrawalRequest(
+      withdrawAmount,
+      withdrawalType,
+      recipient_details
+    );
   };
 
   return (
@@ -53,7 +71,8 @@ const WithdrawalForm: React.FC = () => {
     >
       <h3>Withdraw Funds</h3>
       <p>
-        Current Balance: KES {wallet ? Number(wallet.balance).toFixed(2) : "0.00"}
+        Current Balance: KES{" "}
+        {wallet ? Number(wallet.balance).toFixed(2) : "0.00"}
       </p>
       <form onSubmit={handleSubmit}>
         <div>
@@ -126,10 +145,52 @@ const WithdrawalForm: React.FC = () => {
           onChange={(e) => setWithdrawAmount(Number(e.target.value))}
           style={{ padding: "0.5rem", width: "100%", marginBottom: "0.5rem" }}
         />
-        <button type="submit" disabled={loading} style={{ padding: "0.5rem 1rem" }}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: "0.5rem 1rem" }}
+        >
           {loading ? "Processing..." : "Withdraw"}
         </button>
       </form>
+
+      <span
+        style={{
+          display: "block",
+          textAlign: "center",
+          width: "100%",
+          boxSizing: "border-box",
+          marginTop: "20px",
+        }}
+      >
+        <a
+          href="https://intasend.com/security"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://intasend-prod-static.s3.amazonaws.com/img/trust-badges/intasend-trust-badge-no-mpesa-hr-light.png"
+            style={{ width: "100%", maxWidth: "375px", height: "auto" }}
+            alt="IntaSend Secure Payments (PCI-DSS Compliant)"
+          />
+        </a>
+        <strong>
+          <a
+            style={{
+              display: "block",
+              color: "#454545",
+              textDecoration: "none",
+              fontSize: "0.8em",
+              marginTop: "0.6em",
+            }}
+            href="https://intasend.com/security"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Secured by IntaSend Payments
+          </a>
+        </strong>
+      </span>
     </div>
   );
 };

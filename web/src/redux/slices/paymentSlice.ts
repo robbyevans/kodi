@@ -177,14 +177,13 @@ export const fetchWalletBalance = createAsyncThunk(
 );
 
 // --- withdrawal Thunk ---
-// File: /web/src/redux/slices/paymentSlice.ts
 export const initiateWithdrawal = createAsyncThunk(
   "payments/initiateWithdrawal",
   async (
     {
       amount,
       withdrawal_type,
-      recipient_details,
+      recipient_details, // Should include { mpesa_number: string }
     }: { amount: number; withdrawal_type: string; recipient_details: any },
     { dispatch, rejectWithValue }
   ) => {
