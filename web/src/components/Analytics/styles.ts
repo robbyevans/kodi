@@ -34,7 +34,7 @@ export const AnalyticsHeader = styled.header`
   }
 `;
 
-// Top Stats
+// Top Stats Container
 export const StatsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -42,6 +42,7 @@ export const StatsContainer = styled.div`
   margin-bottom: ${spacing.xl};
 `;
 
+// Stat Card
 export const StatCard = styled.div`
   flex: 1 1 250px;
   background-color: #fff;
@@ -50,23 +51,40 @@ export const StatCard = styled.div`
   padding: ${spacing.lg};
   text-align: left;
   min-width: 200px;
+  position: relative; /* Important for the badge positioning */
 `;
 
+// Stat Title
 export const StatTitle = styled.h3`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
   margin-bottom: ${spacing.xs};
 `;
 
+// Stat Value
 export const StatValue = styled.div`
   font-size: ${fontSizes["2xl"]};
   font-weight: bold;
   margin-bottom: ${spacing.xs};
 `;
 
+// Stat Subtitle
 export const StatSubtitle = styled.div`
   font-size: ${fontSizes.sm};
   color: ${colors.text.secondary};
+`;
+
+// Payment Rate Badge (for the bottom right of the stat card)
+export const PaymentRateBadge = styled.div<{ rate: number }>`
+  position: absolute;
+  right: ${spacing.lg};
+  bottom: ${spacing.lg};
+  background-color: ${({ rate }) => (rate < 60 ? "#c0392b" : "#27ae60")};
+  color: #fff;
+  padding: ${spacing.sm};
+  border-radius: ${borderRadius.sm};
+  font-size: ${fontSizes.sm};
+  font-weight: bold;
 `;
 
 // Section Titles
@@ -76,13 +94,14 @@ export const SectionTitle = styled.h2`
   color: ${colors.primary};
 `;
 
-// Table
+// Table Wrapper
 export const TableWrapper = styled.div`
   width: 100%;
   overflow-x: auto;
   margin-bottom: ${spacing.lg};
 `;
 
+// Table
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -142,7 +161,7 @@ export const DownloadButton = styled.button`
   }
 `;
 
-// Ledger Button
+// Ledger Button (if needed)
 export const LedgerButton = styled.button`
   padding: ${spacing.sm} ${spacing.md};
   background-color: ${colors.primary};

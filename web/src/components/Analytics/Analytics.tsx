@@ -9,12 +9,14 @@ interface IAnalyticsProps {
   ledgerEntries: ILedger[];
   wallet: { balance: number } | null;
   loading: boolean;
+  paymentRate: number;
 }
 
 const Analytics: React.FC<IAnalyticsProps> = ({
   user,
   ledgerEntries,
   wallet,
+  paymentRate,
   // loading,
 }) => {
   // Get the current date and month name
@@ -43,7 +45,7 @@ const Analytics: React.FC<IAnalyticsProps> = ({
 
   const handleDownloadStatement = () => {
     // Suppose you have an endpoint: GET /ledger_entries/download_statement
-    // Could do something like:
+    // Implementation for download statement goes here.
   };
 
   return (
@@ -65,6 +67,9 @@ const Analytics: React.FC<IAnalyticsProps> = ({
           <S.StatTitle>{`Total Deposits for ${currentMonthName}`}</S.StatTitle>
           <S.StatValue>KES {totalDeposits.toFixed(2)}</S.StatValue>
           <S.StatSubtitle>{`${currentMonthName} Deposits`}</S.StatSubtitle>
+          <S.PaymentRateBadge rate={paymentRate}>
+            {paymentRate}%
+          </S.PaymentRateBadge>
         </S.StatCard>
 
         <S.StatCard>
@@ -119,8 +124,6 @@ const Analytics: React.FC<IAnalyticsProps> = ({
       {/* ========== Withdrawal Section ========== */}
       <S.SectionTitle>Make a Withdrawal</S.SectionTitle>
       <WithdrawalForm />
-
-      {/* ========== Example: Additional Ledger Modal (optional) ========== */}
     </S.AnalyticsContainer>
   );
 };
