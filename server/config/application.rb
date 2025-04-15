@@ -19,6 +19,8 @@ module Server
     config.api_only = true
     config.action_controller.allow_forgery_protection = false
 
+    config.active_job.queue_adapter = :sidekiq
+
     # CORS Configuration for Frontend
     config.middleware.insert_before 0, Rack::Cors do
       allow do

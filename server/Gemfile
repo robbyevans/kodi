@@ -22,7 +22,8 @@ gem 'googleauth'
 gem 'google-id-token'
 gem 'httparty'
 gem 'rack-cors'
-gem 'rest-client'
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 # Use Active Storage variants (if needed)
 # gem "image_processing", "~> 1.2"
