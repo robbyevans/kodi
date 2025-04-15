@@ -3,3 +3,8 @@ tenant_house_agreement_monthly_debit:
   cron: "0 0 1 * *" # midnight on the 1st of each month
   class: "TenantHouseAgreementMonthlyDebitJob"
   queue: default
+
+send_new_month_notification:
+  cron: "0 0 1 * *" # midnight on the 1st of each month
+  class: "SendNewMonthNotificationJob"
+  queue: default
