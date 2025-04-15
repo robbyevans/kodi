@@ -7,6 +7,7 @@
 /server/tmp
 /server/db/*.sqlite3
 /server/db/*.sqlite3-journal
+/server/dump.rdb
 
 # General
 .DS_Store
