@@ -1,4 +1,5 @@
 tenant_house_agreement_monthly_debit:
-  cron: "0 0 1 * *" # midnight on the 1st of each month
+  # cron: "0 0 1 * *" # midnight on the 1st of each month
+  cron: "*/1 * * * *" # every minute for testing
   class: "TenantHouseAgreementMonthlyDebitJob"
   queue: default
