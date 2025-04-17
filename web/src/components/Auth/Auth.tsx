@@ -1,147 +1,122 @@
-import { useState, useEffect } from "react";
-import { useAdmins } from "../../redux/hooks/useAdmin";
-import { useNavigate } from "react-router-dom";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import {
+  SplitContainer,
+  LeftPane,
+  RightPane,
+  AuthContainer,
+  InfoTitle,
+  SafariInstallBanner,
+  InstallButtonTopRight,
+  GetStartedContainer,
+  GetStartedButton,
+  GetStartedText,
+  Form,
+  Input,
+  Button,
+  ErrorMessage,
+  Divider,
+  GoogleContainer,
+  InfoImage,
+} from "./styles";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import dashboardImage from "../../assets/dashboard.png";
-import * as S from "./styles";
+import { CredentialResponse } from "@react-oauth/google";
 
-const Auth = () => {
-  const {
-    loading,
-    error,
-    user,
-    isAuthenticated,
-    handleLogin,
-    handleGoogleAuth,
-  } = useAdmins();
+const isMobileSafari = () => {
+  const ua = window.navigator.userAgent;
+  return (
+    /iPhone|iPad|iPod/.test(ua) && /Safari/.test(ua) && !/CriOS|FxiOS/.test(ua)
+  );
+};
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+type Props = {
+  email: string;
+  password: string;
+  error: string | null;
+  loading: boolean;
+  showBanner: boolean;
+  showInstallButton: boolean;
+  setEmail: (e: string) => void;
+  setPassword: (e: string) => void;
+  setShowBanner: (e: boolean) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  handleGoogleSuccess: (resp: CredentialResponse) => void;
 
-  // PWA Install Prompt
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallButton, setShowInstallButton] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
+  handleGoogleError: () => void;
+  handleInstallClick: () => void;
+  handleGetStarted: () => void;
+};
 
-  const isMobileSafari = () => {
-    const ua = window.navigator.userAgent;
-    const isIOS = /iPhone|iPad|iPod/.test(ua);
-    const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS/.test(ua);
-    return isIOS && isSafari;
-  };
-
-  useEffect(() => {
-    const handler = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallButton(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
-    };
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        console.log("✅ User accepted the install prompt");
-      } else {
-        console.log("❌ User dismissed the install prompt");
-      }
-      setDeferredPrompt(null);
-      setShowInstallButton(false);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleLogin(email, password);
-  };
-
-  useEffect(() => {
-    if (isAuthenticated && user.role === "admin") {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated, user.role, navigate]);
-
-  const handleGoogleSuccess = (credentialResponse: any) => {
-    const token = credentialResponse.credential;
-    if (!token) {
-      console.info("No token returned from Google");
-      return;
-    }
-    handleGoogleAuth(token, "login");
-  };
-
-  const handleGoogleError = () => {
-    console.info("Google login failed");
-  };
-
-  const handleGetStarted = () => {
-    navigate("/quiz");
-  };
-
+const AuthView = ({
+  email,
+  password,
+  error,
+  loading,
+  showBanner,
+  showInstallButton,
+  setEmail,
+  setPassword,
+  setShowBanner,
+  handleSubmit,
+  handleGoogleSuccess,
+  handleGoogleError,
+  handleInstallClick,
+  handleGetStarted,
+}: Props) => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <S.SplitContainer>
-        <S.LeftPane>
-          <S.AuthContainer>
-            <S.InfoTitle>
+      <SplitContainer>
+        <LeftPane>
+          <AuthContainer>
+            <InfoTitle>
               Own your properties, not the hassle. Kodi does the rest.
-            </S.InfoTitle>
+            </InfoTitle>
 
             {isMobileSafari() && showBanner && (
-              <S.SafariInstallBanner>
+              <SafariInstallBanner>
                 📲 Add Kodi App to Home Screen: Tap{" "}
                 <strong>Share → Add to Home Screen</strong>
                 <button onClick={() => setShowBanner(false)}>Dismiss</button>
-              </S.SafariInstallBanner>
+              </SafariInstallBanner>
             )}
 
             {showInstallButton && (
-              <S.InstallButtonTopRight onClick={handleInstallClick}>
+              <InstallButtonTopRight onClick={handleInstallClick}>
                 📲
-              </S.InstallButtonTopRight>
+              </InstallButtonTopRight>
             )}
 
-            <S.GetStartedContainer>
-              <S.GetStartedButton onClick={handleGetStarted}>
+            <GetStartedContainer>
+              <GetStartedButton onClick={handleGetStarted}>
                 GET STARTED
-              </S.GetStartedButton>
-              <S.GetStartedText>
+              </GetStartedButton>
+              <GetStartedText>
                 New to Kodi? Begin your journey and set up your property
                 management experience.
-              </S.GetStartedText>
-            </S.GetStartedContainer>
+              </GetStartedText>
+            </GetStartedContainer>
 
-            <S.Form onSubmit={handleSubmit}>
-              <S.Input
+            <Form onSubmit={handleSubmit}>
+              <Input
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <S.Input
+              <Input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-              <S.Button type="submit" disabled={loading}>
+              {error && <ErrorMessage>{error}</ErrorMessage>}
+              <Button type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Login"}
-              </S.Button>
-            </S.Form>
+              </Button>
+            </Form>
 
-            <S.Divider>OR</S.Divider>
+            <Divider>OR</Divider>
 
-            <S.GoogleContainer>
+            <GoogleContainer>
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={handleGoogleError}
@@ -149,15 +124,15 @@ const Auth = () => {
                 shape="pill"
                 size="large"
               />
-            </S.GoogleContainer>
-          </S.AuthContainer>
-        </S.LeftPane>
-        <S.RightPane>
-          <S.InfoImage src={dashboardImage} alt="Kodi Dashboard Preview" />
-        </S.RightPane>
-      </S.SplitContainer>
+            </GoogleContainer>
+          </AuthContainer>
+        </LeftPane>
+        <RightPane>
+          <InfoImage src={dashboardImage} alt="Kodi Dashboard Preview" />
+        </RightPane>
+      </SplitContainer>
     </GoogleOAuthProvider>
   );
 };
 
-export default Auth;
+export default AuthView;

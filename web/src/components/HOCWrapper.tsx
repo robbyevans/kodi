@@ -88,20 +88,6 @@ const HOCWrapper: React.FC<HOCWrapperProps> = ({ children }) => {
     }
   }, [isAuthenticated, user?.admin_id, dispatch]);
 
-  // Listen for incoming foreground messages
-  // useEffect(() => {
-  //   onMessageListener().then((payload: any) => {
-  //     console.log("📩 Foreground Notification Received:", payload);
-  //     dispatch({
-  //       type: "toast/showToast",
-  //       payload: {
-  //         message: payload.notification.body,
-  //         type: "info",
-  //       },
-  //     });
-  //   });
-  // }, [dispatch]);
-
   const UpdateBanner = styled.div`
     position: fixed;
     bottom: 0;

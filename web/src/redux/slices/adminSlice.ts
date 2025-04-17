@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
+import type { AxiosError } from "axios";
 
 // -------------------------------------
 // TYPES
@@ -35,6 +36,16 @@ interface AdminState {
   error: string | null;
 }
 
+export interface AdminResponse {
+  token: string;
+  admin: AdminState["admin"];
+}
+
+export interface GoogleAuthPayload {
+  token: string;
+  mode: "login" | "signup";
+}
+
 // -------------------------------------
 // HELPERS
 // -------------------------------------
@@ -46,26 +57,26 @@ const storeAuthData = (
     phone_number: string;
     profile_image: string;
     role: string;
-    admin_id: number;
-    is_notifications_allowed: boolean;
-    is_terms_and_conditions_agreed: boolean;
+    admin_id: number | null; // allow null here
+    is_notifications_allowed?: boolean;
+    is_terms_and_conditions_agreed?: boolean;
     device_token?: string;
   }
 ) => {
   localStorage.setItem("auth_token", token);
   localStorage.setItem("name", admin.name);
   localStorage.setItem("admin_email", admin.email);
-  localStorage.setItem("admin_id", admin.admin_id.toString());
+  localStorage.setItem("admin_id", admin.admin_id?.toString() ?? "");
   localStorage.setItem("admin_role", admin.role);
   localStorage.setItem("profile_image", admin.profile_image);
   localStorage.setItem("phone_number", admin.phone_number);
   localStorage.setItem(
     "is_notifications_allowed",
-    admin.is_notifications_allowed.toString()
+    admin.is_notifications_allowed?.toString() ?? "false"
   );
   localStorage.setItem(
     "is_terms_and_conditions_agreed",
-    admin.is_terms_and_conditions_agreed.toString()
+    admin.is_terms_and_conditions_agreed?.toString() ?? "false"
   );
   if (admin.device_token) {
     localStorage.setItem("device_token", admin.device_token);
@@ -114,61 +125,56 @@ const initialState: AdminState = {
 // -------------------------------------
 // ASYNC THUNKS
 // -------------------------------------
-export const loginAdmin = createAsyncThunk(
-  "admin/loginAdmin",
-  async (
-    credentials: { email: string; password: string },
-    { dispatch, rejectWithValue }
-  ) => {
-    try {
-      const response = await axiosInstance.post("/login", credentials);
-      dispatch(
-        showToast({ message: "Logged in successfully!", type: "success" })
-      );
-      return response.data;
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "Something went wrong";
-      dispatch(showToast({ message: errorMessage, type: "error" }));
-      return rejectWithValue(errorMessage);
-    }
+export const loginAdmin = createAsyncThunk<
+  AdminResponse,
+  { email: string; password: string }
+>("admin/loginAdmin", async (credentials, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.post("/login", credentials);
+    dispatch(
+      showToast({ message: "Logged in successfully!", type: "success" })
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    const errorMessage = err.response?.data?.error || "Something went wrong";
+    dispatch(showToast({ message: errorMessage, type: "error" }));
+    return rejectWithValue(errorMessage);
   }
-);
+});
 
-export const signupAdmin = createAsyncThunk(
-  "admin/signup",
-  async (
-    credentials: {
-      name: string;
-      email: string;
-      password: string;
-      phone_number: string;
-    },
-    { dispatch, rejectWithValue }
-  ) => {
-    try {
-      const response = await axiosInstance.post("/signup", {
-        admin: credentials,
-      });
-      dispatch(
-        showToast({ message: "Signed up successfully!", type: "success" })
-      );
-      return response.data;
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "Error occurred during signup";
-      dispatch(showToast({ message: errorMessage, type: "error" }));
-      return rejectWithValue(errorMessage);
-    }
+export const signupAdmin = createAsyncThunk<
+  AdminResponse,
+  {
+    name: string;
+    email: string;
+    password: string;
+    phone_number: string;
   }
-);
+>("admin/signup", async (credentials, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.post("/signup", {
+      admin: credentials,
+    });
+    dispatch(
+      showToast({ message: "Signed up successfully!", type: "success" })
+    );
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ error: string }>;
+    const errorMessage =
+      err.response?.data?.error || "Error occurred during signup";
+    dispatch(showToast({ message: errorMessage, type: "error" }));
+    return rejectWithValue(errorMessage);
+  }
+});
 
-export const googleAuthAdmin = createAsyncThunk(
+export const googleAuthAdmin = createAsyncThunk<
+  AdminResponse,
+  GoogleAuthPayload
+>(
   "admin/googleAuthAdmin",
-  async (
-    { token, mode }: { token: string; mode: "login" | "signup" },
-    { dispatch, rejectWithValue }
-  ) => {
+  async ({ token, mode }, { dispatch, rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("/auth/google", {
         token,
@@ -181,21 +187,23 @@ export const googleAuthAdmin = createAsyncThunk(
         })
       );
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
       const errorMessage =
-        error.response?.data?.error || "Google authentication failed";
+        err.response?.data?.error || "Google authentication failed";
       dispatch(showToast({ message: errorMessage, type: "error" }));
       return rejectWithValue(errorMessage);
     }
   }
 );
 
-export const editAdmin = createAsyncThunk(
+export const editAdmin = createAsyncThunk<
+  AdminState["admin"],
+  { adminId: number; data: Partial<IUser> | FormData }
+>(
   "admin/editAdmin",
-  async (
-    { adminId, data }: { adminId: number; data: Partial<IUser> | FormData },
-    { dispatch, rejectWithValue }
-  ) => {
+  async ({ adminId, data }, { dispatch, rejectWithValue }) => {
+    console.log("editAdmin-slice-called");
     try {
       let payload: FormData | object;
       const headers: Record<string, string> = {};
@@ -207,7 +215,7 @@ export const editAdmin = createAsyncThunk(
         if (data.profile_image && data.profile_image instanceof File) {
           const formData = new FormData();
           Object.entries(data).forEach(([key, value]) => {
-            formData.append(`admin[${key}]`, value as any);
+            formData.append(`admin[${key}]`, value as string | Blob);
           });
           payload = formData;
           headers["Content-Type"] = "multipart/form-data";
@@ -219,13 +227,12 @@ export const editAdmin = createAsyncThunk(
       const response = await axiosInstance.put(`/admins/${adminId}`, payload, {
         headers,
       });
-      dispatch(
-        showToast({ message: "Admin updated successfully!", type: "success" })
-      );
-      return response.data; // This should be the full updated admin object
-    } catch (error: any) {
+
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
       const errorMessage =
-        error.response?.data?.error || "Failed to update admin";
+        err.response?.data?.error || "Failed to update admin";
       dispatch(showToast({ message: errorMessage, type: "error" }));
       return rejectWithValue(errorMessage);
     }

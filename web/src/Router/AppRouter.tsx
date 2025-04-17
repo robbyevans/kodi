@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import Auth from "../components/Auth/Auth";
+import AuthContainer from "../containers/AuthContainer";
 import PropertyContainer from "../containers/PropertyContainer";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import AccessRouter from "../components/Utils/AccessRouter";
@@ -41,7 +41,7 @@ const AppRouter = () => {
               path="/auth"
               element={
                 <AccessRouter>
-                  <Auth />
+                  <AuthContainer />
                 </AccessRouter>
               }
             />
@@ -49,7 +49,6 @@ const AppRouter = () => {
             <Route
               path="/quiz"
               element={
-                // Marking quiz as a public route allows unauthenticated users to access it.
                 <AccessRouter publicRoute>
                   <QuizPage />
                 </AccessRouter>
