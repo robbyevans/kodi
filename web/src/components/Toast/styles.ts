@@ -2,14 +2,26 @@ import styled, { keyframes } from "styled-components";
 import { ToastType } from "./ToastMessage";
 import { fontSizes } from "../../styles/foundation";
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
+const slideInTop = keyframes`
+  from {
+    opacity: 0;
+    transform: translate(-50%, -30px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 `;
 
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0; }
+const slideOutTop = keyframes`
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -30px);
+  }
 `;
 
 interface ToastContainerProps {
@@ -22,7 +34,6 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   top: 60px;
   left: 50%;
   transform: translateX(-50%);
-
   background: ${({ type }) =>
     type === "success"
       ? "#4caf50"
@@ -41,7 +52,8 @@ export const ToastContainer = styled.div<ToastContainerProps>`
   align-items: center;
   justify-content: space-between;
   font-family: sans-serif;
-  animation: ${({ exiting }) => (exiting ? fadeOut : fadeIn)} 0.4s ease-out;
+  animation: ${({ exiting }) => (exiting ? slideOutTop : slideInTop)} 0.4s
+    ease-out;
   overflow: hidden;
 `;
 
