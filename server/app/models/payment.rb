@@ -12,7 +12,7 @@ class Payment < ApplicationRecord
   after_create_commit :broadcast_payment
 
   # After a successful payment, trigger SMS notification to both the tenant and msisdn
-  after_create_commit :enqueue_sms_notification
+  after_create_commit -> { SmsJobs::SendPaymentSmsJob.perform_later(id) }
 
   private
 
@@ -63,9 +63,5 @@ class Payment < ApplicationRecord
     end
   rescue StandardError => e
     Rails.logger.error "Failed to broadcast payment: #{e.message}"
-  end
-
-  def enqueue_sms_notification
-    PaymentSmsJob.perform_later(id)
   end
 end

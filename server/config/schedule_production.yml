@@ -1,10 +1,16 @@
-tenant_house_agreement_monthly_debit:
-  # cron: "*/1 * * * *" # run after every minute for testing purposes ONLY.
-  cron: "0 0 1 * *" # midnight on the 1st of each month
-  class: "TenantHouseAgreementMonthlyDebitJob"
+defaults: &monthly_first
+  cron: "0 0 1 * *" # run at midnight on the 1st of each month
   queue: default
 
+tenant_house_agreement_monthly_debit:
+  <<: *monthly_first
+  class: "TenantHouseAgreementMonthlyDebitJob"
+
 send_new_month_notification:
-  cron: "0 0 1 * *" # midnight on the 1st of each month
+  <<: *monthly_first
   class: "SendNewMonthNotificationJob"
+
+rent_reminder_sms:
+  cron: "0 9 10 * *" #run at 9 AM on the 10th of every month
+  class: "SmsJobs::SendRentReminderSmsJob"
   queue: default

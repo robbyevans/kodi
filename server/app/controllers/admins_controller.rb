@@ -10,6 +10,10 @@ class AdminsController < ApplicationController
     @admin.is_terms_and_conditions_agreed = false
 
     if @admin.save
+
+      # send sms notification to admin
+      SmsJobs::SendVerificationSmsJob.perform_later(@admin.id)
+
       token = encode_jwt(@admin.id)
       render json: {
         message: 'Admin created successfully',
@@ -92,7 +96,7 @@ class AdminsController < ApplicationController
   end
 
   private
-  
+
   def admin_params
     params.require(:admin).permit(
       :name, :email, :phone_number, :password, :profile_image,

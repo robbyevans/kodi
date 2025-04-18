@@ -1,6 +1,4 @@
-class TenantHouseAgreementMonthlyDebitJob
-  include Sidekiq::Job
-
+class TenantHouseAgreementMonthlyDebitJob < ApplicationJob
   def perform
     TenantHouseAgreement.where(status: 'active').find_each do |agreement|
       next unless agreement.active? && agreement.monthly_rent.to_f.positive?
