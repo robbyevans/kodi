@@ -6,7 +6,7 @@ require 'erb'
 Sidekiq.configure_server do |config|
   config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
 
-  schedule_file = "config/schedule_#{Rails.env}.yml"
+  schedule_file = Rails.root.join('config', 'schedule', "#{Rails.env}.yml")
 
   if File.exist?(schedule_file)
     config.on(:startup) do

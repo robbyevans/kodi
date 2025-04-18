@@ -1,12 +1,12 @@
-# This job sends an SMS to the admin after account creation for phone number verification.
+# Sends a phone‑verification SMS to a newly created admin.
 
 class SmsJobs::SendVerificationSmsJob < ApplicationJob
   queue_as :default
 
   def perform(admin_id)
     admin = Admin.find_by(id: admin_id)
-    return unless admin && admin.phone_number.present?
+    return unless admin&.phone_number.present?
 
-    Sms::VerificationSmsService.send(admin.phone_number, admin.name)
+    SmsProviders::VerificationSmsService.send(admin.phone_number, admin.name)
   end
 end

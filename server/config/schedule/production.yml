@@ -1,4 +1,4 @@
-defaults: &monthly_first
+_defaults: &monthly_first
   cron: "0 0 1 * *" # run at midnight on the 1st of each month
   queue: default
 

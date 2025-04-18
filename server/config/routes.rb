@@ -1,4 +1,9 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # Mount Sidekiq Web UI at /sidekiq without authentication
+  mount Sidekiq::Web => '/sidekiq'
+
   # Custom routes for fetching all tenants and houses for the current admin
   get '/tenants', to: 'tenants#all'
   get '/houses', to: 'houses#all'
