@@ -16,6 +16,8 @@ Sidekiq.configure_server do |config|
       Sidekiq::Scheduler.dynamic = true
       Sidekiq.schedule = schedule
       Sidekiq::Scheduler.reload_schedule!
+    rescue StandardError => e
+      Sidekiq.logger.error("[Sidekiq::Scheduler] Failed to load #{schedule_file}: #{e.class} #{e.message}")
     end
   end
 end

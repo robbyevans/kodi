@@ -18,6 +18,7 @@ gem 'bootsnap', require: false
 gem 'dotenv-rails', groups: %i[development test]
 gem 'faker'
 gem 'faraday'
+gem 'foreman', require: false
 gem 'googleauth'
 gem 'google-id-token'
 gem 'httparty'

@@ -1,5 +1,5 @@
 _defaults: &monthly_first
-  cron: "*/2 * * * *" # run every 5 minutes
+  cron: "*/2 * * * *" # run every 2 minutes (for testing)
   queue: default
 
 tenant_house_agreement_monthly_debit:
