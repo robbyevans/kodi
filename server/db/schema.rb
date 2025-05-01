@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_13_054350) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_01_163801) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,6 +54,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_13_054350) do
     t.boolean "is_notifications_allowed", default: false
     t.boolean "is_terms_and_conditions_agreed", default: false
     t.string "device_token"
+    t.string "email_confirmation_code"
+    t.datetime "email_confirmation_code_sent_at"
+    t.datetime "email_confirmed_at"
+    t.boolean "is_email_verified", default: false, null: false
+    t.string "reset_password_code"
+    t.datetime "reset_password_sent_at"
+    t.index ["email_confirmation_code"], name: "index_admins_on_email_confirmation_code"
+    t.index ["reset_password_code"], name: "index_admins_on_reset_password_code"
   end
 
   create_table "houses", force: :cascade do |t|

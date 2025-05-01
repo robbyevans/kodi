@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -51,29 +51,28 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-
   # Configure Action Cable URL and allowed request origins.
-  config.action_cable.url = "wss://kodi-rails-server.onrender.com/cable"
+  config.action_cable.url = 'wss://kodi-rails-server.onrender.com/cable'
   config.action_cable.allowed_request_origins = [
-      "https://kodi-2ti.pages.dev",
-      "https://kodi-rails-server.onrender.com"
-    ]
+    'https://kodi-2ti.pages.dev',
+    'https://kodi-rails-server.onrender.com'
+  ]
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT by default
   config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+                                       .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
+                                       .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # "info" includes generic and useful information about system operation, but avoids logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -101,8 +100,20 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Only use :id for inspections in production.
-  config.active_record.attributes_for_inspect = [ :id ]
+  config.active_record.attributes_for_inspect = [:id]
 
+  # Action mailer
+  config.action_mailer.delivery_method     = :smtp
+  config.action_mailer.smtp_settings       = {
+    address: ENV['SMTP_HOST'],
+    port: ENV['SMTP_PORT'],
+    user_name: ENV['SMTP_USERNAME'],
+    password: ENV['SMTP_PASSWORD'],
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+  config.action_mailer.default_url_options = { host: ENV['APP_HOST'] }
+  config.action_mailer.default_options     = { from: 'Kodi PMS <no-reply@kodi-pms.com>' }
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
@@ -112,6 +123,6 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  #to be changes when we the web production-link
+  # to be changes when we the web production-link
   Rails.application.routes.default_url_options = { host: 'kodi-rails-server.onrender.com' }
 end

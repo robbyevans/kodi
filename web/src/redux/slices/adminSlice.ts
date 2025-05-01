@@ -7,30 +7,23 @@ import type { AxiosError } from "axios";
 // TYPES
 // -------------------------------------
 export interface IUser {
+  admin_id: number | null;
   name: string;
   email: string;
-  password?: string;
-  profile_image?: File | string;
-  phone_number: string;
-  admin_id: number | null;
   role: string;
-  is_notifications_allowed?: boolean;
-  is_terms_and_conditions_agreed?: boolean;
+  phone_number: string;
+  profile_image?: string;
   device_token?: string;
+  is_notifications_allowed: boolean;
+  is_terms_and_conditions_agreed: boolean;
+
+  // our new confirmation fields:
+  email_confirmed_at: string | null;
+  is_email_verified: boolean;
 }
 
 interface AdminState {
-  admin: {
-    email: string;
-    role: string;
-    admin_id: number | null;
-    name: string;
-    profile_image: string;
-    phone_number: string;
-    is_notifications_allowed?: boolean;
-    is_terms_and_conditions_agreed?: boolean;
-    device_token?: string;
-  };
+  admin: IUser;
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -38,7 +31,7 @@ interface AdminState {
 
 export interface AdminResponse {
   token: string;
-  admin: AdminState["admin"];
+  admin: IUser;
 }
 
 export interface GoogleAuthPayload {
@@ -49,66 +42,54 @@ export interface GoogleAuthPayload {
 // -------------------------------------
 // HELPERS
 // -------------------------------------
-const storeAuthData = (
-  token: string,
-  admin: {
-    name: string;
-    email: string;
-    phone_number: string;
-    profile_image: string;
-    role: string;
-    admin_id: number | null; // allow null here
-    is_notifications_allowed?: boolean;
-    is_terms_and_conditions_agreed?: boolean;
-    device_token?: string;
-  }
-) => {
+const storeAuthData = (token: string, admin: IUser) => {
   localStorage.setItem("auth_token", token);
   localStorage.setItem("name", admin.name);
   localStorage.setItem("admin_email", admin.email);
   localStorage.setItem("admin_id", admin.admin_id?.toString() ?? "");
   localStorage.setItem("admin_role", admin.role);
-  localStorage.setItem("profile_image", admin.profile_image);
+  localStorage.setItem("profile_image", admin.profile_image || "");
   localStorage.setItem("phone_number", admin.phone_number);
   localStorage.setItem(
     "is_notifications_allowed",
-    admin.is_notifications_allowed?.toString() ?? "false"
+    String(admin.is_notifications_allowed)
   );
   localStorage.setItem(
     "is_terms_and_conditions_agreed",
-    admin.is_terms_and_conditions_agreed?.toString() ?? "false"
+    String(admin.is_terms_and_conditions_agreed)
   );
-  if (admin.device_token) {
-    localStorage.setItem("device_token", admin.device_token);
+  localStorage.setItem("device_token", admin.device_token || "");
+  localStorage.setItem("is_email_verified", String(admin.is_email_verified));
+  if (admin.email_confirmed_at) {
+    localStorage.setItem("email_confirmed_at", admin.email_confirmed_at);
   }
 };
 
-const getStoredAuthData = () => {
+const getStoredAuthData = (): Pick<AdminState, "token" | "admin"> => {
   const token = localStorage.getItem("auth_token");
-  const name = localStorage.getItem("name");
-  const role = localStorage.getItem("admin_role");
-  const email = localStorage.getItem("admin_email");
-  const admin_id = localStorage.getItem("admin_id");
-  const phone_number = localStorage.getItem("phone_number");
-  const profile_image = localStorage.getItem("profile_image");
+  const admin_id = parseInt(localStorage.getItem("admin_id") || "", 10) || null;
   const is_notifications_allowed =
     localStorage.getItem("is_notifications_allowed") === "true";
   const is_terms_and_conditions_agreed =
     localStorage.getItem("is_terms_and_conditions_agreed") === "true";
-  const device_token = localStorage.getItem("device_token");
+  const is_email_verified =
+    localStorage.getItem("is_email_verified") === "true";
+  const email_confirmed_at = localStorage.getItem("email_confirmed_at") || null;
 
   return {
     token: token || null,
     admin: {
-      name: name || "",
-      email: email || "",
-      role: role || "",
-      phone_number: phone_number || "",
-      profile_image: profile_image || "",
-      admin_id: admin_id ? parseInt(admin_id) : null,
-      is_notifications_allowed: is_notifications_allowed,
-      is_terms_and_conditions_agreed: is_terms_and_conditions_agreed,
-      device_token: device_token || "",
+      admin_id,
+      name: localStorage.getItem("name") || "",
+      email: localStorage.getItem("admin_email") || "",
+      role: localStorage.getItem("admin_role") || "",
+      phone_number: localStorage.getItem("phone_number") || "",
+      profile_image: localStorage.getItem("profile_image") || undefined,
+      device_token: localStorage.getItem("device_token") || undefined,
+      is_notifications_allowed,
+      is_terms_and_conditions_agreed,
+      is_email_verified,
+      email_confirmed_at,
     },
   };
 };
@@ -137,35 +118,27 @@ export const loginAdmin = createAsyncThunk<
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ error: string }>;
-    const errorMessage = err.response?.data?.error || "Something went wrong";
-    dispatch(showToast({ message: errorMessage, type: "error" }));
-    return rejectWithValue(errorMessage);
+    const msg = err.response?.data?.error || "Something went wrong";
+    dispatch(showToast({ message: msg, type: "error" }));
+    return rejectWithValue(msg);
   }
 });
 
 export const signupAdmin = createAsyncThunk<
   AdminResponse,
-  {
-    name: string;
-    email: string;
-    password: string;
-    phone_number: string;
-  }
->("admin/signup", async (credentials, { dispatch, rejectWithValue }) => {
+  { name: string; email: string; password: string; phone_number: string }
+>("admin/signup", async (creds, { dispatch, rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/signup", {
-      admin: credentials,
-    });
+    const response = await axiosInstance.post("/signup", { admin: creds });
     dispatch(
       showToast({ message: "Signed up successfully!", type: "success" })
     );
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ error: string }>;
-    const errorMessage =
-      err.response?.data?.error || "Error occurred during signup";
-    dispatch(showToast({ message: errorMessage, type: "error" }));
-    return rejectWithValue(errorMessage);
+    const msg = err.response?.data?.error || "Signup failed";
+    dispatch(showToast({ message: msg, type: "error" }));
+    return rejectWithValue(msg);
   }
 });
 
@@ -189,52 +162,39 @@ export const googleAuthAdmin = createAsyncThunk<
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Google authentication failed";
-      dispatch(showToast({ message: errorMessage, type: "error" }));
-      return rejectWithValue(errorMessage);
+      const msg = err.response?.data?.error || "Google auth failed";
+      dispatch(showToast({ message: msg, type: "error" }));
+      return rejectWithValue(msg);
     }
   }
 );
 
 export const editAdmin = createAsyncThunk<
-  AdminState["admin"],
+  IUser,
   { adminId: number; data: Partial<IUser> | FormData }
 >(
   "admin/editAdmin",
   async ({ adminId, data }, { dispatch, rejectWithValue }) => {
-    console.log("editAdmin-slice-called");
     try {
-      let payload: FormData | object;
+      let payload: any;
       const headers: Record<string, string> = {};
 
       if (data instanceof FormData) {
         payload = data;
         headers["Content-Type"] = "multipart/form-data";
       } else {
-        if (data.profile_image && data.profile_image instanceof File) {
-          const formData = new FormData();
-          Object.entries(data).forEach(([key, value]) => {
-            formData.append(`admin[${key}]`, value as string | Blob);
-          });
-          payload = formData;
-          headers["Content-Type"] = "multipart/form-data";
-        } else {
-          payload = { admin: data };
-        }
+        payload = { admin: data };
       }
 
       const response = await axiosInstance.put(`/admins/${adminId}`, payload, {
         headers,
       });
-
-      return response.data;
+      return response.data as IUser;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
-      const errorMessage =
-        err.response?.data?.error || "Failed to update admin";
-      dispatch(showToast({ message: errorMessage, type: "error" }));
-      return rejectWithValue(errorMessage);
+      const msg = err.response?.data?.error || "Update admin failed";
+      dispatch(showToast({ message: msg, type: "error" }));
+      return rejectWithValue(msg);
     }
   }
 );
@@ -246,91 +206,82 @@ const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    logout: (state) => {
+    logout(state) {
       state.admin = {
+        ...getStoredAuthData().admin,
+        admin_id: null,
         name: "",
-        phone_number: "",
         email: "",
         role: "",
-        admin_id: null,
-        profile_image: "",
-        device_token: "",
+        phone_number: "",
+        profile_image: undefined,
+        device_token: undefined,
       };
       state.token = null;
       state.loading = false;
       state.error = null;
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("admin_email");
-      localStorage.removeItem("name");
-      localStorage.removeItem("admin_id");
-      localStorage.removeItem("admin_role");
-      localStorage.removeItem("phone_number");
-      localStorage.removeItem("profile_image");
-      localStorage.removeItem("is_notifications_allowed");
-      localStorage.removeItem("is_terms_and_conditions_agreed");
-      localStorage.removeItem("device_token");
+      localStorage.clear();
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginAdmin.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(loginAdmin.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(loginAdmin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.admin = action.payload.admin;
-        storeAuthData(action.payload.token, action.payload.admin);
+      .addCase(loginAdmin.fulfilled, (s, a) => {
+        s.loading = false;
+        s.token = a.payload.token;
+        s.admin = a.payload.admin;
+        storeAuthData(a.payload.token, a.payload.admin);
       })
-      .addCase(loginAdmin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+      .addCase(loginAdmin.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
       })
-      .addCase(signupAdmin.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+
+      .addCase(signupAdmin.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(signupAdmin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.admin = action.payload.admin;
-        storeAuthData(action.payload.token, action.payload.admin);
+      .addCase(signupAdmin.fulfilled, (s, a) => {
+        s.loading = false;
+        s.token = a.payload.token;
+        s.admin = a.payload.admin;
+        storeAuthData(a.payload.token, a.payload.admin);
       })
-      .addCase(signupAdmin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+      .addCase(signupAdmin.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
       })
-      .addCase(googleAuthAdmin.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+
+      .addCase(googleAuthAdmin.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(googleAuthAdmin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.admin = action.payload.admin;
-        storeAuthData(action.payload.token, action.payload.admin);
+      .addCase(googleAuthAdmin.fulfilled, (s, a) => {
+        s.loading = false;
+        s.token = a.payload.token;
+        s.admin = a.payload.admin;
+        storeAuthData(a.payload.token, a.payload.admin);
       })
-      .addCase(googleAuthAdmin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+      .addCase(googleAuthAdmin.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
       })
-      .addCase(editAdmin.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+
+      .addCase(editAdmin.pending, (s) => {
+        s.loading = true;
+        s.error = null;
       })
-      .addCase(editAdmin.fulfilled, (state, action) => {
-        state.loading = false;
-        // Merge the updated fields into the admin state
-        state.admin = {
-          ...state.admin,
-          ...action.payload,
-        };
-        storeAuthData(state.token!, action.payload);
+      .addCase(editAdmin.fulfilled, (s, a) => {
+        s.loading = false;
+        s.admin = a.payload;
+        storeAuthData(s.token!, a.payload);
       })
-      .addCase(editAdmin.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+      .addCase(editAdmin.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
       });
   },
 });

@@ -2,6 +2,10 @@ _defaults: &monthly_first
   cron: "*/2 * * * *" # run every 2 minutes (for testing)
   queue: default
 
+monthly_start:
+  <<: *monthly_first
+  class: "MailJobs::MonthlyStartJob"
+
 tenant_house_agreement_monthly_debit:
   <<: *monthly_first
   class: "TenantHouseAgreementMonthlyDebitJob"
@@ -13,3 +17,7 @@ send_new_month_notification:
 rent_reminder_sms:
   <<: *monthly_first
   class: "SmsJobs::SendRentReminderSmsJob"
+
+daily_end_of_month:
+  <<: *monthly_first
+  class: "MailJobs::DailyEndOfMonthCheckJob"

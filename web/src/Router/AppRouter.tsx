@@ -13,7 +13,9 @@ import Footer from "../components/Footer/Footer";
 import QuizPage from "../components/QuizPage/QuizPage";
 import FooterMobile from "../components/FooterMobile/FooterMobile";
 import PaymentContainer from "../containers/paymentContainer";
+import PasswordResetPage from "../components/PasswordReset/PasswordResetPage";
 import * as S from "./styles";
+import TenantNotificationsPage from "../components/TenantNotification/TenantNotification";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
@@ -98,6 +100,13 @@ const AppRouter = () => {
                 </AccessRouter>
               }
             />
+
+            <Route
+              path="/tenant-notifications"
+              element={<TenantNotificationsPage />}
+            />
+
+            <Route path="/password-reset" element={<PasswordResetPage />} />
 
             <Route
               path="/"

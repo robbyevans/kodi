@@ -95,6 +95,22 @@ class AdminsController < ApplicationController
     }, status: status_code
   end
 
+  # POST /admins/send_confirmation_code
+  def send_confirmation_code
+    current_admin.send_confirmation_code!
+    render json: { message: 'Confirmation code sent' }, status: :ok
+  end
+
+  # POST /admins/confirm_email
+  # { code: 'ABC123' }
+  def confirm_email
+    if current_admin.verify_confirmation_code!(params[:code])
+      render json: { message: 'Email confirmed' }, status: :ok
+    else
+      render json: { error: 'Invalid or expired code' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def admin_params

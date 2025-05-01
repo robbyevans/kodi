@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import TestimonialsBackground from "../../assets/Testimonials Background.png";
+import { Link } from "react-router-dom";
 import {
   colors,
   fonts,
@@ -394,4 +395,12 @@ export const SafariInstallBanner = styled.div`
   @media (min-width: 768px) {
     display: none; /* Hide on large screens */
   }
+`;
+
+export const ForgotLink = styled(Link)`
+  margin-top: ${spacing.sm};
+  font-size: ${fontSizes.sm};
+  color: ${colors.primary};
+  text-decoration: underline;
+  display: block;
 `;

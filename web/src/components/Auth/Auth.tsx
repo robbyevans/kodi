@@ -16,6 +16,7 @@ import {
   Divider,
   GoogleContainer,
   InfoImage,
+  ForgotLink,
 } from "./styles";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import dashboardImage from "../../assets/dashboard.png";
@@ -111,7 +112,8 @@ const AuthView = ({
               {error && <ErrorMessage>{error}</ErrorMessage>}
               <Button type="submit" disabled={loading}>
                 {loading ? "Processing..." : "Login"}
-              </Button>
+              </Button>{" "}
+              <ForgotLink to="/password-reset">Forgot password? + </ForgotLink>
             </Form>
 
             <Divider>OR</Divider>

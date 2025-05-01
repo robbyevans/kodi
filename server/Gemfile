@@ -22,10 +22,12 @@ gem 'foreman', require: false
 gem 'googleauth'
 gem 'google-id-token'
 gem 'httparty'
+gem 'prawn'        # pure-Ruby PDF generator
 gem 'rack-cors'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'tzinfo-data', platforms: %i[windows jruby]
+gem 'wicked_pdf'   # wraps wkhtmltopdf for HTML‐to‐PDF
 # Use Active Storage variants (if needed)
 # gem "image_processing", "~> 1.2"
 
@@ -38,6 +40,7 @@ end
 
 group :development do
   gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
+  gem 'letter_opener'
   gem 'web-console'
 end
 

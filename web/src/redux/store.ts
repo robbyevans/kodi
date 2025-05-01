@@ -6,16 +6,22 @@ import adminsReducer from "./slices/adminSlice";
 import toastReducer from "./slices/toastSlice";
 import paymentReducer from "./slices/paymentSlice";
 import notificationReducer from "./slices/notificationSlice";
+import tenantNotificationReducer from "./slices/tenantNotificationSlice";
+import emailConfirmationReducer from "./slices/emailConfirmationSlice";
+import passwordResetReducer from "./slices/passwordResetSlice";
 
 const store = configureStore({
   reducer: {
     properties: propertiesReducer,
     houses: housesReducer,
     tenants: tenantsReducer,
-    admins: adminsReducer,
+    admin: adminsReducer,
     payments: paymentReducer,
     toast: toastReducer,
+    emailConfirmation: emailConfirmationReducer,
     notifications: notificationReducer,
+    tenantNotifications: tenantNotificationReducer,
+    passwordReset: passwordResetReducer,
   },
 });
 

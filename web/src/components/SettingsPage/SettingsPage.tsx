@@ -4,10 +4,12 @@ import PropertyListing from "../PropertyListing/PropertyListing";
 import ProfileSection from "../ProfileSection/ProfileSection";
 import { IProperty } from "../../redux/slices/propertiesSlice";
 import { IUser } from "../../redux/slices/adminSlice";
+import EmailConfirmationSection from "../EmailConfirmation/EmailConfirmationSection";
 
 interface SettingsPageProps {
   propertiesData: IProperty[];
   isLoading: boolean;
+  isUserEmailVerified: boolean;
   onEditProperty: (updatedProperty: IProperty) => void;
   onDeleteProperty: (id: number) => void;
   user: IUser;
@@ -17,6 +19,7 @@ interface SettingsPageProps {
 const SettingsPage: React.FC<SettingsPageProps> = ({
   propertiesData,
   isLoading,
+  isUserEmailVerified,
   onEditProperty,
   onDeleteProperty,
   user,
@@ -34,6 +37,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         user={user}
         onEditUser={onEditUser}
       />
+      {!isUserEmailVerified && <EmailConfirmationSection />}
 
       <PropertyListing
         isLoading={isLoading}

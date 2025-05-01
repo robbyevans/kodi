@@ -4,7 +4,12 @@ import SettingsPage from "../components/SettingsPage/SettingsPage";
 import { useAdmins } from "../redux/hooks/useAdmin";
 
 const SettingsContainer: React.FC = () => {
-  const { user, handleEditUser, loading: isUserDataLoading } = useAdmins();
+  const {
+    user,
+    handleEditUser,
+    loading: isUserDataLoading,
+    isUserEmailVerified,
+  } = useAdmins();
   const {
     data: propertiesData,
     handleEditProperty,
@@ -14,6 +19,7 @@ const SettingsContainer: React.FC = () => {
 
   return (
     <SettingsPage
+      isUserEmailVerified={isUserEmailVerified}
       user={user}
       onEditUser={handleEditUser}
       isLoading={isUserDataLoading && isPropertyDataLoading}

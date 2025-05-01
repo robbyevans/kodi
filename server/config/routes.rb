@@ -37,6 +37,21 @@ Rails.application.routes.draw do
   # Admin-related routes (for management and authentication)
   resources :admins, only: %i[index create update destroy]
 
+  # reset passwordand email confirmation link
+  resources :admins, only: %i[index create update destroy] do
+    collection do
+      post :send_confirmation_code   # auth required
+      post :confirm_email            # auth required
+    end
+  end
+
+  resources :password_resets, only: [:create] do
+    collection do
+      post :verify    # check code validity
+      post :reset     # submit code + new password
+    end
+  end
+
   post '/signup', to: 'admins#create'
   post '/login', to: 'admins#login'
   post '/auth/google', to: 'admins#google_auth'
@@ -44,6 +59,10 @@ Rails.application.routes.draw do
   # Payment routes
   resources :payments, only: [:index]
   post 'payments/ipn', to: 'payments#ipn' # IPN listener route
+
+  # sending notifications / messages to tenants emails
+  post 'notifications/tenant/:tenant_id', to: 'notifications#tenant'
+  post 'notifications/tenants', to: 'notifications#all_tenants'
 
   # Root path – returns all properties for the current admin
   root 'properties#index'
