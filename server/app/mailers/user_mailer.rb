@@ -60,7 +60,11 @@ class UserMailer < ApplicationMailer
 
   # Send notifications/messages to all tenants
   def tenant_notification_email(tenant, subject, body)
-    @body = body
-    mail(to: tenant.email, subject: subject)
+    mail(
+      to: tenant.email,
+      subject: subject,
+      body: body,          # ← inline text body
+      content_type: "text/plain"
+    )
   end
 end
