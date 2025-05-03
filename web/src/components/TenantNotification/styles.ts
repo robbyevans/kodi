@@ -87,3 +87,21 @@ export const Error = styled.p`
   color: ${colors.error};
   font-size: ${fontSizes.sm};
 `;
+
+export const Field = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.xs};
+
+  label {
+    font-size: ${fontSizes.sm};
+    color: ${colors.text.primary};
+  }
+
+  select {
+    padding: ${spacing.sm};
+    font-size: ${fontSizes.md};
+    border: 1px solid ${colors.neutral[300]};
+    border-radius: ${borderRadius.sm};
+  }
+`;

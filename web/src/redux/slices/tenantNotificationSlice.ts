@@ -2,40 +2,55 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../utils";
 import { showToast } from "./toastSlice";
 
+export interface Tenant {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string;
+  national_id: string;
+  house_number: string;
+  property_id: number;
+  property_name: string;
+}
+
 interface TenantNotificationsState {
-  tenants: { id: number; name: string; email: string }[];
+  tenants: Tenant[];
   loading: boolean;
   error: string | null;
 }
+
 const initialState: TenantNotificationsState = {
   tenants: [],
   loading: false,
   error: null,
 };
 
-export const fetchTenants = createAsyncThunk(
-  "notifications/fetchTenants",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get("/tenants");
-      return data as TenantNotificationsState["tenants"];
-    } catch (e: any) {
-      return rejectWithValue(e.message);
-    }
+export const fetchTenants = createAsyncThunk<
+  Tenant[],
+  void,
+  { rejectValue: string }
+>("notifications/fetchTenants", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get("/tenants");
+    return data as Tenant[];
+  } catch (e: any) {
+    return rejectWithValue(e.message);
   }
-);
+});
 
 export const sendNotification = createAsyncThunk<
   void,
-  { tenantIds: number[]; subject: string; body: string }
+  { tenantIds: number[]; subject: string; body: string },
+  { rejectValue: string }
 >(
   "notifications/send",
   async ({ tenantIds, subject, body }, { dispatch, rejectWithValue }) => {
     try {
       if (tenantIds.length === 0) {
-        // all tenants
+        // broadcast to all
         await axios.post("/notifications/tenants", { subject, body });
       } else {
+        // send to each individually
         await Promise.all(
           tenantIds.map((id) =>
             axios.post(`/notifications/tenant/${id}`, { subject, body })
@@ -54,28 +69,31 @@ const slice = createSlice({
   name: "notifications",
   initialState,
   reducers: {},
-  extraReducers: (b) =>
-    b
-      .addCase(fetchTenants.pending, (s) => {
-        s.loading = true;
+  extraReducers: (builder) =>
+    builder
+      .addCase(fetchTenants.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchTenants.fulfilled, (s, { payload }) => {
-        s.loading = false;
-        s.tenants = payload;
+      .addCase(fetchTenants.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.tenants = payload;
       })
-      .addCase(fetchTenants.rejected, (s, { payload }) => {
-        s.loading = false;
-        s.error = payload as string;
+      .addCase(fetchTenants.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload ?? "Failed to load tenants";
       })
-      .addCase(sendNotification.pending, (s) => {
-        s.loading = true;
+      .addCase(sendNotification.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(sendNotification.fulfilled, (s) => {
-        s.loading = false;
+      .addCase(sendNotification.fulfilled, (state) => {
+        state.loading = false;
       })
-      .addCase(sendNotification.rejected, (s, { payload }) => {
-        s.loading = false;
-        s.error = payload as string;
+      .addCase(sendNotification.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload ?? "Failed to send notification";
       }),
 });
+
 export default slice.reducer;
