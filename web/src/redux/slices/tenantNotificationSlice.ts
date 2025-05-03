@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../utils";
+import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
 
 export interface Tenant {
@@ -31,7 +31,7 @@ export const fetchTenants = createAsyncThunk<
   { rejectValue: string }
 >("notifications/fetchTenants", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get("/tenants");
+    const { data } = await axiosInstance.get("/tenants");
     return data as Tenant[];
   } catch (e: any) {
     return rejectWithValue(e.message);
@@ -47,13 +47,14 @@ export const sendNotification = createAsyncThunk<
   async ({ tenantIds, subject, body }, { dispatch, rejectWithValue }) => {
     try {
       if (tenantIds.length === 0) {
-        // broadcast to all
-        await axios.post("/notifications/tenants", { subject, body });
+        await axiosInstance.post("/notifications/tenants", { subject, body });
       } else {
-        // send to each individually
         await Promise.all(
           tenantIds.map((id) =>
-            axios.post(`/notifications/tenant/${id}`, { subject, body })
+            axiosInstance.post(`/notifications/tenant/${id}`, {
+              subject,
+              body,
+            })
           )
         );
       }
