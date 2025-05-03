@@ -4,7 +4,10 @@ import * as S from "./styles";
 
 const AssistantAdmins: React.FC = () => {
   const { list, load, add, update, remove, loading } = useAssistantAdmins();
+
+  const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
   const [editing, setEditing] = useState<number | null>(null);
 
   useEffect(() => {
@@ -14,10 +17,12 @@ const AssistantAdmins: React.FC = () => {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await add(newEmail).unwrap();
+      await add(newName, newEmail, newPhone).unwrap();
+      setNewName("");
       setNewEmail("");
+      setNewPhone("");
     } catch {
-      // errors shown via toast
+      /* toast will show errors */
     }
   };
 
@@ -32,18 +37,31 @@ const AssistantAdmins: React.FC = () => {
     <S.Container>
       <S.Header>Your Assistant Admins</S.Header>
 
-      <S.AddForm>
-        <S.EmailInput
+      <S.AddForm onSubmit={handleAdd}>
+        <S.TextInput
+          type="text"
+          placeholder="Full name"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          required
+        />
+        <S.TextInput
           type="email"
           placeholder="assistant@example.com"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
           required
         />
+        <S.TextInput
+          type="tel"
+          placeholder="Phone number"
+          value={newPhone}
+          onChange={(e) => setNewPhone(e.target.value)}
+          required
+        />
         <S.AddButton
-          type="button"
-          onClick={handleAdd}
-          disabled={!newEmail || loading}
+          type="submit"
+          disabled={!newName || !newEmail || !newPhone || loading}
         >
           + Add
         </S.AddButton>
@@ -52,7 +70,9 @@ const AssistantAdmins: React.FC = () => {
       <S.List>
         {list.map((a) => (
           <S.ListItem key={a.id}>
-            <span>{a.email}</span>
+            <span>
+              {a.name} — {a.email}
+            </span>
             <S.ActionGroup>
               <S.IconButton onClick={() => remove(a.id)}>🗑️</S.IconButton>
               <S.IconButton onClick={() => setEditing(a.id)}>⚙️</S.IconButton>
@@ -68,7 +88,10 @@ const AssistantAdmins: React.FC = () => {
             <S.ModalBackdrop onClick={() => setEditing(null)}>
               <S.ModalContent onClick={(e) => e.stopPropagation()}>
                 <S.ModalHeader>
-                  <h2>{asst.email}</h2>
+                  <h2>{asst.name}</h2>
+                  <p>
+                    {asst.email} · {asst.phone_number}
+                  </p>
                 </S.ModalHeader>
                 <S.Flags>
                   {flags.map((flag) => (

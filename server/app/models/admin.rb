@@ -3,20 +3,20 @@ class Admin < ApplicationRecord
   has_secure_password
   has_one_attached :profile_image
   has_many   :properties, dependent: :destroy
-  has_one    :wallet, dependent: :destroy
+  has_one    :wallet,     dependent: :destroy
   has_many   :tenant_notification_histories, dependent: :destroy
 
   after_create :initialize_wallet, :send_welcome_email
 
+  # — Validations for core Admin fields —
   validates :email, presence: true, uniqueness: true
-  validates :name, presence: true, on: :create
-  validates :role, presence: true, inclusion: { in: %w[admin system_admin] }
+  validates :name,  presence: true, on: :create
   validates :password,
             length: { minimum: 4 },
             format: { with: /[A-Z]/, message: 'must include at least one uppercase letter' },
             allow_nil: true
 
-  # --- self-referencing manager/assistant ---
+  # — Self-reference for manager/assistant —
   belongs_to :manager,
              class_name: 'Admin',
              optional: true
@@ -26,10 +26,13 @@ class Admin < ApplicationRecord
            foreign_key: 'manager_id',
            dependent: :destroy
 
+  # — Roles —
   ROLES = %w[admin system_admin assistant_admin].freeze
-  validates :role, inclusion: { in: ROLES }
+  validates :role,
+            presence: true,
+            inclusion: { in: ROLES }
 
-  # --- convenience predicates ---
+  # — Convenience predicates —
   def real_admin?
     %w[admin system_admin].include?(role)
   end
@@ -64,7 +67,7 @@ class Admin < ApplicationRecord
     true
   end
 
-  # — Password reset code flow (unchanged) —
+  # — Password reset flow —
   def send_reset_password_code!
     code = SecureRandom.alphanumeric(6).upcase
     update!(reset_password_code: code, reset_password_sent_at: Time.current)
@@ -81,12 +84,14 @@ class Admin < ApplicationRecord
   def reset_password_with_code!(code, new_password, new_password_confirmation)
     return false unless verify_reset_password_code!(code)
 
-    update!(password: new_password,
-            password_confirmation: new_password_confirmation,
-            reset_password_code: nil)
+    update!(
+      password: new_password,
+      password_confirmation: new_password_confirmation,
+      reset_password_code: nil
+    )
   end
 
-  # — Monthly summaries (unchanged) —
+  # — Monthly summaries —
   def monthly_start_email
     UserMailer.monthly_start_email(self).deliver_later
   end

@@ -25,11 +25,12 @@ export const Header = styled.h1`
 
 export const AddForm = styled.form`
   display: flex;
+  flex-direction: column;
   gap: ${spacing.sm};
   margin-bottom: ${spacing.lg};
 `;
 
-export const EmailInput = styled.input`
+export const TextInput = styled.input`
   flex: 1;
   padding: ${spacing.sm};
   font-size: ${fontSizes.md};
@@ -109,12 +110,17 @@ export const ModalContent = styled.div`
 `;
 
 export const ModalHeader = styled.div`
+  text-align: center;
   margin-bottom: ${spacing.md};
   h2 {
     margin: 0;
-    font-size: ${fontSizes["xl"]};
+    font-size: ${fontSizes.xl};
     color: ${colors.text.primary};
-    text-align: center;
+  }
+  p {
+    margin: ${spacing.xs} 0 0;
+    font-size: ${fontSizes.sm};
+    color: ${colors.text.secondary};
   }
 `;
 

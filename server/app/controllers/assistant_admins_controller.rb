@@ -11,11 +11,12 @@ class AssistantAdminsController < ApplicationController
   def create
     raw_pw = SecureRandom.alphanumeric(12).tap { |s| s << 'A' }
     a = current_admin.assistant_admins.build(
-      email: params.require(:email),
-      password: raw_pw,
-      password_confirmation: raw_pw,
-      role: 'assistant_admin'
+      assistant_admin_params
+        .merge(password: raw_pw,
+               password_confirmation: raw_pw,
+               role: 'assistant_admin')
     )
+
     a.save!
     UserMailer.assistant_welcome_email(a, raw_pw).deliver_later
     render json: a, status: :created
@@ -41,6 +42,11 @@ class AssistantAdminsController < ApplicationController
   end
 
   private
+
+  def assistant_admin_params
+    params.require(:assistant_admin)
+          .permit(:name, :email, :phone_number)
+  end
 
   def ensure_real_admin!
     head :forbidden unless current_admin.real_admin?

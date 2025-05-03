@@ -4,9 +4,11 @@ import { showToast } from "./toastSlice";
 
 export interface IAssistantAdmin {
   id: number;
+  name: string;
   email: string;
   role: "assistant_admin";
   manager_id: number;
+  phone_number: string;
   can_manage_tenants: boolean;
   can_view_full_records: boolean;
   can_view_finances: boolean;
@@ -40,13 +42,15 @@ export const fetchAssistantAdmins = createAsyncThunk<
 
 export const createAssistantAdmin = createAsyncThunk<
   IAssistantAdmin,
-  { email: string },
+  { name: string; email: string; phone_number: string },
   { rejectValue: string }
 >(
   "assistantAdmins/create",
-  async ({ email }, { dispatch, rejectWithValue }) => {
+  async ({ name, email, phone_number }, { dispatch, rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post("/assistant_admins", { email });
+      const { data } = await axiosInstance.post("/assistant_admins", {
+        assistant_admin: { name, email, phone_number },
+      });
       dispatch(showToast({ message: "Assistant added", type: "success" }));
       return data;
     } catch (e: any) {
@@ -105,15 +109,12 @@ const slice = createSlice({
         state.loading = false;
         state.error = action.payload!;
       })
-
       .addCase(createAssistantAdmin.fulfilled, (state, action) => {
         state.list.push(action.payload);
       })
-
       .addCase(updateAssistantAdmin.fulfilled, () => {
-        // no state mutation needed; UI will re-fetch or reflect local changes
+        /* UI will reflect changes via refetch or local state */
       })
-
       .addCase(deleteAssistantAdmin.fulfilled, (state, action) => {
         state.list = state.list.filter((a) => a.id !== action.meta.arg);
       });

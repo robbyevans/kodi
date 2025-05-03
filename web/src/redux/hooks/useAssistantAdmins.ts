@@ -17,8 +17,9 @@ export const useAssistantAdmins = () => {
     loading,
     error,
     load: () => dispatch(fetchAssistantAdmins()),
-    add: (email: string) => dispatch(createAssistantAdmin({ email })),
-    update: (id: number, changes: Partial<any>) =>
+    add: (name: string, email: string, phone_number: string) =>
+      dispatch(createAssistantAdmin({ name, email, phone_number })),
+    update: (id: number, changes: any) =>
       dispatch(updateAssistantAdmin({ id, changes })),
     remove: (id: number) => dispatch(deleteAssistantAdmin(id)),
   };

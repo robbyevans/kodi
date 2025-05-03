@@ -1,0 +1,19 @@
+Hello <%= @assistant.name %>,
+
+You’ve been invited to join Kodi PMS as an Assistant Admin!
+
+Here are your temporary login credentials:
+
+  Email: <%= @assistant.email %>
+  Temporary password: <%= @raw_password %>
+
+Please sign in at:
+<%= ENV.fetch("FRONTEND_URL", "http://localhost:3000") %>/login
+
+Once you log in, be sure to change your password.
+
+If you have any questions or run into trouble, just reply to this email.
+
+Welcome aboard!
+
+— The Kodi PMS Team
