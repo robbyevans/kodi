@@ -16,6 +16,7 @@ import PaymentContainer from "../containers/paymentContainer";
 import PasswordResetPageContainer from "../containers/PasswordResetPageContainer";
 import * as S from "./styles";
 import TenantNotificationsPage from "../components/TenantNotification/TenantNotification";
+import More from "../components/More/More";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
@@ -106,6 +107,15 @@ const AppRouter = () => {
               element={
                 <AccessRouter>
                   <TenantNotificationsPage />
+                </AccessRouter>
+              }
+            />
+
+            <Route
+              path="/more"
+              element={
+                <AccessRouter>
+                  <More />
                 </AccessRouter>
               }
             />

@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FiHome, FiSettings, FiLogOut } from "react-icons/fi";
+import { FiHome, FiSettings } from "react-icons/fi";
+import { LuBox } from "react-icons/lu";
 import { IoAnalytics } from "react-icons/io5";
 import styled from "styled-components";
 import { colors } from "../../styles/foundation";
-import { useAdmins } from "../../redux/hooks/useAdmin";
 
 const FooterContainer = styled.footer`
   display: none;
@@ -46,7 +46,6 @@ const FooterButton = styled.button<{ $active?: boolean }>`
 const FooterMobile: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleLogout } = useAdmins();
 
   const menu = [
     {
@@ -68,10 +67,10 @@ const FooterMobile: React.FC = () => {
       action: () => navigate("/settings"),
     },
     {
-      path: "/logout",
-      label: "Logout",
-      icon: <FiLogOut />,
-      action: handleLogout,
+      path: "/more",
+      label: "More",
+      icon: <LuBox />,
+      action: () => navigate("/more"),
     },
   ];
 
