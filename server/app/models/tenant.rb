@@ -5,6 +5,11 @@ class Tenant < ApplicationRecord
 
   validates :name, :phone_number, :email, :national_id, presence: true
 
+  has_many :tenant_notification_recipients, dependent: :destroy
+  has_many :notification_histories,
+           through: :tenant_notification_recipients,
+           source: :tenant_notification_history
+
   # Pick the “current” house however you like;
   # here we just take the first one
   def current_house
