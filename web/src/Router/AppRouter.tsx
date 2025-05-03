@@ -17,6 +17,7 @@ import PasswordResetPageContainer from "../containers/PasswordResetPageContainer
 import * as S from "./styles";
 import TenantNotificationsPage from "../components/TenantNotification/TenantNotification";
 import More from "../components/More/More";
+import AssistantAdmins from "../components/AssistantsAdmins/AssistantAdmins";
 
 const AppRouter = () => {
   const { isAuthenticated } = useAdmins();
@@ -81,6 +82,15 @@ const AppRouter = () => {
               element={
                 <AccessRouter>
                   <SettingsPageContainer />
+                </AccessRouter>
+              }
+            />
+
+            <Route
+              path="/assistant-admin"
+              element={
+                <AccessRouter>
+                  <AssistantAdmins />
                 </AccessRouter>
               }
             />

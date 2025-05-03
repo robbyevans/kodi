@@ -16,6 +16,28 @@ class Admin < ApplicationRecord
             format: { with: /[A-Z]/, message: 'must include at least one uppercase letter' },
             allow_nil: true
 
+  # --- self-referencing manager/assistant ---
+  belongs_to :manager,
+             class_name: 'Admin',
+             optional: true
+
+  has_many :assistant_admins,
+           class_name: 'Admin',
+           foreign_key: 'manager_id',
+           dependent: :destroy
+
+  ROLES = %w[admin system_admin assistant_admin].freeze
+  validates :role, inclusion: { in: ROLES }
+
+  # --- convenience predicates ---
+  def real_admin?
+    %w[admin system_admin].include?(role)
+  end
+
+  def assistant_admin?
+    role == 'assistant_admin'
+  end
+
   # — Confirmation code flow —
   def send_confirmation_code!
     code = SecureRandom.alphanumeric(6).upcase

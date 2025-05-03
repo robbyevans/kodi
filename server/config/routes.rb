@@ -46,6 +46,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :assistant_admins, only: %i[index create update destroy]
+
   resources :password_resets, only: [:create] do
     collection do
       post :verify    # check code validity

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_03_091001) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_03_210414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,7 +60,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_03_091001) do
     t.boolean "is_email_verified", default: false, null: false
     t.string "reset_password_code"
     t.datetime "reset_password_sent_at"
+    t.bigint "manager_id"
+    t.boolean "can_manage_tenants", default: false, null: false
+    t.boolean "can_view_full_records", default: false, null: false
+    t.boolean "can_view_finances", default: false, null: false
+    t.boolean "can_send_notifications", default: false, null: false
     t.index ["email_confirmation_code"], name: "index_admins_on_email_confirmation_code"
+    t.index ["manager_id"], name: "index_admins_on_manager_id"
     t.index ["reset_password_code"], name: "index_admins_on_reset_password_code"
   end
 
@@ -190,6 +196,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_03_091001) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "admins", "admins", column: "manager_id"
   add_foreign_key "houses", "properties"
   add_foreign_key "houses", "tenants"
   add_foreign_key "ledger_entries", "admins"
