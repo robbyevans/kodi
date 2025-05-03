@@ -1,79 +1,135 @@
-import React, { useState } from "react";
-import { usePasswordReset } from "../../redux/hooks/usePasswordReset";
+import React from "react";
 import * as S from "./styles";
 
-const PasswordResetPage: React.FC = () => {
-  const { step, loading, error, sendCode, verifyCode, reset } =
-    usePasswordReset();
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [pw, setPw] = useState("");
-  const [pw2, setPw2] = useState("");
+export type ResetStep = "request" | "verify" | "reset";
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (step === "request") sendCode(email);
-    else if (step === "verify") verifyCode(email, code);
-    else reset(email, code, pw, pw2);
-  };
+export interface ResetPasswordPageProps {
+  step: ResetStep;
+  loading: boolean;
+  error: string | null;
+  email: string;
+  code: string;
+  pw: string;
+  pw2: string;
+  cooldown: number;
 
-  return (
-    <S.Container>
+  onBack: () => void;
+  onEmailChange: (v: string) => void;
+  onCodeChange: (v: string) => void;
+  onPwChange: (v: string) => void;
+  onPw2Change: (v: string) => void;
+  onResend: () => void;
+  onSubmit: React.FormEventHandler;
+}
+
+const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({
+  step,
+  loading,
+  error,
+  email,
+  code,
+  pw,
+  pw2,
+  cooldown,
+  onBack,
+  onEmailChange,
+  onCodeChange,
+  onPwChange,
+  onPw2Change,
+  onResend,
+  onSubmit,
+}) => (
+  <S.Container>
+    <S.BackButton onClick={onBack}>← Back</S.BackButton>
+    <S.Wrapper>
       <h1>Reset Password</h1>
       <form onSubmit={onSubmit}>
-        {step === "request" && (
-          <>
+        {/* STEP 1: Email (always visible) */}
+        <S.Section active={step === "request"}>
+          <S.Field>
+            <label>Your Email</label>
             <input
               type="email"
-              placeholder="Your email"
+              placeholder="you@domain.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => onEmailChange(e.target.value)}
+              disabled={step !== "request"}
               required
             />
-          </>
-        )}
-        {step === "verify" && (
-          <>
-            <input
-              type="text"
-              placeholder="Verification code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              required
-            />
-          </>
-        )}
-        {step === "reset" && (
-          <>
-            <input
-              type="password"
-              placeholder="New password"
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Confirm password"
-              value={pw2}
-              onChange={(e) => setPw2(e.target.value)}
-              required
-            />
-          </>
-        )}
-        {error && <S.Error>{error}</S.Error>}
-        <button type="submit" disabled={loading}>
-          {loading
-            ? "…"
-            : step === "request"
-            ? "Send Code"
-            : step === "verify"
-            ? "Verify Code"
-            : "Reset Password"}
-        </button>
-      </form>
-    </S.Container>
-  );
-};
+          </S.Field>
+          {step === "request" && (
+            <S.SubmitSmallButton disabled={loading}>
+              Send Code
+            </S.SubmitSmallButton>
+          )}
+        </S.Section>
 
-export default PasswordResetPage;
+        {/* STEP 2: Code (only render once email is sent) */}
+        {(step === "verify" || step === "reset") && (
+          <S.Section active={step === "verify"}>
+            <S.Field>
+              <label>Verification Code</label>
+              <input
+                type="text"
+                placeholder="ABC123"
+                value={code}
+                onChange={(e) => onCodeChange(e.target.value)}
+                disabled={step !== "verify"}
+                required
+              />
+            </S.Field>
+            {step === "verify" && (
+              <>
+                <S.ResendContainer>
+                  {cooldown === 0 ? (
+                    <S.ResendButton type="button" onClick={onResend}>
+                      Resend Code
+                    </S.ResendButton>
+                  ) : (
+                    <span>Wait {cooldown}s to resend</span>
+                  )}
+                </S.ResendContainer>
+                <S.SubmitSmallButton disabled={loading}>
+                  Verify Code
+                </S.SubmitSmallButton>
+              </>
+            )}
+          </S.Section>
+        )}
+
+        {/* STEP 3: New Password (only render once code is verified) */}
+        {step === "reset" && (
+          <S.Section active>
+            <S.Field>
+              <label>New Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={pw}
+                onChange={(e) => onPwChange(e.target.value)}
+                required
+              />
+            </S.Field>
+            <S.Field>
+              <label>Confirm Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={pw2}
+                onChange={(e) => onPw2Change(e.target.value)}
+                required
+              />
+            </S.Field>
+            <S.SubmitSmallButton disabled={loading}>
+              Reset Password
+            </S.SubmitSmallButton>
+          </S.Section>
+        )}
+
+        {error && <S.ErrorAlert>{error}</S.ErrorAlert>}
+      </form>
+    </S.Wrapper>
+  </S.Container>
+);
+
+export default ResetPasswordPage;

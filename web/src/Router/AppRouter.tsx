@@ -13,7 +13,7 @@ import Footer from "../components/Footer/Footer";
 import QuizPage from "../components/QuizPage/QuizPage";
 import FooterMobile from "../components/FooterMobile/FooterMobile";
 import PaymentContainer from "../containers/paymentContainer";
-import PasswordResetPage from "../components/PasswordReset/PasswordResetPage";
+import PasswordResetPageContainer from "../containers/PasswordResetPageContainer";
 import * as S from "./styles";
 import TenantNotificationsPage from "../components/TenantNotification/TenantNotification";
 
@@ -106,7 +106,10 @@ const AppRouter = () => {
               element={<TenantNotificationsPage />}
             />
 
-            <Route path="/password-reset" element={<PasswordResetPage />} />
+            <Route
+              path="/password-reset"
+              element={<PasswordResetPageContainer />}
+            />
 
             <Route
               path="/"
