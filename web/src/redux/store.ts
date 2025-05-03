@@ -10,7 +10,7 @@ import tenantNotificationReducer from "./slices/tenantNotificationSlice";
 import emailConfirmationReducer from "./slices/emailConfirmationSlice";
 import passwordResetReducer from "./slices/passwordResetSlice";
 import tenantNotificationHistoryReducer from "./slices/tenantNotificationHistorySlice";
-
+import assistantAdminReducer from "./slices/assistantAdminsSlice";
 const store = configureStore({
   reducer: {
     properties: propertiesReducer,
@@ -24,6 +24,7 @@ const store = configureStore({
     tenantNotifications: tenantNotificationReducer,
     tenantNotificationHistory: tenantNotificationHistoryReducer,
     passwordReset: passwordResetReducer,
+    assistantAdmin: assistantAdminReducer,
   },
 });
 

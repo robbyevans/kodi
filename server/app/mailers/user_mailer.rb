@@ -63,8 +63,16 @@ class UserMailer < ApplicationMailer
     mail(
       to: tenant.email,
       subject: subject,
-      body: body,          # ← inline text body
-      content_type: "text/plain"
+      body: body, # ← inline text body
+      content_type: 'text/plain'
     )
+  end
+
+  #  Assistant-admin receives a temporary password
+  def assistant_welcome_email(assistant, raw_password)
+    @assistant = assistant
+    @raw_password = raw_password
+    mail(to: assistant.email,
+         subject: 'You’ve been added as an Assistant in Kodi PMS')
   end
 end
