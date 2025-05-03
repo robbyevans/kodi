@@ -24,25 +24,28 @@ export const PageWrapper = styled.div`
   }
 `;
 
-export const Header = styled.header`
-  display: flex;
-  align-items: center;
-  padding: ${spacing.md};
-  background: ${colors.primary};
-  color: ${colors.text.inverted};
-
+/* Header when showing the menu */
+export const MenuHeader = styled.header`
+  text-align: center;
+  padding: ${spacing.md} 0;
   h1 {
-    flex: 1;
-    text-align: center;
     margin: 0;
-    font-size: ${fontSizes.lg};
+    font-size: ${fontSizes["2xl"]};
+    color: ${colors.text.primary};
   }
+`;
+
+/* Header when inside a section: back button only */
+export const SectionHeader = styled.div`
+  position: relative;
+  padding: ${spacing.md};
+  z-index: 2; /* on top of sliding panel */
 `;
 
 export const BackButton = styled.button`
   background: transparent;
   border: none;
-  color: ${colors.text.inverted};
+  color: ${colors.primary};
   font-size: ${fontSizes.lg};
   cursor: pointer;
 `;
@@ -76,4 +79,5 @@ export const SectionContainer = styled.div`
   height: 100%;
   background: ${colors.background};
   animation: ${slideIn} 0.3s forwards;
+  z-index: 1; /* below the SectionHeader */
 `;

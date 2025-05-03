@@ -20,12 +20,22 @@ const More: React.FC = () => {
 
   return (
     <S.PageWrapper>
-      <S.Header>
-        <S.BackButton onClick={handleBack}>← Back</S.BackButton>
-        <h1>More</h1>
-      </S.Header>
+      {/* Main menu header */}
+      {section === null && (
+        <S.MenuHeader>
+          <h1>More</h1>
+        </S.MenuHeader>
+      )}
 
-      {!section ? (
+      {/* Section header (back button only) */}
+      {section !== null && (
+        <S.SectionHeader>
+          <S.BackButton onClick={handleBack}>← Back</S.BackButton>
+        </S.SectionHeader>
+      )}
+
+      {/* menu list if no section selected */}
+      {section === null && (
         <S.MenuList>
           <S.MenuItem onClick={() => setSection("notifications")}>
             Notifications
@@ -33,8 +43,12 @@ const More: React.FC = () => {
           <S.MenuItem onClick={() => setSection("email")}>
             Email Confirmation
           </S.MenuItem>
+          {/* add more <S.MenuItem> here later */}
         </S.MenuList>
-      ) : (
+      )}
+
+      {/* sliding panel with selected section */}
+      {section !== null && (
         <S.SectionContainer>
           {section === "notifications" && <TenantNotificationsPage />}
           {section === "email" && <EmailConfirmationSection />}
