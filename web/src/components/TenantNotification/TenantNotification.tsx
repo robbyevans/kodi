@@ -37,9 +37,17 @@ const TenantNotificationsPage: React.FC = () => {
     setSelectedIds(allSel ? [] : ids);
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    send(all ? [] : selectedIds, subject, body);
+    try {
+      // dispatch the thunk and unwrap to catch success/failure
+      await send(all ? [] : selectedIds, subject, body).unwrap();
+      // on success, clear inputs
+      setSubject("");
+      setBody("");
+    } catch {
+      // on error we leave the fields intact so user can retry/edit
+    }
   };
 
   return (
@@ -123,6 +131,7 @@ const TenantNotificationsPage: React.FC = () => {
             required
           />
         </S.Field>
+
         <S.Field>
           <label>Body</label>
           <textarea
