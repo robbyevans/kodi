@@ -1,8 +1,7 @@
-// web/src/components/TenantNotification/TenantNotification.tsx
-
 import React, { useEffect, useState } from "react";
 
 import { useTenantNotifications } from "../../redux/hooks/useTenantNotification";
+import TenantNotificationHistory from "../TenantNotificationHistory/TenantNotificationHistory";
 import * as S from "./styles";
 
 const TenantNotificationsPage: React.FC = () => {
@@ -166,6 +165,7 @@ const TenantNotificationsPage: React.FC = () => {
           {loading ? "Sending…" : "Send"}
         </button>
       </form>
+      <TenantNotificationHistory />
     </S.Container>
   );
 };

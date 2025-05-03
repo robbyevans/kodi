@@ -52,6 +52,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :tenant_notification_histories, only: %i[index show]
+
   post '/signup', to: 'admins#create'
   post '/login', to: 'admins#login'
   post '/auth/google', to: 'admins#google_auth'

@@ -5,6 +5,7 @@ class Admin < ApplicationRecord
   has_one_attached :profile_image
   has_many :properties, dependent: :destroy
   has_one :wallet, dependent: :destroy
+  has_many :tenant_notification_histories, dependent: :destroy
 
   after_create :initialize_wallet, :send_welcome_email
 

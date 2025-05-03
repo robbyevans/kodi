@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_01_163801) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_03_091001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -142,6 +142,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_163801) do
     t.index ["tenant_id"], name: "index_tenant_house_agreements_on_tenant_id"
   end
 
+  create_table "tenant_notification_histories", force: :cascade do |t|
+    t.string "subject", null: false
+    t.text "body", null: false
+    t.datetime "sent_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.bigint "admin_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_tenant_notification_histories_on_admin_id"
+  end
+
+  create_table "tenant_notification_recipients", force: :cascade do |t|
+    t.bigint "tenant_notification_history_id", null: false
+    t.bigint "tenant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_tenant_notification_recipients_on_tenant_id"
+    t.index ["tenant_notification_history_id"], name: "idx_tenant_notif_recipient_history"
+  end
+
   create_table "tenants", force: :cascade do |t|
     t.string "name"
     t.string "phone_number"
@@ -179,6 +198,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_163801) do
   add_foreign_key "tenant_house_agreements", "houses"
   add_foreign_key "tenant_house_agreements", "properties"
   add_foreign_key "tenant_house_agreements", "tenants"
+  add_foreign_key "tenant_notification_histories", "admins"
+  add_foreign_key "tenant_notification_recipients", "tenant_notification_histories"
+  add_foreign_key "tenant_notification_recipients", "tenants"
   add_foreign_key "wallets", "admins"
   add_foreign_key "withdrawals", "admins"
 end

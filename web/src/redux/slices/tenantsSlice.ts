@@ -10,6 +10,8 @@ export interface ITenant {
   phone_number: string;
   national_id: string;
   status?: string | null;
+  house_number?: string;
+  property_name?: string;
 }
 
 interface TenantsState {
