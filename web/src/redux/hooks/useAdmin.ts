@@ -6,6 +6,7 @@ import {
   logout,
   editAdmin,
   googleAuthAdmin,
+  fetchCurrentAdmin,
 } from "../slices/adminSlice";
 import {
   selectCurrentAdmin,
@@ -31,20 +32,21 @@ export const useAdmins = () => {
     email: string,
     password: string,
     phone_number: string
-  ) =>
-    dispatch(
-      signupAdmin({ name, email, password, phone_number })
-    );
+  ) => dispatch(signupAdmin({ name, email, password, phone_number }));
 
   const handleLogout = () => dispatch(logout());
 
-  const handleEditUser = (data: FormData | Partial<ReturnType<typeof selectCurrentAdmin>>) => {
+  const handleEditUser = (
+    data: FormData | Partial<ReturnType<typeof selectCurrentAdmin>>
+  ) => {
     if (!user.admin_id) return console.error("Missing admin_id");
     dispatch(editAdmin({ adminId: user.admin_id, data }));
   };
 
   const handleGoogleAuth = (token: string, mode: "login" | "signup") =>
     dispatch(googleAuthAdmin({ token, mode }));
+
+  const refreshUser = () => dispatch(fetchCurrentAdmin());
 
   return {
     user,
@@ -57,5 +59,6 @@ export const useAdmins = () => {
     handleLogout,
     handleEditUser,
     handleGoogleAuth,
+    refreshUser,
   };
 };

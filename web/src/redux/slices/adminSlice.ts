@@ -169,6 +169,19 @@ export const googleAuthAdmin = createAsyncThunk<
   }
 );
 
+export const fetchCurrentAdmin = createAsyncThunk<
+  IUser,
+  void,
+  { rejectValue: string }
+>("admin/fetchCurrent", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axiosInstance.get("/admins/current");
+    return data as IUser;
+  } catch (err: any) {
+    return rejectWithValue(err.message);
+  }
+});
+
 export const editAdmin = createAsyncThunk<
   IUser,
   { adminId: number; data: Partial<IUser> | FormData }
@@ -268,6 +281,10 @@ const adminSlice = createSlice({
       .addCase(googleAuthAdmin.rejected, (s, a) => {
         s.loading = false;
         s.error = a.payload as string;
+      })
+      .addCase(fetchCurrentAdmin.fulfilled, (s, action) => {
+        s.admin = action.payload;
+        storeAuthData(s.token!, action.payload);
       })
 
       .addCase(editAdmin.pending, (s) => {

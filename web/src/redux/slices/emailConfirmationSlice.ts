@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../utils";
 import { showToast } from "./toastSlice";
+import { fetchCurrentAdmin } from "./adminSlice";
 
 interface EmailConfirmState {
   sent: boolean;
-  confirmed: boolean;
   loading: boolean;
   error: string | null;
 }
 const initialState: EmailConfirmState = {
   sent: false,
-  confirmed: false,
   loading: false,
   error: null,
 };
@@ -34,6 +33,7 @@ export const confirmEmail = createAsyncThunk<void, { code: string }>(
     try {
       await axios.post("/admins/confirm_email", { code });
       dispatch(showToast({ type: "success", message: "Email confirmed!" }));
+      dispatch(fetchCurrentAdmin());
     } catch (e: any) {
       dispatch(showToast({ type: "error", message: "Invalid code" }));
       return rejectWithValue(e.message);
@@ -65,7 +65,6 @@ const slice = createSlice({
       })
       .addCase(confirmEmail.fulfilled, (s) => {
         s.loading = false;
-        s.confirmed = true;
       })
       .addCase(confirmEmail.rejected, (s, { payload }) => {
         s.loading = false;

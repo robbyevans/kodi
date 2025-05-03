@@ -1,4 +1,6 @@
-import styled, { keyframes } from "styled-components";
+// File: /web/src/components/More/styles.ts
+
+import styled, { keyframes, css } from "styled-components";
 import {
   colors,
   spacing,
@@ -6,9 +8,14 @@ import {
   borderRadius,
 } from "../../styles/foundation";
 
-const slideIn = keyframes`
+export const slideIn = keyframes`
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
+`;
+
+export const slideOut = keyframes`
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
 `;
 
 export const PageWrapper = styled.div`
@@ -24,7 +31,6 @@ export const PageWrapper = styled.div`
   }
 `;
 
-/* Header when showing the menu */
 export const MenuHeader = styled.header`
   text-align: center;
   padding: ${spacing.md} 0;
@@ -35,11 +41,10 @@ export const MenuHeader = styled.header`
   }
 `;
 
-/* Header when inside a section: back button only */
 export const SectionHeader = styled.div`
   position: relative;
   padding: ${spacing.md};
-  z-index: 2; /* on top of sliding panel */
+  z-index: 2;
 `;
 
 export const BackButton = styled.button`
@@ -71,13 +76,24 @@ export const MenuItem = styled.li`
   }
 `;
 
-export const SectionContainer = styled.div`
+/**
+ * We declare the `exiting` prop here so TS won’t complain,
+ * and choose between slideIn/slideOut via css`…`
+ */
+export const SectionContainer = styled.div<{ exiting: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: ${colors.background};
-  animation: ${slideIn} 0.3s forwards;
-  z-index: 1; /* below the SectionHeader */
+  animation: ${({ exiting }) =>
+    exiting
+      ? css`
+          ${slideOut} 0.3s forwards
+        `
+      : css`
+          ${slideIn} 0.3s forwards
+        `};
+  z-index: 1;
 `;

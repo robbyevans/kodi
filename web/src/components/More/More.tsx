@@ -8,33 +8,34 @@ const More: React.FC = () => {
   const [section, setSection] = useState<"notifications" | "email" | null>(
     null
   );
+  const [exiting, setExiting] = useState(false);
   const navigate = useNavigate();
 
   const handleBack = () => {
     if (section) {
-      setSection(null);
+      setExiting(true);
     } else {
       navigate(-1);
     }
   };
 
+  const onAnimationEnd = () => {
+    if (exiting) {
+      setExiting(false);
+      setSection(null);
+    }
+  };
+
   return (
     <S.PageWrapper>
-      {/* Main menu header */}
-      {section === null && (
-        <S.MenuHeader>
-          <h1>More</h1>
-        </S.MenuHeader>
-      )}
-
-      {/* Section header (back button only) */}
-      {section !== null && (
+      {section === null ? (
+        <S.MenuHeader></S.MenuHeader>
+      ) : (
         <S.SectionHeader>
           <S.BackButton onClick={handleBack}>← Back</S.BackButton>
         </S.SectionHeader>
       )}
 
-      {/* menu list if no section selected */}
       {section === null && (
         <S.MenuList>
           <S.MenuItem onClick={() => setSection("notifications")}>
@@ -43,13 +44,11 @@ const More: React.FC = () => {
           <S.MenuItem onClick={() => setSection("email")}>
             Email Confirmation
           </S.MenuItem>
-          {/* add more <S.MenuItem> here later */}
         </S.MenuList>
       )}
 
-      {/* sliding panel with selected section */}
       {section !== null && (
-        <S.SectionContainer>
+        <S.SectionContainer exiting={exiting} onAnimationEnd={onAnimationEnd}>
           {section === "notifications" && <TenantNotificationsPage />}
           {section === "email" && <EmailConfirmationSection />}
         </S.SectionContainer>
