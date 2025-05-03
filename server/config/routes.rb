@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   # reset passwordand email confirmation link
   resources :admins, only: %i[index create update destroy] do
     collection do
+      get :current
       post :send_confirmation_code   # auth required
       post :confirm_email            # auth required
     end

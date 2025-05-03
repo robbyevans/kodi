@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "lucide-react": "^0.507.0",
+    "react-confetti": "^6.4.0"
+  }
+}

@@ -14,6 +14,7 @@ interface SettingsPageProps {
   onDeleteProperty: (id: number) => void;
   user: IUser;
   onEditUser: (data: FormData | { [key: string]: string | File }) => void;
+  onLogout: () => void;
 }
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
@@ -24,6 +25,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   onDeleteProperty,
   user,
   onEditUser,
+  onLogout,
 }) => {
   return (
     <S.SettingsContainer data-testid="settings-container">
@@ -45,6 +47,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         onEditProperty={onEditProperty}
         onDeleteProperty={onDeleteProperty}
       />
+
+      <S.LogoutWrapper>
+        <S.LogoutButton onClick={onLogout}>Log Out</S.LogoutButton>
+      </S.LogoutWrapper>
     </S.SettingsContainer>
   );
 };

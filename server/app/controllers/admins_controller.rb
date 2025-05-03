@@ -68,6 +68,10 @@ class AdminsController < ApplicationController
     render json: { token: encode_jwt(admin.id), admin: admin.as_json }, status: status
   end
 
+  def current
+    render json: current_admin.as_json, status: :ok
+  end
+
   # POST /admins/send_confirmation_code
   def send_confirmation_code
     current_admin.send_confirmation_code!

@@ -9,6 +9,7 @@ const SettingsContainer: React.FC = () => {
     handleEditUser,
     loading: isUserDataLoading,
     isUserEmailVerified,
+    handleLogout,
   } = useAdmins();
   const {
     data: propertiesData,
@@ -26,6 +27,7 @@ const SettingsContainer: React.FC = () => {
       propertiesData={propertiesData}
       onEditProperty={handleEditProperty}
       onDeleteProperty={handleDeleteProperty}
+      onLogout={handleLogout}
     />
   );
 };
