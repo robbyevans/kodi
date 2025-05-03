@@ -104,4 +104,7 @@ export const Field = styled.div`
     border: 1px solid ${colors.neutral[300]};
     border-radius: ${borderRadius.sm};
   }
+  input {
+    height: 25px;
+  }
 `;

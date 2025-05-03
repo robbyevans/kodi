@@ -9,7 +9,6 @@ export const useTenantNotifications = () => {
   const { tenants, loading, error } = useAppSelector(
     (s) => s.tenantNotifications
   );
-
   return {
     tenants,
     loading,

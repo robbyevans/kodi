@@ -103,7 +103,11 @@ const AppRouter = () => {
 
             <Route
               path="/tenant-notifications"
-              element={<TenantNotificationsPage />}
+              element={
+                <AccessRouter>
+                  <TenantNotificationsPage />
+                </AccessRouter>
+              }
             />
 
             <Route

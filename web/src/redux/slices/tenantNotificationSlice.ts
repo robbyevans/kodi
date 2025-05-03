@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../utils";
 import { showToast } from "./toastSlice";
+import { fetchHistories } from "./tenantNotificationHistorySlice";
 
 export interface Tenant {
   id: number;
@@ -13,17 +14,12 @@ export interface Tenant {
   property_name: string;
 }
 
-interface TenantNotificationsState {
+interface State {
   tenants: Tenant[];
   loading: boolean;
   error: string | null;
 }
-
-const initialState: TenantNotificationsState = {
-  tenants: [],
-  loading: false,
-  error: null,
-};
+const initialState: State = { tenants: [], loading: false, error: null };
 
 export const fetchTenants = createAsyncThunk<
   Tenant[],
@@ -46,28 +42,28 @@ export const sendNotification = createAsyncThunk<
   "notifications/send",
   async ({ tenantIds, subject, body }, { dispatch, rejectWithValue }) => {
     try {
-      if (tenantIds.length === 0) {
-        await axiosInstance.post("/notifications/tenants", { subject, body });
-      } else {
-        await Promise.all(
-          tenantIds.map((id) =>
-            axiosInstance.post(`/notifications/tenant/${id}`, {
-              subject,
-              body,
-            })
-          )
-        );
-      }
-      dispatch(showToast({ message: "Notifications sent!", type: "success" }));
+      await axiosInstance.post("/notifications", {
+        subject,
+        body,
+        tenant_ids: tenantIds,
+      });
+      dispatch(
+        showToast({
+          type: "success",
+          message: `Sent to ${tenantIds.length || "all"} tenant(s)`,
+        })
+      );
+      // refresh history panel
+      dispatch(fetchHistories());
     } catch (e: any) {
-      dispatch(showToast({ message: e.message, type: "error" }));
+      dispatch(showToast({ type: "error", message: e.message }));
       return rejectWithValue(e.message);
     }
   }
 );
 
 const slice = createSlice({
-  name: "notifications",
+  name: "tenant-notifications",
   initialState,
   reducers: {},
   extraReducers: (builder) =>

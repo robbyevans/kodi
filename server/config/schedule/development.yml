@@ -1,5 +1,5 @@
 _defaults: &monthly_first
-  cron: "*/2 * * * *" # run every 2 minutes (for testing)
+  cron: "*/5 * * * *" # run every 2 minutes (for testing)
   queue: default
 
 monthly_start:
