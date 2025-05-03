@@ -1,15 +1,13 @@
 # app/models/admin.rb
-
 class Admin < ApplicationRecord
   has_secure_password
   has_one_attached :profile_image
-  has_many :properties, dependent: :destroy
-  has_one :wallet, dependent: :destroy
-  has_many :tenant_notification_histories, dependent: :destroy
+  has_many   :properties, dependent: :destroy
+  has_one    :wallet, dependent: :destroy
+  has_many   :tenant_notification_histories, dependent: :destroy
 
   after_create :initialize_wallet, :send_welcome_email
 
-  # — Validations —
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true, on: :create
   validates :role, presence: true, inclusion: { in: %w[admin system_admin] }
@@ -28,11 +26,11 @@ class Admin < ApplicationRecord
     UserMailer.confirmation_code_email(self).deliver_later
   end
 
-  def verify_confirmation_code!(code)
+  def verify_confirmation_code!(submitted_code)
     return false if email_confirmation_code_sent_at.nil? ||
                     email_confirmation_code_sent_at < 2.days.ago
     return false unless ActiveSupport::SecurityUtils.secure_compare(
-      code,
+      submitted_code,
       email_confirmation_code
     )
 
@@ -44,31 +42,26 @@ class Admin < ApplicationRecord
     true
   end
 
-  # — Password-reset code flow —
+  # — Password reset code flow (unchanged) —
   def send_reset_password_code!
     code = SecureRandom.alphanumeric(6).upcase
-    update!(
-      reset_password_code: code,
-      reset_password_sent_at: Time.current
-    )
+    update!(reset_password_code: code, reset_password_sent_at: Time.current)
     UserMailer.reset_password_code_email(self).deliver_later
   end
 
-  def verify_reset_password_code!(code)
+  def verify_reset_password_code!(submitted_code)
     return false if reset_password_sent_at.nil? ||
                     reset_password_sent_at < 2.hours.ago
 
-    ActiveSupport::SecurityUtils.secure_compare(code, reset_password_code)
+    ActiveSupport::SecurityUtils.secure_compare(submitted_code, reset_password_code)
   end
 
   def reset_password_with_code!(code, new_password, new_password_confirmation)
     return false unless verify_reset_password_code!(code)
 
-    update!(
-      password: new_password,
-      password_confirmation: new_password_confirmation,
-      reset_password_code: nil
-    )
+    update!(password: new_password,
+            password_confirmation: new_password_confirmation,
+            reset_password_code: nil)
   end
 
   # — Monthly summaries (unchanged) —
@@ -80,8 +73,7 @@ class Admin < ApplicationRecord
     UserMailer.monthly_end_email(self).deliver_later
   end
 
-  # — JSON representation for API —
-  # Make sure this stays above `private` so controllers can call `admin.as_json`
+  # — JSON output for API —
   def as_json(options = {})
     super(options.merge(except: [:profile_image])).merge(
       admin_id: id,

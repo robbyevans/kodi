@@ -1,98 +1,71 @@
 class AdminsController < ApplicationController
   skip_before_action :authenticate_admin, only: %i[create login google_auth]
 
-  # Admin creation action
+  # POST /signup
   def create
-    Rails.logger.debug "Admin params: #{admin_params.inspect}"
-    @admin = Admin.new(admin_params)
-    @admin.role = 'admin'
-    @admin.is_notifications_allowed = false
-    @admin.is_terms_and_conditions_agreed = false
-
+    @admin = Admin.new(admin_params.merge(role: 'admin',
+                                          is_notifications_allowed: false,
+                                          is_terms_and_conditions_agreed: false))
     if @admin.save
-
-      # send sms notification to admin
       SmsJobs::SendVerificationSmsJob.perform_later(@admin.id)
-
       token = encode_jwt(@admin.id)
       render json: {
         message: 'Admin created successfully',
         token: token,
-        admin: @admin.as_json # Returns full admin record including device_token
+        admin: @admin.as_json
       }, status: :created
     else
       render json: { errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
+  # PUT /admins/:id
   def update
     @admin = Admin.find(params[:id])
     if @admin.update(admin_params)
-      render json: @admin.as_json # Full admin record returned
+      render json: @admin.as_json, status: :ok
     else
       render json: { errors: @admin.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
+  # DELETE /admins/:id
   def destroy
-    @admin = Admin.find(params[:id])
-    @admin.destroy
+    Admin.find(params[:id]).destroy
     head :no_content
   end
 
-  # Admin login action
+  # POST /login
   def login
     admin = Admin.find_by(email: params[:email])
-    if admin && admin.authenticate(params[:password])
-      token = encode_jwt(admin.id)
-      render json: {
-        token: token,
-        admin: admin.as_json # Returns full admin record
-      }, status: :ok
+    if admin&.authenticate(params[:password])
+      render json: { token: encode_jwt(admin.id), admin: admin.as_json }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
   end
 
-  # Admin google login/signup
+  # POST /auth/google
   def google_auth
-    token = params[:token]
     validator = GoogleIDToken::Validator.new
     begin
-      payload = validator.check(token, ENV['GOOGLE_CLIENT_ID'])
-    rescue GoogleIDToken::ValidationError => e
-      Rails.logger.error "Google token validation error: #{e}"
-      render json: { error: 'Invalid Google token' }, status: :unauthorized and return
+      payload = validator.check(params[:token], ENV['GOOGLE_CLIENT_ID'])
+    rescue GoogleIDToken::ValidationError
+      return render json: { error: 'Invalid Google token' }, status: :unauthorized
     end
 
-    email = payload['email']
-    name  = payload['name']
-    admin = Admin.find_by(email: email)
+    admin = Admin.find_or_initialize_by(email: payload['email'])
+    if admin.new_record?
+      pw = SecureRandom.alphanumeric(9).tap { |s| s << 'A' }
+      admin.assign_attributes(name: payload['name'], password: pw, password_confirmation: pw, role: 'admin')
+      return render(json: { error: admin.errors.full_messages }, status: :unprocessable_entity) unless admin.save
 
-    if admin.nil?
-      random_password = "#{SecureRandom.alphanumeric(9)}A"
-      admin = Admin.new(
-        email: email,
-        name: name,
-        password: random_password,
-        password_confirmation: random_password,
-        role: 'admin'
-      )
-      unless admin.save
-        render json: { error: admin.errors.full_messages.join(', ') },
-               status: :unprocessable_entity and return
-      end
-
-      status_code = :created
+      status = :created
     else
-      status_code = :ok
+      status = :ok
     end
 
-    jwt = encode_jwt(admin.id)
-    render json: {
-      token: jwt,
-      admin: admin.as_json # Returns full admin record
-    }, status: status_code
+    render json: { token: encode_jwt(admin.id), admin: admin.as_json }, status: status
   end
 
   # POST /admins/send_confirmation_code
@@ -102,7 +75,7 @@ class AdminsController < ApplicationController
   end
 
   # POST /admins/confirm_email
-  # { code: 'ABC123' }
+  # params: { code: "ABC123" }
   def confirm_email
     if current_admin.verify_confirmation_code!(params[:code])
       render json: { message: 'Email confirmed' }, status: :ok
@@ -115,8 +88,15 @@ class AdminsController < ApplicationController
 
   def admin_params
     params.require(:admin).permit(
-      :name, :email, :phone_number, :password, :profile_image,
-      :is_notifications_allowed, :device_token, :is_terms_and_conditions_agreed
+      :name,
+      :email,
+      :phone_number,
+      :password,
+      :password_confirmation,
+      :profile_image,
+      :is_notifications_allowed,
+      :device_token,
+      :is_terms_and_conditions_agreed
     )
   end
 end
