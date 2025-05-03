@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../utils";
 import { showToast } from "./toastSlice";
-import { PayloadAction } from "@reduxjs/toolkit";
 
 interface PasswordResetState {
   step: "request" | "verify" | "reset";
@@ -15,33 +14,38 @@ const initialState: PasswordResetState = {
   error: null,
 };
 
-export const sendResetCode = createAsyncThunk<void, { email: string }>(
+export const sendResetCode = createAsyncThunk<
+  void,
+  { email: string },
+  { rejectValue: string }
+>(
   "passwordReset/sendCode",
   async ({ email }, { dispatch, rejectWithValue }) => {
     try {
       await axios.post("/password_resets", { email });
       dispatch(showToast({ message: "Reset code sent!", type: "success" }));
-    } catch (e: any) {
-      dispatch(showToast({ message: e.message, type: "error" }));
-      return rejectWithValue(e.message);
+    } catch (err: any) {
+      const error = err.response?.data?.error || err.message;
+      dispatch(showToast({ message: error, type: "error" }));
+      return rejectWithValue(error);
     }
   }
 );
 
 export const verifyResetCode = createAsyncThunk<
   void,
-  { email: string; code: string }
+  { email: string; code: string },
+  { rejectValue: string }
 >(
   "passwordReset/verifyCode",
-  async (payload, { dispatch, rejectWithValue }) => {
+  async ({ email, code }, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post("/password_resets/verify", payload);
+      await axios.post("/password_resets/verify", { email, code });
       dispatch(showToast({ message: "Code valid!", type: "success" }));
-    } catch (e: any) {
-      dispatch(
-        showToast({ message: "Invalid or expired code", type: "error" })
-      );
-      return rejectWithValue(e.message);
+    } catch (err: any) {
+      const error = err.response?.data?.error || "Invalid or expired code";
+      dispatch(showToast({ message: error, type: "error" }));
+      return rejectWithValue(error);
     }
   }
 );
@@ -53,14 +57,16 @@ export const resetPassword = createAsyncThunk<
     code: string;
     password: string;
     password_confirmation: string;
-  }
+  },
+  { rejectValue: string }
 >("passwordReset/reset", async (payload, { dispatch, rejectWithValue }) => {
   try {
     await axios.post("/password_resets/reset", payload);
     dispatch(showToast({ message: "Password reset!", type: "success" }));
-  } catch (e: any) {
-    dispatch(showToast({ message: e.message, type: "error" }));
-    return rejectWithValue(e.message);
+  } catch (err: any) {
+    const error = err.response?.data?.error || err.message;
+    dispatch(showToast({ message: error, type: "error" }));
+    return rejectWithValue(error);
   }
 });
 
@@ -81,8 +87,8 @@ const slice = createSlice({
       state.error = null;
     },
   },
-  extraReducers: (b) =>
-    b
+  extraReducers: (builder) => {
+    builder
       .addMatcher(
         (action) =>
           action.type.startsWith("passwordReset/") &&
@@ -96,18 +102,18 @@ const slice = createSlice({
         (action) => action.type.endsWith("/fulfilled"),
         (state) => {
           state.loading = false;
-          state.error = null;
         }
       )
       .addMatcher(
         (action) =>
-          action.type.endsWith("/rejected") &&
-          action.type.startsWith("passwordReset/"),
+          action.type.startsWith("passwordReset/") &&
+          action.type.endsWith("/rejected"),
         (state, action: PayloadAction<string>) => {
           state.loading = false;
           state.error = action.payload;
         }
-      ),
+      );
+  },
 });
 
 export const { toVerify, toReset, toRequest } = slice.actions;
