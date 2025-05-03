@@ -62,9 +62,8 @@ Rails.application.routes.draw do
   resources :payments, only: [:index]
   post 'payments/ipn', to: 'payments#ipn' # IPN listener route
 
-  # sending notifications / messages to tenants emails
-  post 'notifications/tenant/:tenant_id', to: 'notifications#tenant'
-  post 'notifications/tenants', to: 'notifications#all_tenants'
+  # single, batch‐send endpoint:
+  post '/notifications', to: 'notifications#create'
 
   # Root path – returns all properties for the current admin
   root 'properties#index'
