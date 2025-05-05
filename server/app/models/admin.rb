@@ -1,4 +1,3 @@
-# app/models/admin.rb
 class Admin < ApplicationRecord
   has_secure_password
   has_one_attached :profile_image
@@ -8,7 +7,7 @@ class Admin < ApplicationRecord
 
   after_create :initialize_wallet, :send_welcome_email
 
-  # — Validations for core Admin fields —
+  # — Validations —
   validates :email, presence: true, uniqueness: true
   validates :name,  presence: true, on: :create
   validates :password,
@@ -16,7 +15,7 @@ class Admin < ApplicationRecord
             format: { with: /[A-Z]/, message: 'must include at least one uppercase letter' },
             allow_nil: true
 
-  # — Self-reference for manager/assistant —
+  # — Self reference for manager/assistant —
   belongs_to :manager,
              class_name: 'Admin',
              optional: true
@@ -39,6 +38,35 @@ class Admin < ApplicationRecord
 
   def assistant_admin?
     role == 'assistant_admin'
+  end
+
+  # — Data elevation —
+  # Returns the admin whose data we should operate on
+  def effective_admin
+    assistant_admin? ? manager : self
+  end
+
+  # — Permission helpers —
+  # Allow full admins always, assistants only if their flag is true
+  def can_manage_tenants?
+    real_admin? || can_manage_tenants
+  end
+
+  def can_view_full_records?
+    real_admin? || can_view_full_records
+  end
+
+  def can_view_finances?
+    real_admin? || can_view_finances
+  end
+
+  def can_send_notifications?
+    real_admin? || can_send_notifications
+  end
+
+  # — Convenience: the properties this user should see/edit
+  def accessible_properties
+    effective_admin.properties
   end
 
   # — Confirmation code flow —

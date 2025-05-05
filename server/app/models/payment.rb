@@ -23,16 +23,21 @@ class Payment < ApplicationRecord
     property = Property.find_by(id: property_id.to_i)
     return unless property&.admin&.wallet
 
-    # Credit tenant’s agreement account
+    # 1) Credit the tenant_house_agreement account
     if (house = property.houses.find_by(house_number: house_number))
-      if (agreement = TenantHouseAgreement.active.find_by(house: house, property: property))
+      agreement = TenantHouseAgreement
+                  .active
+                  .find_by(house: house, property: property)
+
+      if agreement
         agreement.credit!(transaction_amount)
+        Rails.logger.info "Agreement #{agreement.id} credited; new balance: #{agreement.balance}"
       else
         Rails.logger.warn "No active agreement for house #{house_number}"
       end
     end
 
-    # Credit admin’s wallet
+    # 2) Credit the admin’s wallet + update the ledger entry
     wallet = property.admin.wallet
     wallet.with_lock do
       wallet.credit!(transaction_amount)
@@ -65,6 +70,10 @@ class Payment < ApplicationRecord
   def send_tenant_receipt
     return unless (house = House.find_by(house_number: house_number))&.tenant&.email.present?
 
-    UserMailer.payment_receipt_email(house.tenant, self).deliver_later
+    UserMailer
+      .payment_receipt_email(house.tenant, self)
+      .deliver_later
+  rescue StandardError => e
+    Rails.logger.error "send_tenant_receipt failed: #{e.class}: #{e.message}"
   end
 end

@@ -39,10 +39,10 @@ export const sendNotification = createAsyncThunk<
   { tenantIds: number[]; subject: string; body: string },
   { rejectValue: string }
 >(
-  "notifications/send",
+  "tenant_notifications/send",
   async ({ tenantIds, subject, body }, { dispatch, rejectWithValue }) => {
     try {
-      await axiosInstance.post("/notifications", {
+      await axiosInstance.post("/tenant_notifications", {
         subject,
         body,
         tenant_ids: tenantIds,
