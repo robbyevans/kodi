@@ -1,4 +1,3 @@
-// File: /web/src/containers/AnalyticsContainer.tsx
 import React, { useEffect } from "react";
 import { useAdmins } from "../redux/hooks/useAdmin";
 import { usePayments } from "../redux/hooks/usePayment";
