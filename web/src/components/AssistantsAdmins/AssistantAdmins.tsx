@@ -1,67 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { useAssistantAdmins } from "../../redux/hooks/useAssistantAdmins";
+import { FiMoreVertical, FiTrash2, FiEdit } from "react-icons/fi";
+import type { IAssistantAdmin } from "../../redux/slices/assistantAdminsSlice";
 import * as S from "./styles";
 
-const AssistantAdmins: React.FC = () => {
-  const { list, load, add, update, remove, loading } = useAssistantAdmins();
+type Props = {
+  list: IAssistantAdmin[];
+  newName: string;
+  setNewName: React.Dispatch<React.SetStateAction<string>>;
+  newEmail: string;
+  setNewEmail: React.Dispatch<React.SetStateAction<string>>;
+  newPhone: string;
+  setNewPhone: React.Dispatch<React.SetStateAction<string>>;
+  loading: boolean;
+  handleAdd: (e: React.FormEvent) => void;
+  editing: number | null;
+  setEditing: React.Dispatch<React.SetStateAction<number | null>>;
+  update: (id: number, data: Partial<IAssistantAdmin>) => void;
+  remove: (id: number) => void;
+};
 
-  const [newName, setNewName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newPhone, setNewPhone] = useState("");
-  const [editing, setEditing] = useState<number | null>(null);
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await add(newName, newEmail, newPhone).unwrap();
-      setNewName("");
-      setNewEmail("");
-      setNewPhone("");
-    } catch {
-      /* toast will show errors */
-    }
-  };
-
-  const flags = [
-    // PROPERTIES
+const flagGroups = {
+  "Manage Properties": [
     "can_view_properties",
     "can_create_properties",
     "can_update_properties",
     "can_delete_properties",
-
-    // HOUSES
+  ],
+  "Manage Houses": [
     "can_view_houses",
     "can_create_houses",
     "can_update_houses",
     "can_delete_houses",
-
-    // TENANTS & LEASES
+  ],
+  "Manage Tenants & Leases": [
     "can_view_tenants",
     "can_create_tenants",
     "can_update_tenants",
     "can_terminate_leases",
-
-    // FINANCES
+  ],
+  "Manage Finances": [
     "can_view_payments",
     "can_record_payments",
     "can_withdraw_funds",
-
-    // NOTIFICATIONS
+  ],
+  "Manage Notifications": [
     "can_send_notifications",
     "can_view_notification_history",
-  ] as const;
+  ],
+} as const;
 
+const AssistantAdmin: React.FC<Props> = ({
+  list,
+  newName,
+  setNewName,
+  newEmail,
+  setNewEmail,
+  newPhone,
+  setNewPhone,
+  loading,
+  handleAdd,
+  editing,
+  setEditing,
+  update,
+  remove,
+}) => {
   return (
     <S.Container>
       <S.Header>Your Assistant Admins</S.Header>
 
       <S.AddForm onSubmit={handleAdd}>
         <S.TextInput
-          type="text"
           placeholder="Full name"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
@@ -81,31 +88,34 @@ const AssistantAdmins: React.FC = () => {
           onChange={(e) => setNewPhone(e.target.value)}
           required
         />
-        <S.AddButton
-          type="submit"
-          disabled={!newName || !newEmail || !newPhone || loading}
-        >
+        <S.AddButton disabled={!newName || !newEmail || !newPhone || loading}>
           + Add
         </S.AddButton>
       </S.AddForm>
 
       <S.List>
-        {list.map((a) => (
+        {(list ?? []).map((a) => (
           <S.ListItem key={a.id}>
-            <span>
-              {a.name} — {a.email}
-            </span>
-            <S.ActionGroup>
-              <S.IconButton onClick={() => remove(a.id)}>🗑️</S.IconButton>
-              <S.IconButton onClick={() => setEditing(a.id)}>⚙️</S.IconButton>
-            </S.ActionGroup>
+            <S.ProfileSection>
+              <S.ProfileImage src={a.profile_image} alt={a.name} />
+              <div>
+                <S.AdminName>{a.name}</S.AdminName>
+                <S.AdminEmail>{a.email}</S.AdminEmail>
+              </div>
+            </S.ProfileSection>
+            <S.MoreIconButton onClick={() => setEditing(a.id)}>
+              <FiMoreVertical />
+            </S.MoreIconButton>
           </S.ListItem>
         ))}
       </S.List>
 
       {editing !== null &&
+        list &&
         (() => {
-          const asst = list.find((x) => x.id === editing)!;
+          const asst = list.find((x) => x.id === editing);
+          if (!asst) return null; // Guard against undefined
+
           return (
             <S.ModalBackdrop onClick={() => setEditing(null)}>
               <S.ModalContent onClick={(e) => e.stopPropagation()}>
@@ -116,21 +126,41 @@ const AssistantAdmins: React.FC = () => {
                   </p>
                 </S.ModalHeader>
                 <S.Flags>
-                  {flags.map((flag) => (
-                    <S.ToggleWrapper key={flag}>
-                      {flag.replace(/_/g, " ")}
-                      <S.ToggleInput
-                        type="checkbox"
-                        id={`${asst.id}-${flag}`}
-                        checked={asst[flag]}
-                        onChange={(e) =>
-                          update(asst.id, { [flag]: e.target.checked })
-                        }
-                      />
-                      <S.ToggleSlider checked={asst[flag]} />
-                    </S.ToggleWrapper>
+                  {Object.entries(flagGroups).map(([title, flags]) => (
+                    <S.FlagGroup key={title}>
+                      <S.GroupTitle>{title}</S.GroupTitle>
+                      {flags.map((flag) => (
+                        <S.ToggleWrapper key={flag}>
+                          {flag.replace(/_/g, " ")}
+                          <S.ToggleInput
+                            type="checkbox"
+                            id={`${asst.id}-${flag}`}
+                            checked={asst[flag]}
+                            onChange={(e) =>
+                              update(asst.id, { [flag]: e.target.checked })
+                            }
+                          />
+                          <S.ToggleSlider checked={asst[flag]} />
+                        </S.ToggleWrapper>
+                      ))}
+                    </S.FlagGroup>
                   ))}
                 </S.Flags>
+
+                <S.ModalActions>
+                  <S.EditButton>
+                    <FiEdit /> Edit
+                  </S.EditButton>
+                  <S.DeleteButton
+                    onClick={() => {
+                      remove(asst.id);
+                      setEditing(null);
+                    }}
+                  >
+                    <FiTrash2 /> Delete
+                  </S.DeleteButton>
+                </S.ModalActions>
+
                 <S.CloseButton onClick={() => setEditing(null)}>
                   Done
                 </S.CloseButton>
@@ -142,4 +172,4 @@ const AssistantAdmins: React.FC = () => {
   );
 };
 
-export default AssistantAdmins;
+export default AssistantAdmin;

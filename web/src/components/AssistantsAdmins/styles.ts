@@ -59,17 +59,18 @@ export const List = styled.ul`
   padding: 0;
   margin: 0;
 `;
-
+export const ListItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 export const ListItem = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: ${spacing.sm} ${spacing.md};
-  border-bottom: 1px solid ${colors.neutral[200]};
-
-  &:last-child {
-    border-bottom: none;
-  }
+  border: 1px solid ${colors.primary};
+  border-left: 5px solid ${colors.primary};
+  border-radius: 5px;
 `;
 
 export const ActionGroup = styled.div`
@@ -106,8 +107,17 @@ export const ModalContent = styled.div`
   border-radius: ${borderRadius.md};
   padding: ${spacing.lg};
   width: 90%;
-  max-width: 400px;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
   box-shadow: ${shadows.lg};
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.md};
+
+  @media (max-width: 480px) {
+    padding: ${spacing.md};
+  }
 `;
 
 export const ModalHeader = styled.div`
@@ -159,11 +169,11 @@ export const CloseButton = styled.button`
 
 export const ToggleWrapper = styled.label`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: ${spacing.sm};
   font-size: ${fontSizes.md};
   color: ${colors.text.primary};
-  cursor: pointer;
+  padding: ${spacing.xs} 0;
 `;
 
 export const ToggleInput = styled.input`
@@ -190,4 +200,93 @@ export const ToggleSlider = styled.span<{ checked: boolean }>`
     border-radius: 50%;
     transition: left 0.2s ease;
   }
+`;
+export const FlagGroup = styled.div`
+  background: ${colors.neutral[100]};
+  border-radius: ${borderRadius.sm};
+  padding: ${spacing.md};
+  margin-bottom: ${spacing.md};
+  box-shadow: ${shadows.sm};
+`;
+
+export const GroupTitle = styled.h3`
+  margin-bottom: ${spacing.sm};
+  font-size: ${fontSizes.lg};
+  color: ${colors.primary};
+`;
+
+export const MoreIconButton = styled.button`
+  background: transparent;
+  border: none;
+  font-size: ${fontSizes.lg};
+  cursor: pointer;
+  color: ${colors.text.primary};
+
+  &:hover {
+    color: ${colors.accent};
+  }
+`;
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: ${spacing.md};
+`;
+
+export const EditButton = styled.button`
+  background: ${colors.primary};
+  color: ${colors.text.inverted};
+  border: none;
+  padding: ${spacing.xs} ${spacing.md};
+  border-radius: ${borderRadius.sm};
+  font-size: ${fontSizes.md};
+  display: flex;
+  align-items: center;
+  gap: ${spacing.xs};
+  cursor: pointer;
+
+  &:hover {
+    background: ${colors.accent};
+  }
+`;
+
+export const DeleteButton = styled.button`
+  background: ${colors.error};
+  color: ${colors.text.inverted};
+  border: none;
+  padding: ${spacing.xs} ${spacing.md};
+  border-radius: ${borderRadius.sm};
+  font-size: ${fontSizes.md};
+  display: flex;
+  align-items: center;
+  gap: ${spacing.xs};
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+export const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+`;
+
+export const ProfileImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid ${colors.neutral[300]};
+`;
+
+export const AdminName = styled.div`
+  font-size: ${fontSizes.md};
+  font-weight: 600;
+  color: ${colors.text.primary};
+`;
+
+export const AdminEmail = styled.div`
+  font-size: ${fontSizes.sm};
+  color: ${colors.text.secondary};
 `;
