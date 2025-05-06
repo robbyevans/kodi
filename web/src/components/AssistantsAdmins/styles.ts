@@ -8,6 +8,7 @@ import {
 } from "../../styles/foundation";
 
 export const Container = styled.div`
+  height: 100%;
   max-width: 600px;
   margin: ${spacing["2xl"]} auto;
   padding: ${spacing.xl};
@@ -153,5 +154,40 @@ export const CloseButton = styled.button`
 
   &:hover {
     background: ${colors.accent};
+  }
+`;
+
+export const ToggleWrapper = styled.label`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+  font-size: ${fontSizes.md};
+  color: ${colors.text.primary};
+  cursor: pointer;
+`;
+
+export const ToggleInput = styled.input`
+  display: none;
+`;
+
+export const ToggleSlider = styled.span<{ checked: boolean }>`
+  width: 40px;
+  height: 20px;
+  background-color: ${(props) =>
+    props.checked ? colors.success : colors.neutral[300]};
+  border-radius: 999px;
+  position: relative;
+  transition: background-color 0.2s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: ${(props) => (props.checked ? "20px" : "2px")};
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: left 0.2s ease;
   }
 `;
