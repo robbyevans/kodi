@@ -4,6 +4,11 @@ class TenantHouseAgreement < ApplicationRecord
   belongs_to :house
   belongs_to :property
 
+  scope :active, lambda {
+    where(status: 'active')
+      .where('end_date IS NULL OR end_date > ?', Time.current)
+  }
+
   validates :status, presence: true, inclusion: { in: %w[active ended evicted] }
   validates :deposit, :monthly_rent,
             numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
@@ -26,21 +31,20 @@ class TenantHouseAgreement < ApplicationRecord
   end
 
   def end_agreement!
-    update!(status: "ended", end_date: Time.current)
+    update!(status: 'ended', end_date: Time.current)
   end
 
   def status_label
     if balance < 0
-      "Owing"
+      'Owing'
     elsif balance > 0
-      "Credit"
+      'Credit'
     else
-      "Settled"
+      'Settled'
     end
   end
-  
 
   def active?
-    status == "active" && (end_date.nil? || end_date > Time.current)
+    status == 'active' && (end_date.nil? || end_date > Time.current)
   end
 end

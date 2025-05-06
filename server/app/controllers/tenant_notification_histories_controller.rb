@@ -1,31 +1,21 @@
 class TenantNotificationHistoriesController < ApplicationController
-  before_action :authenticate_admin
-
+  # GET /tenant_notification_histories
   def index
-    histories = current_admin
-                .tenant_notification_histories
-                .includes(:tenants)
-                .order(sent_at: :desc)
-
-    render json: histories.as_json(
+    authorize TenantNotificationHistory
+    @histories = policy_scope(TenantNotificationHistory).order(sent_at: :desc)
+    render json: @histories.as_json(
       only: %i[id subject sent_at],
-      include: {
-        tenants: { only: %i[id name email house_number property_name] }
-      }
+      include: { tenants: { only: %i[id name email house_number property_name] } }
     )
   end
 
+  # GET /tenant_notification_histories/:id
   def show
-    history = current_admin
-              .tenant_notification_histories
-              .includes(:tenants)
-              .find(params[:id])
-
-    render json: history.as_json(
+    @history = TenantNotificationHistory.find(params[:id])
+    authorize @history
+    render json: @history.as_json(
       only: %i[id subject body sent_at],
-      include: {
-        tenants: { only: %i[id name email house_number property_name] }
-      }
+      include: { tenants: { only: %i[id name email house_number property_name] } }
     )
   end
 end

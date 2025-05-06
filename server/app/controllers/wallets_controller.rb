@@ -1,8 +1,8 @@
 class WalletsController < ApplicationController
-  before_action :authenticate_admin
-
+  # GET /wallets/current
   def current
-    Rails.logger.info "Current Admin Wallet: #{current_admin.wallet.inspect}"
-    render json: current_admin.wallet
+    wallet = current_admin.wallet
+    authorize wallet, :show?
+    render json: wallet
   end
 end
