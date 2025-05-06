@@ -58,6 +58,9 @@ export const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 export const ListItemWrapper = styled.div`
   display: flex;
@@ -117,6 +120,7 @@ export const ModalContent = styled.div`
 
   @media (max-width: 480px) {
     padding: ${spacing.md};
+    max-height: 70vh;
   }
 `;
 
@@ -153,7 +157,6 @@ export const FlagLabel = styled.label`
 
 export const CloseButton = styled.button`
   display: block;
-  margin: 0 auto;
   padding: ${spacing.sm} ${spacing.md};
   font-size: ${fontSizes.md};
   background: ${colors.success};
@@ -288,5 +291,42 @@ export const AdminName = styled.div`
 
 export const AdminEmail = styled.div`
   font-size: ${fontSizes.sm};
+  color: ${colors.text.secondary};
+`;
+
+export const AddBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.sm};
+  background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
+  color: ${colors.text.inverted};
+  padding: ${spacing.sm} ${spacing.md};
+  border: none;
+  border-radius: ${borderRadius.md};
+  font-size: ${fontSizes.md};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  .button-text {
+    display: inline;
+  }
+`;
+export const EmptyState = styled.div`
+  text-align: center;
+  margin-top: ${spacing.xl};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const EmptyImage = styled.img`
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+  margin-bottom: ${spacing.md};
+`;
+
+export const EmptyText = styled.p`
+  font-size: ${fontSizes.md};
   color: ${colors.text.secondary};
 `;

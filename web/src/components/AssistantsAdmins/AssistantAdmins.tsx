@@ -1,4 +1,7 @@
-import { FiMoreVertical, FiTrash2, FiEdit } from "react-icons/fi";
+import { useState } from "react";
+import { FiMoreVertical, FiTrash2, FiPlus } from "react-icons/fi";
+import profilePlaceholder from "../../assets/profile-placeholder-preview.png";
+import emptyIllustration from "../../assets/empty-assistant.png";
 import type { IAssistantAdmin } from "../../redux/slices/assistantAdminsSlice";
 import * as S from "./styles";
 
@@ -63,52 +66,78 @@ const AssistantAdmin: React.FC<Props> = ({
   update,
   remove,
 }) => {
+  const [showForm, setShowForm] = useState(false);
   return (
     <S.Container>
-      <S.Header>Your Assistant Admins</S.Header>
+      <S.Header>
+        Your Assistant Admins
+        <S.AddBtn onClick={() => setShowForm((prev) => !prev)}>
+          <FiPlus /> Add Assistant
+        </S.AddBtn>
+      </S.Header>
 
-      <S.AddForm onSubmit={handleAdd}>
-        <S.TextInput
-          placeholder="Full name"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          required
-        />
-        <S.TextInput
-          type="email"
-          placeholder="assistant@example.com"
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
-          required
-        />
-        <S.TextInput
-          type="tel"
-          placeholder="Phone number"
-          value={newPhone}
-          onChange={(e) => setNewPhone(e.target.value)}
-          required
-        />
-        <S.AddButton disabled={!newName || !newEmail || !newPhone || loading}>
-          + Add
-        </S.AddButton>
-      </S.AddForm>
+      {showForm && (
+        <S.AddForm
+          onSubmit={(e) => {
+            handleAdd(e);
+            setShowForm(false);
+          }}
+        >
+          <S.TextInput
+            placeholder="Full name"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            required
+          />
+          <S.TextInput
+            type="email"
+            placeholder="assistant@example.com"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            required
+          />
+          <S.TextInput
+            type="tel"
+            placeholder="Phone number"
+            value={newPhone}
+            onChange={(e) => setNewPhone(e.target.value)}
+            required
+          />
+          <S.AddButton disabled={!newName || !newEmail || !newPhone || loading}>
+            + Add
+          </S.AddButton>
+        </S.AddForm>
+      )}
 
-      <S.List>
-        {(list ?? []).map((a) => (
-          <S.ListItem key={a.id}>
-            <S.ProfileSection>
-              <S.ProfileImage src={a.profile_image} alt={a.name} />
-              <div>
-                <S.AdminName>{a.name}</S.AdminName>
-                <S.AdminEmail>{a.email}</S.AdminEmail>
-              </div>
-            </S.ProfileSection>
-            <S.MoreIconButton onClick={() => setEditing(a.id)}>
-              <FiMoreVertical />
-            </S.MoreIconButton>
-          </S.ListItem>
-        ))}
-      </S.List>
+      {list.length === 0 ? (
+        <S.EmptyState>
+          <S.EmptyImage src={emptyIllustration} alt="No assistants" />
+          <S.EmptyText>
+            You have no assistant. Add your first assistant.
+          </S.EmptyText>
+        </S.EmptyState>
+      ) : (
+        <S.List>
+          {list.map((a) => (
+            <S.ListItem key={a.id}>
+              <S.ProfileSection>
+                <S.ProfileImage
+                  src={a.profile_image || profilePlaceholder}
+                  alt={a.name}
+                />
+
+                <div>
+                  <S.AdminName>{a.name}</S.AdminName>
+                  <S.AdminEmail>{a.email}</S.AdminEmail>
+                </div>
+              </S.ProfileSection>
+              <S.MoreIconButton onClick={() => setEditing(a.id)}>
+                <FiMoreVertical />
+              </S.MoreIconButton>
+            </S.ListItem>
+          ))}
+        </S.List>
+      )}
 
       {editing !== null &&
         list &&
@@ -148,9 +177,6 @@ const AssistantAdmin: React.FC<Props> = ({
                 </S.Flags>
 
                 <S.ModalActions>
-                  <S.EditButton>
-                    <FiEdit /> Edit
-                  </S.EditButton>
                   <S.DeleteButton
                     onClick={() => {
                       remove(asst.id);
@@ -159,11 +185,10 @@ const AssistantAdmin: React.FC<Props> = ({
                   >
                     <FiTrash2 /> Delete
                   </S.DeleteButton>
+                  <S.CloseButton onClick={() => setEditing(null)}>
+                    Done
+                  </S.CloseButton>
                 </S.ModalActions>
-
-                <S.CloseButton onClick={() => setEditing(null)}>
-                  Done
-                </S.CloseButton>
               </S.ModalContent>
             </S.ModalBackdrop>
           );
