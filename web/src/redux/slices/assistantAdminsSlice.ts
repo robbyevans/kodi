@@ -9,6 +9,7 @@ export interface IAssistantAdmin {
   role: "assistant_admin";
   manager_id: number;
   phone_number: string;
+  profile_image: string;
 
   // PROPERTIES
   can_view_properties: boolean;
@@ -119,7 +120,7 @@ export const deleteAssistantAdmin = createAsyncThunk<
 });
 
 const slice = createSlice({
-  name: "assistantAdmins",
+  name: "assistantAdmin",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
