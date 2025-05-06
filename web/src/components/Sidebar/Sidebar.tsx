@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
-import { FiHome, FiSettings, FiLogOut, FiUsers } from "react-icons/fi";
+import { FiSettings, FiLogOut, FiUsers } from "react-icons/fi";
 import { TbMailShare } from "react-icons/tb";
 import { IoAnalytics } from "react-icons/io5";
+import { MdDashboard } from "react-icons/md";
 import * as S from "./styles";
 
 const menuItems = [
-  { path: "/dashboard", icon: <FiHome />, label: "Dashboard" },
+  { path: "/dashboard", icon: <MdDashboard />, label: "Dashboard" },
   { path: "/analytics", icon: <IoAnalytics />, label: "Analytics" },
-  { path: "/settings", icon: <FiSettings />, label: "Settings" },
-  {
-    path: "/assistant-admin",
-    icon: <FiUsers />,
-    label: "Assistants",
-  },
   {
     path: "/tenant-notifications",
     icon: <TbMailShare />,
     label: "Bulk Notification",
   },
+  {
+    path: "/assistant-admin",
+    icon: <FiUsers />,
+    label: "Assistants",
+  },
+  { path: "/settings", icon: <FiSettings />, label: "Settings" },
 ];
 
 const Sidebar: React.FC = () => {
