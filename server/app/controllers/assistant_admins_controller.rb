@@ -27,11 +27,17 @@ class AssistantAdminsController < ApplicationController
     a = Admin.find(params[:id])
     authorize a # uses AssistantAdminPolicy#update?
     if a.update!(params.permit(
-                   :can_manage_tenants,
-                   :can_view_full_records,
-                   :can_view_finances,
-                   :can_send_notifications
-                 ))
+      # PROPERTIES
+      :can_view_properties, :can_create_properties, :can_update_properties, :can_delete_properties,
+      # HOUSES
+      :can_view_houses, :can_create_houses, :can_update_houses, :can_delete_houses,
+      # TENANTS & LEASES
+      :can_view_tenants, :can_create_tenants, :can_update_tenants, :can_terminate_leases,
+      # FINANCES
+      :can_view_payments, :can_record_payments, :can_withdraw_funds,
+      # NOTIFICATIONS
+      :can_send_notifications, :can_view_notification_history
+    ))
       render json: a, status: :ok
     else
       render json: { errors: a.errors.full_messages }, status: :unprocessable_entity

@@ -9,10 +9,33 @@ export interface IAssistantAdmin {
   role: "assistant_admin";
   manager_id: number;
   phone_number: string;
-  can_manage_tenants: boolean;
-  can_view_full_records: boolean;
-  can_view_finances: boolean;
+
+  // PROPERTIES
+  can_view_properties: boolean;
+  can_create_properties: boolean;
+  can_update_properties: boolean;
+  can_delete_properties: boolean;
+
+  // HOUSES
+  can_view_houses: boolean;
+  can_create_houses: boolean;
+  can_update_houses: boolean;
+  can_delete_houses: boolean;
+
+  // TENANTS & LEASES
+  can_view_tenants: boolean;
+  can_create_tenants: boolean;
+  can_update_tenants: boolean;
+  can_terminate_leases: boolean;
+
+  // FINANCES
+  can_view_payments: boolean;
+  can_record_payments: boolean;
+  can_withdraw_funds: boolean;
+
+  // NOTIFICATIONS
   can_send_notifications: boolean;
+  can_view_notification_history: boolean;
 }
 
 interface AssistantsState {

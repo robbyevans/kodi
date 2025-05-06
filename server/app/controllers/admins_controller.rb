@@ -149,10 +149,23 @@ class AdminsController < ApplicationController
         :is_terms_and_conditions_agreed,
         :role,
         :manager_id,
-        :can_manage_tenants,
-        :can_view_full_records,
-        :can_view_finances,
-        :can_send_notifications
+        :can_view_properties,
+        :can_create_properties,
+        :can_update_properties,
+        :can_delete_properties,
+        :can_view_houses,
+        :can_create_houses,
+        :can_update_houses,
+        :can_delete_houses,
+        :can_view_tenants,
+        :can_create_tenants,
+        :can_update_tenants,
+        :can_terminate_leases,
+        :can_view_payments,
+        :can_record_payments,
+        :can_withdraw_funds,
+        :can_send_notifications,
+        :can_view_notification_history
       )
     end
   end
