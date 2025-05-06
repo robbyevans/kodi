@@ -178,6 +178,7 @@ export const ToggleSlider = styled.span<{ checked: boolean }>`
   border-radius: 999px;
   position: relative;
   transition: background-color 0.2s ease;
+  border: 1px solid red;
 
   &::before {
     content: "";
