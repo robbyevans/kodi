@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_03_210414) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_06_065959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,10 +61,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_03_210414) do
     t.string "reset_password_code"
     t.datetime "reset_password_sent_at"
     t.bigint "manager_id"
-    t.boolean "can_manage_tenants", default: false, null: false
-    t.boolean "can_view_full_records", default: false, null: false
-    t.boolean "can_view_finances", default: false, null: false
+    t.boolean "can_view_properties", default: false, null: false
+    t.boolean "can_create_properties", default: false, null: false
+    t.boolean "can_update_properties", default: false, null: false
+    t.boolean "can_delete_properties", default: false, null: false
+    t.boolean "can_view_houses", default: false, null: false
+    t.boolean "can_create_houses", default: false, null: false
+    t.boolean "can_update_houses", default: false, null: false
+    t.boolean "can_delete_houses", default: false, null: false
+    t.boolean "can_view_tenants", default: false, null: false
+    t.boolean "can_create_tenants", default: false, null: false
+    t.boolean "can_update_tenants", default: false, null: false
+    t.boolean "can_terminate_leases", default: false, null: false
+    t.boolean "can_view_payments", default: false, null: false
+    t.boolean "can_record_payments", default: false, null: false
+    t.boolean "can_withdraw_funds", default: false, null: false
     t.boolean "can_send_notifications", default: false, null: false
+    t.boolean "can_view_notification_history", default: false, null: false
     t.index ["email_confirmation_code"], name: "index_admins_on_email_confirmation_code"
     t.index ["manager_id"], name: "index_admins_on_manager_id"
     t.index ["reset_password_code"], name: "index_admins_on_reset_password_code"

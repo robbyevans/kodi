@@ -47,27 +47,27 @@ class Admin < ApplicationRecord
   end
 
   # — Permission helpers —
-  # Allow full admins always, assistants only if their flag is true
-  def can_manage_tenants?
-    real_admin? || can_manage_tenants
-  end
+  def can_view_properties? = real_admin? || can_view_properties
+  def can_create_properties? = real_admin? || can_create_properties
+  def can_update_properties? = real_admin? || can_update_properties
+  def can_delete_properties? = real_admin? || can_delete_properties
 
-  def can_view_full_records?
-    real_admin? || can_view_full_records
-  end
+  def can_view_houses? = real_admin? || can_view_houses
+  def can_create_houses? = real_admin? || can_create_houses
+  def can_update_houses? = real_admin? || can_update_houses
+  def can_delete_houses? = real_admin? || can_delete_houses
 
-  def can_view_finances?
-    real_admin? || can_view_finances
-  end
+  def can_view_tenants? = real_admin? || can_view_tenants
+  def can_create_tenants? = real_admin? || can_create_tenants
+  def can_update_tenants? = real_admin? || can_update_tenants
+  def can_terminate_leases? = real_admin? || can_terminate_leases
 
-  def can_send_notifications?
-    real_admin? || can_send_notifications
-  end
+  def can_view_payments? = real_admin? || can_view_payments
+  def can_record_payments? = real_admin? || can_record_payments
+  def can_withdraw_funds? = real_admin? || can_withdraw_funds
 
-  # — Convenience: the properties this user should see/edit
-  def accessible_properties
-    effective_admin.properties
-  end
+  def can_send_notifications? = real_admin? || can_send_notifications
+  def can_view_notification_history? = real_admin? || can_view_notification_history
 
   # — Confirmation code flow —
   def send_confirmation_code!

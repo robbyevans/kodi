@@ -23,7 +23,7 @@ class TenantsController < ApplicationController
   # POST /houses/:house_id/tenants
   def create
     @house = policy_scope(House).find(params[:house_id])
-    authorize @house, :update?
+    authorize @house, :show? # only require “view” rights on the house
 
     if @house.payable_rent.to_d <= 0
       return render json: { error: 'Cannot add tenant. House has no payable rent.' },
@@ -31,7 +31,7 @@ class TenantsController < ApplicationController
     end
 
     @tenant = Tenant.new(tenant_params)
-    authorize @tenant
+    authorize @tenant # uses TenantPolicy#create? → real_admin? || can_create_tenants?
 
     ActiveRecord::Base.transaction do
       @tenant.save!

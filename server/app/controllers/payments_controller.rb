@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
-  skip_before_action :authenticate_admin, only: %i[ipn index]
-  skip_before_action :verify_authenticity_token, only: :ipn
+  skip_before_action :authenticate_admin, only: %i[ipn]
+  skip_before_action :verify_authenticity_token, only: %i[ipn]
 
   # POST /payments/ipn
   def ipn
