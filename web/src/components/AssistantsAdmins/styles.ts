@@ -118,9 +118,10 @@ export const ModalContent = styled.div`
   flex-direction: column;
   gap: ${spacing.md};
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
     padding: ${spacing.md};
     max-height: 70vh;
+    margin: 20px;
   }
 `;
 
@@ -324,6 +325,7 @@ export const EmptyImage = styled.img`
   width: 100%;
   height: auto;
   margin-bottom: ${spacing.md};
+  border-radius: 5px;
 `;
 
 export const EmptyText = styled.p`

@@ -85,7 +85,7 @@ export const createAssistantAdmin = createAsyncThunk<
 );
 
 export const updateAssistantAdmin = createAsyncThunk<
-  IAssistantAdmin, // <-- return type
+  IAssistantAdmin,
   { id: number; changes: Partial<IAssistantAdmin> },
   { rejectValue: string }
 >(
@@ -97,7 +97,7 @@ export const updateAssistantAdmin = createAsyncThunk<
         changes
       );
       dispatch(showToast({ message: "Permissions updated", type: "success" }));
-      return data; // <-- now returns the updated assistant
+      return data;
     } catch (e: any) {
       dispatch(showToast({ message: e.message, type: "error" }));
       return rejectWithValue(e.message);

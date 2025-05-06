@@ -1,5 +1,5 @@
 class AssistantAdminPolicy < ApplicationPolicy
-  # Only full‐admins may list or create assistants
+  # Only full‐admins may list or create/update/delete assistants
   def index?
     user.real_admin?
   end
@@ -8,11 +8,8 @@ class AssistantAdminPolicy < ApplicationPolicy
     user.real_admin?
   end
 
-  # To update or destroy an assistant record:
-  # – full‐admins always
-  # – assistants only if they have can_manage_tenants
   def update?
-    user.real_admin? || (user.assistant_admin? && user.can_manage_tenants?)
+    user.real_admin?
   end
   alias edit? update?
 
