@@ -61,15 +61,19 @@ export const createAssistantAdmin = createAsyncThunk<
 );
 
 export const updateAssistantAdmin = createAsyncThunk<
-  void,
+  IAssistantAdmin, // <-- return type
   { id: number; changes: Partial<IAssistantAdmin> },
   { rejectValue: string }
 >(
   "assistantAdmins/update",
   async ({ id, changes }, { dispatch, rejectWithValue }) => {
     try {
-      await axiosInstance.patch(`/assistant_admins/${id}`, changes);
+      const { data } = await axiosInstance.patch<IAssistantAdmin>(
+        `/assistant_admins/${id}`,
+        changes
+      );
       dispatch(showToast({ message: "Permissions updated", type: "success" }));
+      return data; // <-- now returns the updated assistant
     } catch (e: any) {
       dispatch(showToast({ message: e.message, type: "error" }));
       return rejectWithValue(e.message);
@@ -112,8 +116,10 @@ const slice = createSlice({
       .addCase(createAssistantAdmin.fulfilled, (state, action) => {
         state.list.push(action.payload);
       })
-      .addCase(updateAssistantAdmin.fulfilled, () => {
-        /* UI will reflect changes via refetch or local state */
+      .addCase(updateAssistantAdmin.fulfilled, (state, action) => {
+        state.list = state.list.map((a) =>
+          a.id === action.payload.id ? action.payload : a
+        );
       })
       .addCase(deleteAssistantAdmin.fulfilled, (state, action) => {
         state.list = state.list.filter((a) => a.id !== action.meta.arg);

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmins } from "../../redux/hooks/useAdmin";
-import { FiHome, FiSettings, FiLogOut } from "react-icons/fi";
-import { BsFillPeopleFill } from "react-icons/bs";
+import { FiHome, FiSettings, FiLogOut, FiUsers } from "react-icons/fi";
 import { TbMailShare } from "react-icons/tb";
 import { IoAnalytics } from "react-icons/io5";
 import * as S from "./styles";
@@ -13,7 +12,7 @@ const menuItems = [
   { path: "/settings", icon: <FiSettings />, label: "Settings" },
   {
     path: "/assistant-admin",
-    icon: <BsFillPeopleFill />,
+    icon: <FiUsers />,
     label: "Assistants",
   },
   {

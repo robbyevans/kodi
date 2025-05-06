@@ -10,7 +10,7 @@ export const Container = styled.div`
   max-width: 600px;
   margin: ${spacing["2xl"]} auto;
   padding: ${spacing.xl};
-  background: ${colors.background};
+  background: ${colors.text.inverted};
   border-radius: ${borderRadius.md};
 
   h1 {

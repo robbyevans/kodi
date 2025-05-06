@@ -26,14 +26,16 @@ class AssistantAdminsController < ApplicationController
   def update
     a = Admin.find(params[:id])
     authorize a # uses AssistantAdminPolicy#update?
-    a.update!(params.permit(
-                :can_manage_tenants,
-                :can_view_full_records,
-                :can_view_finances,
-                :can_send_notifications,
-                :active
-              ))
-    head :no_content
+    if a.update!(params.permit(
+                   :can_manage_tenants,
+                   :can_view_full_records,
+                   :can_view_finances,
+                   :can_send_notifications
+                 ))
+      render json: a, status: :ok
+    else
+      render json: { errors: a.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # DELETE /assistant_admins/:id

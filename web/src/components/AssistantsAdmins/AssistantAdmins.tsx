@@ -95,16 +95,18 @@ const AssistantAdmins: React.FC = () => {
                 </S.ModalHeader>
                 <S.Flags>
                   {flags.map((flag) => (
-                    <S.FlagLabel key={flag}>
-                      <input
+                    <S.ToggleWrapper key={flag}>
+                      {flag.replace(/_/g, " ")}
+                      <S.ToggleInput
                         type="checkbox"
+                        id={`${asst.id}-${flag}`}
                         checked={asst[flag]}
                         onChange={(e) =>
                           update(asst.id, { [flag]: e.target.checked })
                         }
-                      />{" "}
-                      {flag.replace(/_/g, " ")}
-                    </S.FlagLabel>
+                      />
+                      <S.ToggleSlider checked={asst[flag]} />
+                    </S.ToggleWrapper>
                   ))}
                 </S.Flags>
                 <S.CloseButton onClick={() => setEditing(null)}>
