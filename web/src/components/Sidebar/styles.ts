@@ -27,7 +27,7 @@ export const ProfileSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: ${spacing.lg};
+  margin-bottom: ${spacing.mxl};
 `;
 
 export const ProfileImage = styled.img`
