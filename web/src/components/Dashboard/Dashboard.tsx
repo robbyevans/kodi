@@ -24,6 +24,8 @@ interface DashboardProps {
   occupancyRate: number;
   totalTenants: number;
   paymentRate: number;
+  greetingText: string;
+  dateTime: string;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -37,6 +39,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   occupancyRate,
   paymentRate,
   totalTenants,
+  greetingText,
+  dateTime,
 }) => {
   return (
     <S.DashboardContainer>
@@ -45,7 +49,12 @@ const Dashboard: React.FC<DashboardProps> = ({
       ) : (
         <S.DashboardHeader>
           <div className="header-content">
-            <p className="welcome-text">Welcome, {userData.name}</p>
+            <S.GreetingText>
+              {greetingText}, {userData.name}
+            </S.GreetingText>
+
+            <S.DateTimeText>{dateTime}</S.DateTimeText>
+
             <h1>Dashboard</h1>
             <p>Manage your properties and view detailed stats</p>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProperties } from "../redux/hooks/useProperties";
 import { useAdmins } from "../redux/hooks/useAdmin";
@@ -24,10 +24,28 @@ const DashboardContainer = () => {
     paymentRate,
   } = getPropertyStats(propertyData);
 
+  // single clock state
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60_000); // every minute
+    return () => clearInterval(timer);
+  }, []);
+
+  // formatted date/time
+  const dateTime = now.toLocaleString();
+
+  // choose greeting by hour
+  const hour = now.getHours();
+  const greetingText =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
   return (
     <>
       <Dashboard
         userData={userData}
+        greetingText={greetingText}
+        dateTime={dateTime}
         propertyData={propertyData}
         loading={loading}
         navigate={navigate}
