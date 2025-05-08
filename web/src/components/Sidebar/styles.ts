@@ -8,7 +8,6 @@ import {
   borderRadius,
 } from "../../styles/foundation";
 
-// Full Sidebar for large screens
 export const SidebarContainer = styled.nav`
   min-width: 185px;
   background: ${colors.primary};
@@ -24,15 +23,30 @@ export const SidebarContainer = styled.nav`
   }
 `;
 
-export const SidebarHeader = styled.div`
+export const ProfileSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: ${spacing.lg};
 `;
 
-export const Title = styled.h1`
-  font-size: ${fontSizes["2xl"]};
-  font-weight: ${fontWeights.semibold};
-  margin: 0;
-  letter-spacing: -0.5px;
+export const ProfileImage = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+`;
+
+export const GreetingText = styled.span`
+  margin-top: ${spacing.sm};
+  font-size: ${fontSizes.md};
+  font-weight: ${fontWeights.medium};
+`;
+
+export const DateTimeText = styled.span`
+  margin-top: ${spacing.xs};
+  font-size: ${fontSizes.sm};
 `;
 
 export const Menu = styled.div`
@@ -41,7 +55,6 @@ export const Menu = styled.div`
   gap: ${spacing.lg};
 `;
 
-// Updated MenuItem with active styling
 export const MenuItem = styled.button<{ $active?: boolean }>`
   background: ${(props) => (props.$active ? "#265d50" : "none")};
   border: none;
