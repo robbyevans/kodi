@@ -5,7 +5,6 @@ import {
   fontSizes,
   spacing,
   shadows,
-  fontWeights,
   borderRadius,
 } from "../../styles/foundation";
 import TestimonialsBackground from "../../assets/Testimonials Background.png";
@@ -17,11 +16,6 @@ export const DashboardContainer = styled.div`
   overflow-y: auto;
   padding: ${spacing.md};
   min-height: 100vh;
-`;
-
-export const DateTimeText = styled.span`
-  margin-top: ${spacing.xs};
-  font-size: ${fontSizes.sm};
 `;
 
 export const DashboardHeader = styled.header`
@@ -52,12 +46,6 @@ export const DashboardHeader = styled.header`
     font-size: ${fontSizes.lg};
     margin: 0;
   }
-`;
-
-export const GreetingText = styled.span`
-  margin-top: ${spacing.sm};
-  font-size: ${fontSizes.md};
-  font-weight: ${fontWeights.medium};
 `;
 
 export const ContentWrapper = styled.div`

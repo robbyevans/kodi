@@ -39,8 +39,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   occupancyRate,
   paymentRate,
   totalTenants,
-  greetingText,
-  dateTime,
 }) => {
   return (
     <S.DashboardContainer>
@@ -49,12 +47,6 @@ const Dashboard: React.FC<DashboardProps> = ({
       ) : (
         <S.DashboardHeader>
           <div className="header-content">
-            <S.GreetingText>
-              {greetingText}, {userData.name}
-            </S.GreetingText>
-
-            <S.DateTimeText>{dateTime}</S.DateTimeText>
-
             <h1>Dashboard</h1>
             <p>Manage your properties and view detailed stats</p>
           </div>
