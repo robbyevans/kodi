@@ -55,6 +55,10 @@ group :development, :test do
   gem 'rubocop-rails', require: false
 end
 
+group :development do
+  gem 'rubocop-erb', require: false
+end
+
 gem 'africastalking-ruby', github: 'AfricasTalkingLtd/africastalking-ruby', branch: 'master'
 
 gem 'jwt', '~> 2.10'
