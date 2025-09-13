@@ -12,6 +12,9 @@
 !.env.example
 !/.env*.erb
 
+# Ignore firebase.json
+/firebase.json
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
