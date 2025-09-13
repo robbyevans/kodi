@@ -15,15 +15,17 @@ RUN apt-get update -qq && \
       libxslt1.1 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+# Bundler config for production; and IMPORTANT: ignore local .bundle/config changes
 ENV RAILS_ENV=production \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_PATH=/usr/local/bundle \
-    BUNDLE_WITHOUT="development:test"
+    BUNDLE_WITHOUT="development:test" \
+    BUNDLE_IGNORE_CONFIG=1
 
 # ---------- Build stage ----------
 FROM base AS build
 
-# Use bash for RUN in this stage so we can use pipefail in diagnostics
+# Use bash so we can use pipefail in diagnostics
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Headers to compile native gems against system libs
@@ -37,7 +39,7 @@ RUN apt-get update -qq && \
       libxslt1-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install gems (separate to leverage Docker cache)
+# Install gems (separately to leverage Docker cache)
 COPY Gemfile Gemfile.lock ./
 
 # Build Nokogiri against system libraries
@@ -49,7 +51,7 @@ RUN gem update --system 3.3.26 && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-# ===== DIAGNOSTIC BLOCK =====
+# ===== DIAGNOSTICS (keeps failing builds from reaching release) =====
 RUN set -euxo pipefail; \
   ruby -v; bundle -v; gem -v; \
   echo "=== bundle env ==="; bundle env; \
@@ -58,8 +60,14 @@ RUN set -euxo pipefail; \
   echo "=== nokogiri (gem) ==="; (gem list ^nokogiri$ -d || true); (gem which nokogiri || true); \
   echo "=== require test ==="; bundle exec ruby -e 'require "nokogiri"; puts "Nokogiri OK: #{Nokogiri::VERSION}"'
 
-# App code + precompiles
+# App code
 COPY . .
+
+# OPTIONAL: neutralize entrypoint lines that force vendor/bundle (if present)
+# (Safe no-op if the pattern isn't there)
+RUN sed -i '/bundle config set --local path/d' bin/docker-entrypoint || true
+
+# Precompile bootsnap and assets
 RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
@@ -68,11 +76,13 @@ FROM base
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
+# Non-root user
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER 1000:1000
 
+# Keep the Rails entrypoint, but Bundler will now ignore any local config it tries to write.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 CMD ["./bin/rails", "server"]
