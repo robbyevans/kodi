@@ -25,19 +25,15 @@ ENV RAILS_ENV="production" \
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Install packages needed to build gems
+# Install packages needed to build gems (no system XML/XSLT libs; let Nokogiri use vendored)
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config \
-    libxml2-dev libxslt1-dev && \
+    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 
-# ✅ Ensure Nokogiri builds with system libs
-ENV NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-
-# ✅ Ensure correct RubyGems + Bundler versions inside Fly build
+# Ensure correct RubyGems + Bundler versions inside Fly build
 RUN gem update --system 3.3.26 && \
     gem install bundler -v 2.6.3 && \
     bundle install && \
