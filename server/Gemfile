@@ -62,3 +62,5 @@ end
 gem 'africastalking-ruby', github: 'AfricasTalkingLtd/africastalking-ruby', branch: 'master'
 
 gem 'jwt', '~> 2.10'
+
+gem "dockerfile-rails", ">= 1.7", :group => :development

@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for server-misty-mountain-4350 on 2025-09-13T20:47:58+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'server-misty-mountain-4350'
+primary_region = 'fra'
+console_command = '/rails/bin/rails console'
+
+[build]
+
+[deploy]
+  release_command = './bin/rails db:prepare'
+
+[processes]
+  app = './bin/rails server'
+  sidekiq = 'bundle exec sidekiq'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[[statics]]
+  guest_path = '/rails/public'
+  url_prefix = '/'
+
+[processes]
+  web = "bundle exec puma -C config/puma.rb"
+  worker = "bundle exec sidekiq -C config/sidekiq.yml"
