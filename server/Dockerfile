@@ -2,9 +2,10 @@
 ARG RUBY_VERSION=3.1.2
 FROM docker.io/library/ruby:${RUBY_VERSION}-slim AS base
 
+# App dir
 WORKDIR /rails
 
-# ---- RUNTIME PACKAGES (include XML/XSLT) ----
+# ---- RUNTIME PACKAGES (include XML/XSLT so Nokogiri can load at runtime) ----
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       curl \
@@ -24,7 +25,7 @@ ENV RAILS_ENV=production \
 # ---------- Build stage ----------
 FROM base AS build
 
-# Dev headers to compile native gems against system libs
+# Headers to compile native gems against system libs
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential \
@@ -35,6 +36,7 @@ RUN apt-get update -qq && \
       libxslt1-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
+# Only Gemfiles first for better layer caching
 COPY Gemfile Gemfile.lock ./
 
 # Build Nokogiri against system libs
@@ -46,8 +48,14 @@ RUN gem update --system 3.3.26 && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
-# Fail fast if Nokogiri can't load (you'll see it during build, not at release)
-RUN ruby -e 'require "nokogiri"; puts "Nokogiri OK: #{Nokogiri::VERSION}"'
+# ===== DIAGNOSTIC BLOCK (rich report) =====
+RUN set -euxo pipefail; \
+  ruby -v; bundle -v; gem -v; \
+  echo "=== bundle env ==="; bundle env; \
+  echo "=== gem env ==="; gem env; \
+  echo "=== nokogiri (bundle) ==="; (bundle info nokogiri || true); \
+  echo "=== nokogiri (gem) ==="; (gem list ^nokogiri$ -d || true); (gem which nokogiri || true); \
+  echo "=== require test ==="; bundle exec ruby -e 'require "nokogiri"; puts "Nokogiri OK: #{Nokogiri::VERSION}"'
 
 # App code and precompiles
 COPY . .
@@ -59,6 +67,7 @@ FROM base
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
+# Non-root user
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
