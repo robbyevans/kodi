@@ -452,6 +452,7 @@ DEPENDENCIES
   jbuilder
   jwt (~> 2.10)
   letter_opener
+  nokogiri (>= 1.14)
   pg (~> 1.1)
   prawn
   puma (>= 5.0)

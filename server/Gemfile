@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gem 'importmap-rails'
 gem 'jbuilder'
+gem 'nokogiri', '>= 1.14', platforms: :ruby
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'pundit'
@@ -63,4 +64,4 @@ gem 'africastalking-ruby', github: 'AfricasTalkingLtd/africastalking-ruby', bran
 
 gem 'jwt', '~> 2.10'
 
-gem "dockerfile-rails", ">= 1.7", :group => :development
+gem 'dockerfile-rails', '>= 1.7', group: :development
