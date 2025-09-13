@@ -41,4 +41,5 @@
 /server/config/firebase_service_account.json
 
 db/*.sqlite3
-db/*.sqlite3-journal
+db/*.sqlite3-journal.bundle/
+vendor/bundle/
