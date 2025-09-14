@@ -8,6 +8,16 @@ Bundler.require(*Rails.groups)
 
 require 'dotenv/rails' if Rails.env.development? || Rails.env.test?
 
+require_relative 'boot'
+
+require 'rails/all'
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
+
+require 'dotenv/rails' if Rails.env.development? || Rails.env.test?
+
 module Server
   class Application < Rails::Application
     config.load_defaults 7.2
@@ -19,6 +29,11 @@ module Server
 
     # Disable CSRF protection for API
     config.api_only = true
+
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore,
+                          key: '_server_session', same_site: :lax, secure: true
+
     config.action_controller.allow_forgery_protection = false
 
     config.active_job.queue_adapter = :sidekiq
