@@ -1,57 +1,59 @@
+# config/routes.rb
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  # Mount Sidekiq Web UI at /sidekiq without authentication
+  # --- Health check (use this in fly.toml checks) ---
+  get '/healthz', to: proc { [200, {}, ['OK']] }
+
+  # --- Secure Sidekiq Web UI ---
+  # Sidekiq Web needs a session in API-only apps, and must be protected.
+  Sidekiq::Web.use Rack::Session::Cookie, secret: Rails.application.secret_key_base
+  Sidekiq::Web.use Rack::Auth::Basic do |u, p|
+    ActiveSupport::SecurityUtils.secure_compare(u, ENV.fetch('SIDEKIQ_USERNAME')) &&
+      ActiveSupport::SecurityUtils.secure_compare(p, ENV.fetch('SIDEKIQ_PASSWORD'))
+  end
   mount Sidekiq::Web => '/sidekiq'
 
-  # Custom routes for fetching all tenants and houses for the current admin
+  # --- Custom convenience endpoints ---
   get '/tenants', to: 'tenants#all'
-  get '/houses', to: 'houses#all'
+  get '/houses',  to: 'houses#all'
 
-  # Nest houses under properties so URLs look like /properties/:property_id/houses
+  # --- Nested resources ---
   resources :properties, except: %i[new edit] do
     resources :houses, except: %i[new edit]
   end
 
-  # Nest tenants under houses so URLs look like /houses/:house_id/tenants
   resources :houses, only: [] do
     resources :tenants, except: %i[new edit]
   end
 
-  # Ledger entries API endpoints
   resources :ledger_entries, only: [:index] do
-    collection do
-      get 'download_statement'
-    end
+    collection { get :download_statement }
   end
 
   resources :wallets, only: [] do
-    collection do
-      get 'current'
-    end
+    collection { get :current }
   end
 
-  # Withdrawal route
   resources :withdrawals, only: [:create]
 
-  # Admin-related routes (for management and authentication)
-  resources :admins, only: %i[index create update destroy]
-
-  # reset passwordand email confirmation link
+  # --- Admin/auth routes (deduped) ---
   resources :admins, only: %i[index create update destroy] do
     collection do
-      get :current
-      post :send_confirmation_code   # auth required
-      post :confirm_email            # auth required
+      get  :current
+      post :send_confirmation_code
+      post :confirm_email
     end
   end
+  post '/signup',       to: 'admins#create' # optional alias of admins#create
+  post '/login',        to: 'admins#login'
+  post '/auth/google',  to: 'admins#google_auth'
 
   resources :assistant_admins, only: %i[index create update destroy]
-
   resources :password_resets, only: [:create] do
     collection do
-      post :verify    # check code validity
-      post :reset     # submit code + new password
+      post :verify
+      post :reset
     end
   end
 
@@ -68,6 +70,6 @@ Rails.application.routes.draw do
   # single, batch‐send endpoint:
   post '/tenant_notifications', to: 'tenant_notifications#create'
 
-  # Root path – returns all properties for the current admin
+  # Root (likely requires auth; expect “Token is missing” if you hit it raw)
   root 'properties#index'
 end
