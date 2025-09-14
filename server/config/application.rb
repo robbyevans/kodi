@@ -38,13 +38,17 @@ module Server
 
     config.active_job.queue_adapter = :sidekiq
 
-    # CORS Configuration for Frontend
+    allowed_origins = [
+      ENV['FRONTEND_URL'],
+      'http://localhost:5173'
+    ].compact
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'http://localhost:5173' # Change this to your production domain when needed
+        origins(*allowed_origins)
         resource '*',
-                 headers: :any,
-                 methods: %i[get post patch put delete options head],
+                 headers: %w[Authorization Content-Type],
+                 methods: %i[get post put patch delete options head],
                  credentials: true
       end
     end
