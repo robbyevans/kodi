@@ -39,8 +39,7 @@ module Server
     config.active_job.queue_adapter = :sidekiq
 
     allowed_origins = [
-      ENV['FRONTEND_URL'],
-      'http://localhost:5173'
+      ENV['FRONTEND_URL']&.split(',')
     ].compact
 
     config.middleware.insert_before 0, Rack::Cors do
