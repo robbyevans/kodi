@@ -76,8 +76,12 @@ class AdminsController < ApplicationController
   # POST /admins/send_confirmation_code
   def send_confirmation_code
     authorize @admin
-    @admin.send_confirmation_code!
-    render json: { message: 'Confirmation code sent' }, status: :ok
+    code = @admin.send_confirmation_code!
+    if dev_mode?
+      render json: { message: 'DEV: confirmation code generated', code: code }, status: :ok
+    else
+      render json: { message: 'Confirmation code sent' }, status: :ok
+    end
   end
 
   # POST /admins/confirm_email
@@ -113,18 +117,15 @@ class AdminsController < ApplicationController
     @admin = Admin.find(params[:id])
   end
 
-  # Strong params for signup — always full‐admin creation
+  # Strong params for signup — accept wrapped OR flat payloads
   def admin_create_params
-    params.require(:admin).permit(
-      :name,
-      :email,
-      :phone_number,
-      :password,
-      :password_confirmation,
-      :profile_image,
-      :device_token
+    envelope = params[:admin].is_a?(ActionController::Parameters) ? params.require(:admin) : params
+    envelope.permit(
+      :name, :email, :phone_number, :password, :password_confirmation,
+      :profile_image, :device_token
     )
   end
+
 
   # Strong params for update:
   # - assistant_admins may only change their password and profile_image

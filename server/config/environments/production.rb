@@ -43,7 +43,8 @@ Rails.application.configure do
 
   # Mailer
   config.action_mailer.perform_caching = false
-  config.action_mailer.delivery_method = :smtp
+   config.action_mailer.perform_deliveries = false
+  config.action_mailer.delivery_method = :test
   config.action_mailer.smtp_settings = {
     address:              ENV["SMTP_HOST"],
     port:                 ENV.fetch("SMTP_PORT", 587),
@@ -54,7 +55,7 @@ Rails.application.configure do
   }
   config.action_mailer.default_url_options = { host: app_host }
   config.action_mailer.default_options     = { from: "Kodi PMS <no-reply@kodipms.com>" }
-
+  
   # I18n & deprecations
   config.i18n.fallbacks = true
   config.active_support.report_deprecations = false

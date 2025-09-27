@@ -20,6 +20,8 @@ class ApplicationController < ActionController::Base
     @real_admin || @current_admin
   end
 
+  helper_method :dev_mode?
+
   private
 
   def authenticate_admin
@@ -48,5 +50,9 @@ class ApplicationController < ActionController::Base
     JWT.decode(token, Rails.application.secret_key_base, true, algorithm: 'HS256').first
   rescue JWT::ExpiredSignature, JWT::DecodeError
     nil
+  end
+
+  def dev_mode?
+    Rails.env.development? || ENV['FORCE_DEV_RESPONSES'] == 'true'
   end
 end

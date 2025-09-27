@@ -76,7 +76,10 @@ class Admin < ApplicationRecord
       email_confirmation_code: code,
       email_confirmation_code_sent_at: Time.current
     )
-    UserMailer.confirmation_code_email(self).deliver_later
+
+    # Only send real email in production
+    UserMailer.confirmation_code_email(self).deliver_later if Rails.env.production?
+    code
   end
 
   def verify_confirmation_code!(submitted_code)
@@ -99,7 +102,9 @@ class Admin < ApplicationRecord
   def send_reset_password_code!
     code = SecureRandom.alphanumeric(6).upcase
     update!(reset_password_code: code, reset_password_sent_at: Time.current)
-    UserMailer.reset_password_code_email(self).deliver_later
+    # Only send real email in production
+    UserMailer.reset_password_code_email(self).deliver_later if Rails.env.production?
+    code
   end
 
   def verify_reset_password_code!(submitted_code)

@@ -4,6 +4,11 @@ class SmsJobs::SendVerificationSmsJob < ApplicationJob
   queue_as :default
 
   def perform(admin_id)
+    unless Rails.env.production?
+      Rails.logger.info "DEV: Skipping SMS send (verification) for admin_id=#{admin_id}"
+      return
+    end
+
     admin = Admin.find_by(id: admin_id)
     return unless admin&.phone_number.present?
 

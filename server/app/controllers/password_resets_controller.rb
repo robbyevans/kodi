@@ -4,13 +4,18 @@ class PasswordResetsController < ApplicationController
 
   # POST /password_resets
   # { email: "you@domain.com" }
-  def create
-    admin = Admin.find_by(email: params[:email].downcase)
-    return render json: { error: 'Email not found' }, status: :not_found unless admin
+ def create
+  admin = Admin.find_by(email: params[:email].to_s.downcase)
+  return render json: { error: 'Email not found' }, status: :not_found unless admin
 
-    admin.send_reset_password_code!
+  code = admin.send_reset_password_code!  # <— capture it
+  if dev_mode?
+    render json: { message: 'DEV: reset code generated', code: code }, status: :ok
+  else
     render json: { message: 'Reset code sent' }, status: :ok
   end
+end
+
 
   # POST /password_resets/verify
   # { email: "...", code: "ABC123" }
