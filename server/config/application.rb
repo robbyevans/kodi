@@ -1,26 +1,16 @@
 require_relative 'boot'
-
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-require 'dotenv/rails' if Rails.env.development? || Rails.env.test?
-
-require_relative 'boot'
-
-require 'rails/all'
-
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
 
 require 'dotenv/rails' if Rails.env.development? || Rails.env.test?
 
 module Server
   class Application < Rails::Application
-    config.load_defaults 7.2
+    config.load_defaults 7.0
 
     # 📦 Enable autoloader logging in development
     Rails.autoloaders.each do |autoloader|

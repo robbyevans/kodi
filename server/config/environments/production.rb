@@ -70,11 +70,11 @@ Rails.application.configure do
   # ---- Security: CSRF + Host Authorization ----
   # Only needed if you use cookies/sessions or Rails form_authenticity_token.
   config.action_controller.forgery_protection_origin_check = true
-  config.action_controller.permitted_csrf_origins = [
-    "https://kodipms.com",
-    "https://www.kodipms.com",
-    "https://kodi-2ti.pages.dev"
-  ]
+  #   config.action_controller.permitted_csrf_origins = [
+  #   "https://kodipms.com",
+  #   "https://www.kodipms.com",
+  #   "https://kodi-2ti.pages.dev"
+  # ]
 
   # Prevent Host header spoofing; allow your public domains
   config.hosts += [
